@@ -20,7 +20,7 @@ def main() -> int:
         written = models()
         for path, text in written.items():
             path.write_text(text, encoding="utf-8")
-        print(f"wrote {len(written)} generated warehouse models")
+        print(f"wrote {len(written)} generated warehouse files")
         return 0
     problems = stale()
     if problems:

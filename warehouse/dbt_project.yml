@@ -22,6 +22,8 @@ vars:
   unimpeded_percentile: 0.10
   unimpeded_min_flights: 30
   rotation_gap_hours: 6.0
+  # int_legs is built this many buckets of tail numbers at a time (macros/int_legs.sql).
+  leg_buckets: 16
 
 models:
   turnaround:

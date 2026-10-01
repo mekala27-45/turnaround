@@ -41,8 +41,18 @@ class RotationCounts:
         return self.first + self.gap + self.broken_chain + self.impossible
 
 
-def reconstruct_sql(source: str, gap_hours: float) -> str:
-    """The legs of ``source`` with their link to the previous leg, the link's status and the rotation id."""
+Bucket = tuple[int | str, int | str]
+
+
+def reconstruct_sql(source: str, gap_hours: float, bucket: Bucket | None = None) -> str:
+    """The legs of ``source`` with their link to the previous leg, the link's status and the rotation id.
+
+    ``bucket`` (index, count) keeps only the tails whose hash falls in one of ``count`` buckets. Every
+    window here is partitioned by the tail, so a bucket holds whole partitions, and the buckets
+    together give exactly what one statement over every tail gives, in pieces small enough to sort
+    in memory.
+    """
+    only = "" if bucket is None else f"\n          and hash(tail_number) % {bucket[1]} = {bucket[0]}"
     return f"""
     with legs as (
         select
@@ -52,7 +62,7 @@ def reconstruct_sql(source: str, gap_hours: float) -> str:
             sched_arr_utc + to_minutes(cast(arr_delay as bigint)) as actual_arr_utc
         from {source}
         where not cancelled and not diverted and tail_number is not null
-          and dep_delay is not null and arr_delay is not null and sched_dep_utc is not null
+          and dep_delay is not null and arr_delay is not null and sched_dep_utc is not null{only}
     ),
     ordered as (
         select
@@ -110,11 +120,12 @@ def leg_index_sql(source: str) -> str:
     """
 
 
-def full_sql(source: str, gap_hours: float) -> str:
+def full_sql(source: str, gap_hours: float, bucket: Bucket | None = None) -> str:
     """Links, statuses, rotation ids and leg numbers in one statement: the warehouse model int_legs is
     generated from this function (scripts/build_warehouse_sql.py), so the simulator and the real
-    flights go through the same SQL."""
-    return leg_index_sql(f"({reconstruct_sql(source, gap_hours)})")
+    flights go through the same SQL. The leg numbers are partitioned by the rotation and by the tail
+    and day, both inside one tail, so a bucket of tails stays whole here too."""
+    return leg_index_sql(f"({reconstruct_sql(source, gap_hours, bucket)})")
 
 
 def reconstruct(con: duckdb.DuckDBPyConnection, source: str, target: str, gap_hours: float) -> RotationCounts:

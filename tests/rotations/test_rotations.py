@@ -134,3 +134,38 @@ def test_rho_recovered_on_a_linear_fixture(rho: float) -> None:
     assert m == 40 and converged
     assert abs(estimate - rho) < 4 * se + 0.01
     assert clusters == n // 4
+
+
+def test_buckets_of_tails_together_equal_one_statement() -> None:
+    # The warehouse builds int_legs one bucket of tails at a time; the union must be the same table.
+    rng = np.random.default_rng(14)
+    rows = []
+    airports = ["AAA", "BBB", "CCC", "DDD"]
+    for t in range(40):
+        place = "AAA"
+        clock = 5 * 60 + int(rng.integers(0, 120))
+        for _ in range(int(rng.integers(2, 7))):
+            dest = airports[int(rng.integers(0, 4))]
+            if rng.random() < 0.1:
+                place = airports[int(rng.integers(0, 4))]  # a swap the tail number does not show
+            rows.append(
+                (
+                    f"N{t + 1}",
+                    place,
+                    dest,
+                    f"{clock // 60:02d}:{clock % 60:02d}",
+                    75,
+                    int(rng.integers(-5, 60)),
+                    int(rng.integers(-10, 70)),
+                )
+            )
+            place = dest
+            clock += 75 + int(rng.integers(20, 200))
+            if clock > 22 * 60:
+                break
+    con = duckdb.connect()
+    con.register("f", _legs(rows).to_arrow())
+    whole = con.execute(f"select * from ({reconstruct.full_sql('f', 6.0)}) order by flight_id").fetchall()
+    parts = " union all ".join(f"({reconstruct.full_sql('f', 6.0, bucket=(b, 5))})" for b in range(5))
+    pieces = con.execute(f"select * from ({parts}) order by flight_id").fetchall()
+    assert len(whole) == len(rows) and pieces == whole

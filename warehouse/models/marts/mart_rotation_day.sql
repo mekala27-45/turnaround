@@ -10,6 +10,6 @@ select
     sum(greatest(arr_delay, 0)) as arr_delay_pos_sum,
     max(arr_delay) as worst_arrival_delay,
     count(*) filter (where link_status = 'linked') as linked_legs,
-    any_value(link_status order by leg_index) as opened_by
+    arg_min(link_status, leg_index) as opened_by
 from {{ ref('int_legs') }}
 group by rotation_id
