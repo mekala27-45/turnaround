@@ -26,7 +26,7 @@ $hubs = (Invoke-RestMethod -Uri "$base/v1/hubs" -TimeoutSec 120).hubs
 $bodies = @()
 for ($i = 0; $i -lt $hubs.Count; $i++) {
     $h = $hubs[$i]
-    $bodies += (@{ origin = $h.origins[0]; connection = $h.hub; destination = $h.destinations[0]; travel_month = $health.outcome_month; inbound_hour = 12; outbound_hour = 13; buffer_minutes = 45 + 15 * ($i % 4); note = "load test" } | ConvertTo-Json)
+    $bodies += (@{ origin = $h.busiest_origin; connection = $h.hub; destination = $h.busiest_destination; travel_month = $health.outcome_month; inbound_hour = 12; outbound_hour = 13; buffer_minutes = 45 + 15 * ($i % 4); note = "load test" } | ConvertTo-Json)
 }
 $sw = [Diagnostics.Stopwatch]::StartNew()
 $null = Invoke-RestMethod -Method Post -Uri "$base/v1/checks" -Headers $headers -ContentType "application/json" -TimeoutSec 120 -Body $bodies[0]

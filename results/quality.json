@@ -1,16 +1,16 @@
 {
- "measured_at": "2026-10-01T22:20:46+00:00",
+ "measured_at": "2026-10-01T23:15:33+00:00",
  "ruff": "clean",
  "mypy": "clean",
  "coverage": 87.0,
  "tests": {
-  "passed": 189,
+  "passed": 190,
   "failed": 0,
   "skipped": 1,
   "exit_code": 0
  },
  "api_tests": {
-  "passed": 10,
+  "passed": 11,
   "failed": 0,
   "names": [
    "test_a_short_load_test_runs_clean_with_ordered_percentiles",
@@ -21,6 +21,7 @@
    "test_curve_is_monotone_and_names_the_crossing",
    "test_every_route_carries_the_statement_on_success_and_failure",
    "test_health_names_the_model_and_the_outcome_month",
+   "test_hubs_name_a_busiest_connection_flown_in_the_outcome_month",
    "test_migration_into_a_schema_ignores_another_projects_version_table",
    "test_score_is_committed",
    "test_writes_need_the_token"

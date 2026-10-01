@@ -24,6 +24,9 @@ export interface HubEntry {
   hub: string;
   origins: string[];
   destinations: string[];
+  // The busiest route each way in the outcome month, when the server names them.
+  busiest_origin?: string | null;
+  busiest_destination?: string | null;
 }
 export interface HubsResponse extends Envelope {
   hubs: HubEntry[];

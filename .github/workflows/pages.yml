@@ -32,14 +32,15 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
       - run: npm ci
-      - run: npm run typecheck
-      # The site's data folder is written from the committed results, the way `make marts` writes it.
+      # The site's data folder is written from the committed results, the way `make marts` writes it;
+      # the type check reads it too, so it comes first.
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: "3.12"
       - name: The site's data from the committed manifest, story, charts and marts
         working-directory: .
         run: uv sync --frozen && uv run turnaround marts
+      - run: npm run typecheck
       - run: npx playwright install --with-deps chromium
       # The tests run against a build pointed at the test server's mock API (which refuses HEAD and
       # answers a first 503), so they pass whether the live API is awake or not and never need the

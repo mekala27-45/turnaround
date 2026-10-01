@@ -56,9 +56,9 @@ def a_connection(base: str, hub: str | None) -> dict[str, Any]:
         raise SystemExit("the server covers no hubs")
     entry = hubs[hub] if hub else hubs[sorted(hubs)[0]]
     return {
-        "origin": entry["origins"][0],
+        "origin": entry.get("busiest_origin") or entry["origins"][0],
         "connection": entry["hub"],
-        "destination": entry["destinations"][0],
+        "destination": entry.get("busiest_destination") or entry["destinations"][0],
     }
 
 

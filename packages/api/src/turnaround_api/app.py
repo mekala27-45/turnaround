@@ -180,6 +180,19 @@ async def audit(
     await session.commit()
 
 
+def _busiest(frame: pl.DataFrame, column: str, month: int | None) -> list[str]:
+    """The airports in ``column`` ordered by scheduled flights in the month, busiest first, ties by code."""
+    pool = frame.filter(pl.col("month") == month) if month is not None else frame
+    if pool.height == 0:
+        pool = frame
+    ranked = (
+        pool.group_by(column)
+        .agg(pl.col("scheduled").sum())
+        .sort(["scheduled", column], descending=[True, False])
+    )
+    return [str(a) for a in ranked[column].to_list()]
+
+
 def _estimate(cells: Cells, body: CheckIn, buffer: int) -> Estimate:
     try:
         return cells.estimate(
@@ -269,15 +282,25 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         require_cells(state)
         routes = state.served.routes
         assert routes is not None
+        outcome = state.served.outcome_month
+        month = int(outcome[5:7]) if outcome else None
         out = []
         for hub in state.served.hubs:
             inbound = routes.filter((pl.col("direction") == "in") & (pl.col("dest") == hub))
             outbound = routes.filter((pl.col("direction") == "out") & (pl.col("origin") == hub))
+            # The busiest route each way in the outcome month's calendar month: a connection a client
+            # can check without guessing, flown that month, and never back to where it started.
+            origins = _busiest(inbound, "origin", month)
+            destinations = [
+                d for d in _busiest(outbound, "dest", month) if d != (origins[0] if origins else None)
+            ]
             out.append(
                 {
                     "hub": hub,
                     "origins": sorted(inbound["origin"].unique().to_list()),
                     "destinations": sorted(outbound["dest"].unique().to_list()),
+                    "busiest_origin": origins[0] if origins else None,
+                    "busiest_destination": destinations[0] if destinations else None,
                 }
             )
         return envelope({"hubs": out, "model_version": state.served.version})

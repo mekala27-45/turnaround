@@ -57,15 +57,15 @@ def record(base: str, token: str) -> dict[str, Any]:
     month = str(health["outcome_month"])
     connections: list[dict[str, Any]] = []
     for h in hubs:
-        origin = h["origins"][0] if h["origins"] else None
-        # A connection goes somewhere else: never back to the airport it started from.
-        onward = [d for d in h["destinations"] if d != origin]
-        if origin is None or not onward:
+        # The busiest connection the server names for the month: flown then, and never back to
+        # the airport it started from.
+        origin, destination = h.get("busiest_origin"), h.get("busiest_destination")
+        if not origin or not destination:
             continue
         c = {
             "origin": origin,
             "connection": h["hub"],
-            "destination": onward[0],
+            "destination": destination,
             "travel_month": month,
             "inbound_hour": 12,
             "outbound_hour": 13,

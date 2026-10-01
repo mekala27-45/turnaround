@@ -64,11 +64,12 @@ async def run(base: str, token: str, requests: int, concurrency: int) -> dict[st
         hubs = (await client.get(f"{base}/v1/hubs", timeout=60.0)).json()["hubs"]
         if not hubs:
             raise SystemExit("the server covers no hubs")
-        # One connection per hub, never back to the airport it started from.
+        # One connection per hub: the busiest routes the server names for the outcome month, which
+        # were flown that month and never lead back to where they started.
         routed = [
-            (h, h["origins"][0], next(d for d in h["destinations"] if d != h["origins"][0]))
+            (h, h["busiest_origin"], h["busiest_destination"])
             for h in hubs
-            if h["origins"] and any(d != h["origins"][0] for d in h["destinations"])
+            if h.get("busiest_origin") and h.get("busiest_destination")
         ]
         if not routed:
             raise SystemExit("the server lists no connection that goes somewhere else")

@@ -5609,7 +5609,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": 55
+   "value": 57
   },
   "build.decisions": {
    "fmt": "int",
@@ -9207,7 +9207,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "coverage 87.0 percent; mypy clean; ruff clean; palette green; 55 commits; rederive not run; tag not pushed; Apache 2.0 with the four data sources' terms."
+   "value": "coverage 87.0 percent; mypy clean; ruff clean; palette green; 57 commits; rederive not run; tag not pushed; Apache 2.0 with the four data sources' terms."
   },
   "checklist.18.status": {
    "fmt": "text",
@@ -9501,7 +9501,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "tests/api: 10 passed (test_check_is_committed, test_score_is_committed, test_audit_precedes_response, the out of process scripts/check_persistence.py)."
+   "value": "tests/api: 11 passed (test_check_is_committed, test_score_is_committed, test_audit_precedes_response, the out of process scripts/check_persistence.py)."
   },
   "checklist.8.status": {
    "fmt": "text",

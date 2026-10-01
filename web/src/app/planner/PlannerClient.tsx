@@ -139,9 +139,11 @@ export function PlannerClient({ line }: { line: number }) {
                 onChange={(e) => {
                   const h = hubs.find((x) => x.hub === e.target.value);
                   if (!h) return;
-                  const origin = h.origins[0] ?? "";
-                  // A connection goes somewhere else: never back to the airport it started from.
-                  update({ connection: h.hub, origin, destination: h.destinations.find((d) => d !== origin) ?? h.destinations[0] ?? "" });
+                  // Start from the busiest connection the server names for the month, which was flown
+                  // then; a connection goes somewhere else, never back to the airport it started from.
+                  const origin = h.busiest_origin ?? h.origins[0] ?? "";
+                  const destination = h.busiest_destination ?? h.destinations.find((d) => d !== origin) ?? h.destinations[0] ?? "";
+                  update({ connection: h.hub, origin, destination });
                 }}
               >
                 {hubs.map((h) => (

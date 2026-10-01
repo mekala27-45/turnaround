@@ -116,3 +116,28 @@ def test_health_names_the_model_and_the_outcome_month(client: TestClient) -> Non
     assert health["model_version"].startswith("cells-")
     assert health["outcome_month"] == "2023-12"
     assert health["hubs"] == 4
+
+
+def test_hubs_name_a_busiest_connection_flown_in_the_outcome_month(
+    client: TestClient, auth: dict[str, str]
+) -> None:
+    # The deploy tools check the connection the server names; one not flown that month would be a 404.
+    for entry in client.get("/v1/hubs").json()["hubs"]:
+        origin, destination = entry["busiest_origin"], entry["busiest_destination"]
+        assert origin in entry["origins"] and destination in entry["destinations"]
+        assert origin != destination
+        body = {
+            "origin": origin,
+            "connection": entry["hub"],
+            "destination": destination,
+            "travel_month": "2023-12",
+            "inbound_hour": 12,
+            "outbound_hour": 13,
+            "buffer_minutes": 60,
+        }
+        assert (
+            client.get(
+                "/v1/curve", params={k: v for k, v in body.items() if k != "buffer_minutes"}
+            ).status_code
+            == 200
+        )

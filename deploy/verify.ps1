@@ -20,7 +20,7 @@ Write-Host "health: status=$($health.status) database=$($health.database) model=
 
 $hub = (Invoke-RestMethod -Uri "$base/v1/hubs" -TimeoutSec 90).hubs[0]
 $body = @{
-    origin = $hub.origins[0]; connection = $hub.hub; destination = $hub.destinations[0]
+    origin = $hub.busiest_origin; connection = $hub.hub; destination = $hub.busiest_destination
     travel_month = $health.outcome_month; inbound_hour = 12; outbound_hour = 13; buffer_minutes = 60
     note = "verification from a separate client"
 }

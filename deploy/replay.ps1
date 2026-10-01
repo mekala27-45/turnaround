@@ -1,5 +1,5 @@
 # Fill the demo queue from a separate client: one check at every hub the server covers, for the
-# outcome month it holds (its busiest listed inbound and outbound routes, a 13:00 departure after a
+# outcome month it holds (the busiest inbound and outbound routes the server names for that month, a 13:00 departure after a
 # 12:00 arrival, a 60 minute buffer), then score the log, so the check log is never empty. Writes
 # what the server answered to results\deploy\replay.json.
 #
@@ -15,7 +15,7 @@ $hubs = (Invoke-RestMethod -Uri "$base/v1/hubs" -TimeoutSec 90).hubs
 $made = @()
 foreach ($h in $hubs) {
     $body = @{
-        origin = $h.origins[0]; connection = $h.hub; destination = $h.destinations[0]
+        origin = $h.busiest_origin; connection = $h.hub; destination = $h.busiest_destination
         travel_month = $health.outcome_month; inbound_hour = 12; outbound_hour = 13; buffer_minutes = 60; note = "demo queue"
     }
     try {
