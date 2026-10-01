@@ -1,0 +1,27 @@
+# Provenance
+
+Four public sources, each used under its own terms, and one simulator. Nothing here identifies a traveler: the on time files have no passenger, the registry is kept to the aircraft, and the check log stores airports, hours and buffers.
+
+{{ statement() }}
+
+## The Bureau of Transportation Statistics: Reporting Carrier On-Time Performance
+
+Public domain as a work of the U.S. government. Monthly files from `https://transtats.bts.gov/PREZIP/On_Time_Reporting_Carrier_On_Time_Performance_1987_present_<year>_<month>.zip`, downloaded one at a time with retries by `deploy/fetch-data.ps1` on a machine that could reach the host. {{ v('data.months') }} files of {{ v('data.months_expected') }} expected from {{ v('data.first_month') }} to {{ v('data.last_month') }}; missing months: {{ v('data.gaps') }}. {{ v('data.layout_matches') }} files matched the field layout their own readme describes. {{ v('data.rows') }} rows in all.
+
+{{ table('data.files') }}
+
+## The FAA releasable aircraft registry
+
+Public domain as a work of the U.S. government. `ReleasableAircraft.zip` from `https://registry.faa.gov/database/ReleasableAircraft.zip`: MASTER, the aircraft registered today, and DEREG, the ones whose registration was cancelled, which is where the airliners retired since the window opened are. Only the aircraft columns are read; the registrant's name and street address never leave the zip, and the identifier scan fails on any of their column names in a committed table. {{ v('registry.tails') }} tail numbers in the flights; {{ v('registry.tail_join_rate') }} matched a record valid for the dates they flew, covering {{ v('registry.flight_join_rate') }} of flights.
+
+## OurAirports
+
+Public domain. `airports.csv` from `https://davidmegginson.github.io/ourairports-data/airports.csv`, for coordinates, names and time zones, committed as `data/airports.csv`: {{ v('airports.count') }} airports in the flights, missing: {{ v('airports.missing_codes') }}.
+
+## Open-Meteo historical weather
+
+{{ weather_attribution }} Hourly temperature, precipitation, snowfall, wind speed and gusts, low cloud cover and the weather code (for fog, thunder and freezing precipitation) at the FAA's Core 30 airports (DECISIONS.md explains why not at every airport): {{ v('weather.rows') }} hourly rows from {{ v('weather.first_hour') }} to {{ v('weather.last_hour') }} UTC, pulled once with a disk cache and committed as `data/weather/hourly.parquet` with `data/weather/ATTRIBUTION.md`. The values are reanalysis at the airport's coordinates, not the airport's own observations.
+
+## The simulator
+
+`packages/sim` generates the synthetic network the estimators are proven on: {{ v('sim.carriers') }} carriers, {{ v('sim.airports') }} airports and {{ v('sim.routes') }} routes over {{ v('sim.days') }} days, seeded, with its truth tables in `data/sim`.
