@@ -34,7 +34,7 @@ FILE_PATTERN = re.compile(
 class Field:
     raw: str
     name: str
-    kind: str  # text, int, minutes, clock, flag, date
+    kind: str  # text, tail, int, minutes, clock, flag, date
 
 
 # The fields read, in the order the record layout lists them. Everything else in the file
@@ -46,7 +46,7 @@ FIELDS: tuple[Field, ...] = (
     Field("DayOfWeek", "day_of_week", "int"),
     Field("FlightDate", "flight_date", "date"),
     Field("Reporting_Airline", "carrier", "text"),
-    Field("Tail_Number", "tail_number", "text"),
+    Field("Tail_Number", "tail_number", "tail"),
     Field("Flight_Number_Reporting_Airline", "flight_number", "int"),
     Field("OriginAirportID", "origin_airport_id", "int"),
     Field("Origin", "origin", "text"),
@@ -132,8 +132,9 @@ RULES: tuple[Rule, ...] = (
     Rule("tail_missing", "no tail number on the row", "the rotations of chapter 4"),
     Rule(
         "tail_format",
-        "a tail number that is not a valid FAA registration (N, a digit 1 to 9, at most two trailing letters)",
-        "the rotations of chapter 4 and the registry join",
+        "a tail number that is not a valid FAA registration (N, a digit 1 to 9, at most two trailing letters) "
+        "even after a missing leading N is restored, such as an airline's own fleet number",
+        "the registry join; the rotations keep the row, since the value still names one aircraft",
     ),
     Rule(
         "revision",
@@ -170,6 +171,16 @@ def _typed(field: Field) -> str:
     blank = f"nullif(trim({col}), '')"
     if field.kind == "text":
         return f"{blank} as {field.name}"
+    if field.kind == "tail":
+        # The value as reported, and the registration it names. Some carriers report the registration
+        # without its leading N (248NV for N248NV); the N is restored only when the result is a valid
+        # registration. Anything else, an airline's own fleet number included, is kept as reported.
+        restored = f"'N' || {blank}"
+        return (
+            f"{blank} as tail_reported, "
+            f"case when {blank} is not null and not starts_with({blank}, 'N') "
+            f"and regexp_full_match({restored}, '{N_NUMBER}') then {restored} else {blank} end as {field.name}"
+        )
     if field.kind == "int":
         return f"try_cast({blank} as integer) as {field.name}"
     if field.kind == "date":
@@ -188,7 +199,7 @@ def _typed(field: Field) -> str:
 def _parse_failures(field: Field) -> str:
     col = f'"{field.raw}"'
     blank = f"nullif(trim({col}), '')"
-    if field.kind == "text":
+    if field.kind in {"text", "tail"}:
         return "0"
     target = {"int": "integer", "date": "date", "flag": "double", "minutes": "double", "clock": "integer"}[
         field.kind

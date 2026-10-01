@@ -139,3 +139,17 @@ it returns in half a second), and chapter 4's buffer curve would have needed mos
 The curve now sweeps one column at a time in float64 and keeps the swept columns in float32, with
 every sum in float64; its slopes agree with the all float64 fit to about one part in a hundred
 million, and the link groupings arrive as integer codes ranked in DuckDB instead of strings.
+
+## 2026-10-01: correction, a registration without its N is restored, and a fleet number stays in the rotations
+
+The first full ingest flagged 2,093,332 rows, 2.8 percent of the window, under the tail format
+rule, far more than typing errors explain. Two carriers made almost all of it. Allegiant reports its
+registrations without the leading N (248NV for N248NV, which the FAA registry lists), so every
+Allegiant flight in the files failed the rule and missed the registry join. American reported its
+own fleet numbers wrapped in N and AA from 2015 to 2017 (N3DAAA, N4YRAA); those are not
+registrations, since a registration carries at most two trailing letters, so they stay out of the
+registry join. The rule's text also said its rows were left out of the rotations, which the
+rotation model never did: a rotation needs a value that names one aircraft, and the chain rules
+catch one that does not. The ingest now restores the N when the result is a valid registration and
+keeps the reported value beside it as `tail_reported`, the rule excludes from the registry join
+only and says so, and `tests/contracts/test_quarantine.py` pins both cases.

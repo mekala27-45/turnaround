@@ -182,6 +182,36 @@ def build_weather(p: Paths) -> pl.DataFrame:
     return frame
 
 
+def latest_check(p: Paths, last: tuple[int, int]) -> tuple[str, bool]:
+    """When the fetch ran, and whether it asked BTS for the month after the last one and got nothing.
+
+    deploy/fetch-data.ps1 writes fetch-status-flights.json; a copy beside the zips as
+    fetch-status.json is the evidence that the window ends at the latest published month.
+    """
+    status_file = p.external_bts / "fetch-status.json"
+    if not status_file.exists():
+        return "not recorded", False
+    status = json.loads(status_file.read_text(encoding="utf-8-sig"))
+    following = (last[0] + 1, 1) if last[1] == 12 else (last[0], last[1] + 1)
+    asked = f"{following[0]}_{following[1]}" in (status.get("bts_missing") or [])
+    return str(status.get("fetched_at", ""))[:10] or "not recorded", asked
+
+
+def tails_restored(p: Paths) -> tuple[int, str]:
+    """Rows whose tail number had its leading N restored at ingest, and the carriers that sent them."""
+    con = connect(p)
+    row = con.execute(
+        f"""
+        select count(*), coalesce(string_agg(distinct carrier, ', ' order by carrier), '')
+        from read_parquet('{flights_glob(p)}')
+        where tail_reported is distinct from tail_number
+        """
+    ).fetchone()
+    con.close()
+    assert row is not None
+    return int(row[0]), str(row[1])
+
+
 def quarantine_report(p: Paths) -> pl.DataFrame:
     con = connect(p)
     sums = ", ".join(f"sum(q_{r.name}::int) as {r.name}" for r in RULES)
@@ -235,6 +265,12 @@ def run(p: Paths) -> Manifest:
     gaps = [f"{a}-{b:02d}" for a, b in expected if (a, b) not in present]
     bts.put("data.months_expected", len(expected), "int")
     bts.put("data.gaps", ", ".join(gaps) if gaps else "none", "text")
+    # "The latest month BTS has published" rests on the fetch having asked for the month after it.
+    fetched_on, next_unpublished = latest_check(p, last)
+    following = (last[0] + 1, 1) if last[1] == 12 else (last[0], last[1] + 1)
+    bts.put("data.fetched_on", fetched_on, "text")
+    bts.put("data.next_month", month_label(*following), "text")
+    bts.put("data.next_month_unpublished", int(next_unpublished), "int")
     bts.table(
         "data.files",
         ["File", "Rows", "Bytes", "SHA-256 (first 16)"],
@@ -268,6 +304,10 @@ def run(p: Paths) -> Manifest:
         [[str(y), int(n), int(c)] for y, n, c in by_year.iter_rows()],
     )
     bts.put("data.carriers", int(quarantine["carrier"].n_unique()), "int")
+    restored, restored_carriers = tails_restored(p)
+    bts.put("data.tails_restored", restored, "int")
+    bts.put("data.tails_restored_share", restored / rows, "pct2")
+    bts.put("data.tails_restored_carriers", restored_carriers or "none", "text")
 
     ap = Scribe(
         manifest,

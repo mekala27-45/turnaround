@@ -49,6 +49,36 @@ def test_each_rule_finds_exactly_what_was_planted(tmp_path: Path) -> None:
     assert found == expected
 
 
+def test_a_missing_leading_n_is_restored_and_a_fleet_number_is_kept(tmp_path: Path) -> None:
+    rows = generate_rows(2023, 5, 60, 3, Planted(0, 0, 0, 0, 0, 0, 0))
+    reported = {0: "248NV", 1: "7819A", 2: "N3DAAA", 3: "248N", 4: "NV248"}
+    for i, value in reported.items():
+        rows[i]["Tail_Number"] = value
+    ingest_month(write_month(tmp_path / "raw", 2023, 5, rows), tmp_path / "flights")
+    con = duckdb.connect()
+    got = {
+        r[0]: (r[1], r[2])
+        for r in con.execute(
+            "select tail_reported, tail_number, q_tail_format from read_parquet(?) where tail_reported in "
+            "('248NV', '7819A', 'N3DAAA', '248N', 'NV248')",
+            [str(tmp_path / "flights" / "flights_2023_05.parquet")],
+        ).fetchall()
+    }
+    # Restored only when N plus the value is a valid registration; otherwise kept and flagged.
+    assert got == {
+        "248NV": ("N248NV", False),
+        "7819A": ("N7819A", False),
+        "N3DAAA": ("N3DAAA", True),
+        "248N": ("N248N", False),
+        "NV248": ("NV248", True),
+    }
+    untouched = con.execute(
+        "select count(*) from read_parquet(?) where tail_reported is distinct from tail_number",
+        [str(tmp_path / "flights" / "flights_2023_05.parquet")],
+    ).fetchone()
+    assert untouched == (3,)
+
+
 def test_revision_rule_counts_rows_a_later_download_changed(tmp_path: Path) -> None:
     rows = generate_rows(2023, 4, 300, 5, Planted(0, 0, 0, 0, 0, 0, 0))
     first = ingest_month(write_month(tmp_path / "v1", 2023, 4, rows), tmp_path / "f1")

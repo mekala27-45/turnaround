@@ -17,7 +17,7 @@ Copy `.env.example` to `.env` on any machine that deploys. Nothing in `.env` is 
 
 `uv run turnaround data`. Reads the monthly BTS files, the FAA registry, the OurAirports table and the Open-Meteo cache from `data/external`, applies the quarantine rules, and writes the derived parquet by month to `data/flights`, the aircraft to `data/aircraft` and the hourly weather to `data/weather/hourly.parquet` with its attribution. Any month missing between January 2015 and the latest file is named in `data.gaps`, and the checklist's first line stays not done until it is filled.
 
-The hosts that serve the files do not answer every network. `deploy/fetch-data.ps1` downloads them on a Windows machine that can reach them, one file at a time with retries, into a folder you then place under `data/external`; the target prints the expected paths either way.
+The hosts that serve the files do not answer every network. `deploy/fetch-data.ps1` downloads them on a Windows machine that can reach them, one file at a time with retries, into a folder you then place under `data/external`; the target prints the expected paths either way. Copy the script's `fetch-status-flights.json` beside the zips as `data/external/bts/fetch-status.json`: it records the first month BTS had not published, which is the evidence that the window ends at the latest month and not at whatever was on disk.
 
 ### warehouse
 
