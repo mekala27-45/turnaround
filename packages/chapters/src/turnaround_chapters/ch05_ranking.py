@@ -114,8 +114,19 @@ def biggest_movers(r: RankingResult) -> tuple[RankRow, RankRow]:
     return up, down
 
 
-def message(r: RankingResult) -> str:
-    moved = sum(1 for x in r.rows if x.change != 0)
-    if moved == 0:
+def message(r: RankingResult, names: dict[str, str] | None = None) -> str:
+    """The chart's one message, by rule: whether the ranking moves once the routes, months, hours and
+    aircraft are held constant, and the carriers it moves most for (ties broken by code)."""
+    moved = [x for x in r.rows if x.change != 0]
+    if not moved:
         return "Holding constant what each carrier flies leaves the ranking unchanged"
-    return "The ranking changes once you hold constant what each carrier flies"
+
+    def name(code: str) -> str:
+        return (names or {}).get(code, code)
+
+    up = max(moved, key=lambda x: (x.change, x.carrier))
+    down = min(moved, key=lambda x: (x.change, x.carrier))
+    return (
+        f"The ranking changes once you hold constant what each carrier flies: {name(up.carrier)} rises "
+        f"{up.change} {'place' if up.change == 1 else 'places'} and {name(down.carrier)} falls {-down.change}"
+    )

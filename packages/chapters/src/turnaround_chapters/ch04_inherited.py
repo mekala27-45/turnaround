@@ -187,13 +187,22 @@ def sample_rotations(
 
 
 def message(r: InheritedResult) -> str:
+    """The chart's one message, by rule: how much of the delay was inherited, and the scheduled turn
+    at which the minutes passed on halve, which is where a buffer would have stopped it."""
     share = r.share
     if share >= 0.5:
         lead = "Most arrival delay was inherited from the aircraft's previous flight"
+    elif share >= 0.4:
+        lead = "Close to half of arrival delay was inherited from the aircraft's previous flight"
     elif share >= 0.3:
         lead = "About a third of arrival delay was inherited from the aircraft's previous flight"
+    elif share >= 0.2:
+        lead = "About a quarter of arrival delay was inherited from the aircraft's previous flight"
     else:
-        lead = "Less arrival delay was inherited than the airline's day suggests"
+        lead = "A small share of arrival delay was inherited from the aircraft's previous flight"
+    turn = r.estimate.min_turn + r.halving_buffer
+    if r.halving_buffer > 0 and turn == turn:
+        return f"{lead}, and a scheduled turn of {turn:.0f} minutes halves what is passed on"
     return lead
 
 

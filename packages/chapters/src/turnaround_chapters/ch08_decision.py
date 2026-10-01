@@ -184,7 +184,9 @@ def message(r: DecisionResult) -> str:
     """One message for the curve chart, from the largest hub's crossing buffer."""
     top = r.hubs[0]
     if top.crossing is None:
-        return "No buffer on the grid brings the misconnect chance under the line at the busiest hub"
+        return (
+            f"No buffer on the grid brings the misconnect chance under the line at {top.hub}, the busiest hub"
+        )
     if r.first_advantage.low > 0:
-        return "Book the first flight of the aircraft's day, and leave the buffer the curve names"
-    return "Leave the buffer the curve names; the first flight of the day is not reliably safer"
+        return f"Book the first flight of the aircraft's day, and leave {top.crossing} minutes to connect at {top.hub}"
+    return f"Leave {top.crossing} minutes to connect at {top.hub}; the first flight of the day is not reliably safer"

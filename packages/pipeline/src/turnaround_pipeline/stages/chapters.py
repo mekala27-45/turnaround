@@ -711,7 +711,7 @@ def _chapter5(
             for x in r.rows
         ],
     )
-    message = ch05_ranking.message(r)
+    message = ch05_ranking.message(r, names)
     callout = (
         f"{names.get(up.carrier, up.carrier)} moves from {up.raw_rank} to {up.adjusted_rank} once the routes, months, hours "
         f"and aircraft are held constant; {names.get(down.carrier, down.carrier)} moves from {down.raw_rank} to "
@@ -1042,7 +1042,7 @@ def _chapter7(
                 ),
             )
         )
-    message = ch07_meltdowns.message(r)
+    message = ch07_meltdowns.message(r, names)
     s.figure(
         "chart.meltdowns",
         message,

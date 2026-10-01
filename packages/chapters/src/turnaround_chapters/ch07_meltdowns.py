@@ -239,7 +239,34 @@ def estimate(
     )
 
 
-def message(r: MeltdownResult) -> str:
-    if r.trait_p_value < 0.05:
-        return "A meltdown is a recovery, and how fast a carrier recovers is a trait of the carrier"
-    return "Meltdowns are caught on their first day, but recovery speed does not separate the carriers"
+def message(r: MeltdownResult, names: dict[str, str] | None = None) -> str:
+    """The chart's one message, chosen by rule: how long each studied meltdown took to get back to
+    its peers, then whether recovery speed separates the carriers over every alert episode."""
+    p = r.trait_p_value
+    if p != p:  # NaN: fewer than two carriers had enough episodes to compare
+        trait = "too few carriers had enough alert episodes to call recovery speed a trait"
+    elif p < 0.05:
+        trait = "across every alert episode, how fast a carrier recovers is a trait of the carrier"
+    else:
+        trait = "across every alert episode, recovery speed does not separate the carriers"
+
+    def name(code: str) -> str:
+        return (names or {}).get(code, code)
+
+    timed = sorted(
+        (s for s in r.studies if s.recovery_days is not None), key=lambda s: (s.recovery_days, s.carrier)
+    )
+    stuck = sorted(s.carrier for s in r.studies if s.recovery_days is None)
+    if len(timed) >= 2 and timed[-1].recovery_days != timed[0].recovery_days:
+        slow, fast = timed[-1], timed[0]
+        return (
+            f"{name(slow.carrier)} took {slow.recovery_days} days to get back to its peers and "
+            f"{name(fast.carrier)} {fast.recovery_days}; {trait}"
+        )
+    if timed and stuck:
+        return f"{name(stuck[0])} was not back to its peers within the study window, {name(timed[0].carrier)} was back in {timed[0].recovery_days} days; {trait}"
+    if timed:
+        return (
+            f"{name(timed[0].carrier)} took {timed[0].recovery_days} days to get back to its peers; {trait}"
+        )
+    return f"A meltdown is a recovery: {trait}"
