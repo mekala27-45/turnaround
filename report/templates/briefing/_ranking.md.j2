@@ -1,0 +1,12 @@
+## {{ number }}. {{ v('plan.5.title') }}
+
+<!-- chart: ranking -->
+**{{ message('ranking') }}.**
+
+Raw top three: {{ v('ch5.raw.top3') }}. Adjusted for route, month, hour and aircraft: {{ v('ch5.adjusted.top3') }}. Raw bottom three: {{ v('ch5.raw.bottom3') }}; adjusted: {{ v('ch5.adjusted.bottom3') }}.
+
+{{ v('ch5.up.carrier') }} rises from {{ v('ch5.up.raw_rank') }} to {{ v('ch5.up.adjusted_rank') }}; {{ v('ch5.down.carrier') }} falls from {{ v('ch5.down.raw_rank') }} to {{ v('ch5.down.adjusted_rank') }}.
+
+*Method.* Plan `{{ v('plan.5.hash') }}`. {{ v('plan.5.estimator') }} {{ v('plan.5.interval') }}
+
+**What the ops director would push back on.** What the data does not record, such as spare aircraft and turn standards, is the carrier's own choice and is charged to it.

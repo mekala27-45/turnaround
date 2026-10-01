@@ -1,0 +1,129 @@
+# Results
+
+Every figure on this page is rendered from `results/manifest.json` (as of {{ manifest.as_of }}) by the claim gate, which re-renders the page in CI and fails on any difference. The window is {{ v('data.first_month') }} to {{ v('data.last_month') }}; models choose on {{ v('policy.fit_years') }} and report on {{ v('policy.test_first_year') }} onward.
+
+{{ statement() }}
+
+## Definition of done
+
+{% for n in range(1, raw('checklist.total') + 1) %}
+{{ n }}. **{{ v('checklist.' ~ n ~ '.status') }}.** {{ v('checklist.' ~ n ~ '.text') }}. *Evidence:* {{ v('checklist.' ~ n ~ '.evidence') }}
+{% endfor %}
+
+{{ v('checklist.done') }} of {{ v('checklist.total') }} done; not done: {{ v('checklist.missing') }}.
+
+Stretch items, not counted toward the checklist: the long history before the window, fares from the ticket sample, load factors from the segment data, an aircraft chapter, the Newark page and containers built in CI are not done in this release.
+
+## The eight chapters
+
+| Chapter | Plan hash | The finding | Headline with interval |
+|---|---|---|---|
+| {{ v('plan.1.title') }} | `{{ v('plan.1.hash') }}` | {{ message('definition') }} | on time {{ v('ch1.on_time.change') }} ({{ v('ch1.on_time.change.low') }} to {{ v('ch1.on_time.change.high') }}), scheduled block {{ v('ch1.sched.change') }} ({{ v('ch1.sched.change.low') }} to {{ v('ch1.sched.change.high') }}), actual block {{ v('ch1.actual.change') }} ({{ v('ch1.actual.change.low') }} to {{ v('ch1.actual.change.high') }}) |
+| {{ v('plan.2.title') }} | `{{ v('plan.2.hash') }}` | {{ message('padding') }} | padding {{ v('ch2.padding.change') }} ({{ v('ch2.padding.change.low') }} to {{ v('ch2.padding.change.high') }}); {{ v('ch2.changepoints') }} steps |
+| {{ v('plan.3.title') }} | `{{ v('plan.3.hash') }}` | {{ message('line') }} | {{ v('ch3.flagged') }} of {{ v('ch3.carriers') }} carriers; pooled z {{ v('ch3.pooled.z') }}, p {{ v('ch3.pooled.p') }} |
+| {{ v('plan.4.title') }} | `{{ v('plan.4.hash') }}` | {{ message('inherited') }} | {{ v('ch4.share') }} ({{ v('ch4.share.low') }} to {{ v('ch4.share.high') }}); rho {{ v('ch4.rho') }} ({{ v('ch4.rho.low') }} to {{ v('ch4.rho.high') }}) |
+| {{ v('plan.5.title') }} | `{{ v('plan.5.hash') }}` | {{ message('ranking') }} | {{ v('ch5.moved') }} of {{ v('ch5.carriers') }} carriers change places |
+| {{ v('plan.6.title') }} | `{{ v('plan.6.hash') }}` | {{ message('causes') }} | {{ v('ch6.weather_share') }} ({{ v('ch6.weather_share.low') }} to {{ v('ch6.weather_share.high') }}) against {{ v('ch6.reported_weather_share') }} reported |
+| {{ v('plan.7.title') }} | `{{ v('plan.7.hash') }}` | {{ message('meltdowns') }} | recall {{ v('ch7.test.recall') }} on the reporting years; trait p {{ v('ch7.trait.p') }} |
+| {{ v('plan.8.title') }} | `{{ v('plan.8.hash') }}` | {{ message('decision') }} | first leg {{ v('ch8.first_advantage') }} ({{ v('ch8.first_advantage.low') }} to {{ v('ch8.first_advantage.high') }}) more often on time |
+
+## The recovery study
+
+{{ table('recovery.by_condition') }}
+
+*{{ label('recovery.by_condition') }}*
+
+The padding estimator does worst under {{ v('recovery.worst.padding') }}; the propagation interval covers least under {{ v('recovery.worst.propagation') }}; the raw ranking is most wrong under {{ v('recovery.worst.raw_ranking') }}, where the adjusted ranking still reaches a rank correlation of {{ v('recovery.rank_adjusted.strong') }} on average; the weather interval covers least under {{ v('recovery.worst.weather') }}. The definition chapter's route panel recovered the scheduled change within {{ v('recovery.definition.sched_error') }} over {{ v('recovery.definition.seeds') }} two year simulations.
+
+## The data
+
+{{ table('data.by_year') }}
+
+*{{ label('data.by_year') }}*
+
+{{ table('quarantine.by_rule') }}
+
+*{{ label('quarantine.by_rule') }}* The report by carrier and month is `results/marts/mart_quarantine.parquet`, shown on the data page.
+
+The registry join matched {{ v('registry.tail_join_rate') }} of tail numbers and {{ v('registry.flight_join_rate') }} of flights; {{ v('registry.tails_unmatched') }} tails had no record valid for the dates they flew (foreign registered, retired, reassigned or blanked). Weather: {{ v('weather.rows') }} hourly rows at {{ v('weather.airports') }} airports. {{ weather_attribution }}
+
+## The warehouse and the metric layer
+
+{{ v('warehouse.models') }} models, {{ v('warehouse.tests') }} tests, {{ v('warehouse.tests_failed') }} failed. {{ v('metrics.count') }} metrics, each defined over the flights and over the shipped mart, reconciled at {{ v('metrics.grains') }} grains: {{ v('metrics.cells') }} cells compared, {{ v('metrics.disagreements') }} disagreements.
+
+{{ table('metrics.definitions') }}
+
+## Chapter tables
+
+### {{ v('plan.1.title') }}
+
+{{ table('ch1.by_year') }}
+
+### {{ v('plan.2.title') }}
+
+{{ table('ch2.changepoints') }}
+
+{{ table('ch2.by_carrier') }}
+
+### {{ v('plan.3.title') }}
+
+{{ table('ch3.by_carrier') }}
+
+### {{ v('plan.4.title') }}
+
+{{ v('ch4.legs') }} legs, {{ v('ch4.linked') }} linked ({{ v('ch4.linked_share') }}), {{ v('ch4.first') }} first legs, {{ v('ch4.gap') }} gaps, {{ v('ch4.broken_chain') }} broken chains, {{ v('ch4.impossible') }} impossible sequences; {{ v('ch4.rotations') }} rotations on {{ v('ch4.tails') }} tails. Minimum turn {{ v('ch4.min_turn') }}, profiled on {{ v('ch4.fit_year') }}; halving buffer {{ v('ch4.halving_buffer') }}.
+
+{{ table('ch4.buffer_curve') }}
+
+### {{ v('plan.5.title') }}
+
+{{ table('ch5.ranking') }}
+
+Raw top three: {{ v('ch5.raw.top3') }}; raw bottom three: {{ v('ch5.raw.bottom3') }}. Adjusted top three: {{ v('ch5.adjusted.top3') }}; adjusted bottom three: {{ v('ch5.adjusted.bottom3') }}.
+
+### {{ v('plan.6.title') }}
+
+{{ table('ch6.reported_by_year') }}
+
+{{ table('ch6.nas_by_airport') }}
+
+{{ table('ch6.coefficients') }}
+
+### {{ v('plan.7.title') }}
+
+{{ table('ch7.events') }}
+
+Threshold {{ v('ch7.threshold') }}, chosen from {{ v('ch7.grid_low') }} to {{ v('ch7.grid_high') }} with a false alarm costed at {{ v('ch7.cost_false_alarm') }} and a miss at {{ v('ch7.cost_miss') }}, {{ v('ch7.interior') }}. Fitting years: {{ v('ch7.fit.detected') }} of {{ v('ch7.fit.events') }} events flagged, {{ v('ch7.fit.false_alarms') }} false alarm episodes. Reporting years: {{ v('ch7.test.detected') }} of {{ v('ch7.test.events') }}, {{ v('ch7.test.false_alarms') }} false alarm episodes over {{ v('ch7.test.unit_days') }} unit days.
+
+{{ table('ch7.recovery_by_carrier') }}
+
+### {{ v('plan.8.title') }}
+
+{{ table('ch8.by_position') }}
+
+{{ table('ch8.by_hour') }}
+
+{{ table('ch8.by_dow') }}
+
+{{ table('ch8.by_month') }}
+
+{{ table('ch8.hubs') }}
+
+{{ table('ch8.trade_airports') }}
+
+{{ table('ch8.trade_routes') }}
+
+## Latency
+
+{% if raw('latency.live.status') == 'measured' %}Against {{ v('latency.live.base_url') }} from a separate client, {{ v('latency.live.requests') }} sequential checks after one warming request ({{ v('latency.live.first_request_ms') }}, the machine waking): POST /v1/checks p50 {{ v('latency.live.check.p50_ms') }} and p99 {{ v('latency.live.check.p99_ms') }}; GET /v1/checks/{id} p50 {{ v('latency.live.read.p50_ms') }} and p99 {{ v('latency.live.read.p99_ms') }}; a burst of {{ v('latency.live.concurrency') }} concurrent checks finished within {{ v('latency.live.burst_max_ms') }}.{% else %}The live load test has not run yet.{% endif %}
+
+## Limitations
+
+- **The weather covers thirty airports.** The weather estimate uses flights between two of the FAA's Core 30 airports, which carry most of the traffic and most of the weather delay but not the regional airports where a storm can close the only runway. It is also airport weather at the scheduled hours, not weather along the route, so it is a floor on weather's share.
+- **Inherited delay rests on tail numbers.** An aircraft swap at the same airport inside one turn is invisible, and the chain rules split only the swaps that break the airport sequence. The simulator plants swaps; the real swap rate is unknown.
+- **The propagation interval is narrower than the uncertainty.** On the simulator rho was biased by {{ v('recovery.rho_bias.weak') }} at weak propagation and its interval covered the truth in {{ v('recovery.rho_coverage.weak') }} of runs; the published interval carries sampling error only.
+- **The fair ranking holds constant what the data records.** Spare aircraft, reserve crews and turn standards are the carrier's own choices and are charged to the carrier; they are not in the data.
+- **The density test sees arrivals, not schedules.** Managing to the line by lengthening the schedule shows up in the padding chapter, not in the test at the line.
+- **The detector is graded against a short table.** {{ v('ch7.test.events') }} reporting year events with citations; disruptions not in the table count as false alarms, which overstates the false alarm rate.
+- **Missed connections ignore protection.** The curve treats every inbound and outbound pair the same; airlines hold flights for connecting passengers and rebook the rest, and the minimum connection time is one number for every hub.
+- **Reported causes are reported.** The cause fields are filled by the carriers under rules that keep the weather field for extreme weather; the chapter compares them with an estimate, it does not correct them.

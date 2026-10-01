@@ -1,0 +1,22 @@
+<!-- chapter: ranking | {{ number }} | ranking -->
+## {{ number }}. {{ v('plan.5.title') }}
+
+<!-- claim -->
+**{{ message('ranking') }}.**
+
+<!-- step: raw -->
+The usual airline ranking sorts carriers by average arrival delay. That is a fair measure of what a passenger on each carrier sat through and an unfair measure of the carrier, because carriers do not fly the same routes, hours, months or aircraft. On the raw average in the reporting years, the three least delayed carriers were {{ v('ch5.raw.top3') }}, and the three most delayed were {{ v('ch5.raw.bottom3') }}.
+
+<!-- step: adjusted -->
+Holding constant what each carrier flies (route, month, scheduled departure hour and aircraft type, fit by weighted least squares on {{ v('ch5.cells') }} cells, with intervals clustered by day), the three least delayed become {{ v('ch5.adjusted.top3') }}, and the three most delayed {{ v('ch5.adjusted.bottom3') }}. {{ v('ch5.moved') }} of {{ v('ch5.carriers') }} carriers change places.
+
+<!-- step: movers -->
+{{ v('ch5.up.carrier') }} rises the most, from {{ v('ch5.up.raw_rank') }} to {{ v('ch5.up.adjusted_rank') }}: its routes, hours and months are harder than the average carrier's, and its raw average charges it for them. {{ v('ch5.down.carrier') }} falls the most, from {{ v('ch5.down.raw_rank') }} to {{ v('ch5.down.adjusted_rank') }}: its flying is easier than most, and its raw average credits it for that.
+
+<!-- method -->
+*Method.* Plan `{{ v('plan.5.hash') }}`. {{ v('plan.5.estimator') }} {{ v('plan.5.split') }} {{ v('plan.5.interval') }} On the simulator, where the true ranking is known and the raw one is confounded by design, the adjusted ranking's rank correlation with the truth averaged {{ v('recovery.rank_adjusted.strong') }} under strong confounding against {{ v('recovery.rank_raw.strong') }} for the raw ranking, and {{ v('recovery.rank_adjusted.none') }} against {{ v('recovery.rank_raw.none') }} with no confounding at all.
+
+<!-- pushback -->
+**What the ops director would push back on.** My carrier flies the hardest routes. This chapter is the answer to that objection: the route, month, hour and aircraft are held constant, so a carrier flying into the hardest airports at the busiest hours is compared with other carriers on the same routes at the same hours. What it does not hold constant is anything the carrier chooses that the data does not record, such as how many spare aircraft and crews it keeps and how tightly it schedules its turns. Those are the carrier's own decisions, and the ranking is right to charge them to the carrier.
+
+<!-- /chapter -->

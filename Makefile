@@ -4,7 +4,7 @@
 PY := uv run python
 T := uv run turnaround
 
-.PHONY: help setup data warehouse simulate recovery chapters events misconnect exports manifest render marts pipeline gates lint types test check rederive web deploy verify-api load-test live-check demo clean
+.PHONY: help setup data warehouse metrics simulate recovery chapters metrics-chapters exports manifest render marts pipeline gates lint types test check rederive web deploy verify-api load-test live-check demo clean
 
 help:
 	@grep -E '^[a-z-]+:' Makefile | sed 's/:.*//' | tr '\n' ' '; echo
@@ -23,20 +23,22 @@ data:
 warehouse:
 	$(T) warehouse
 
+metrics:
+	$(T) metrics
+
 simulate:
 	$(T) simulate
 
 recovery:
 	$(T) recovery
 
+# The eight chapters, the events and the misconnect curves; then the metric layer again with the
+# metrics a chapter writes (the inherited share).
 chapters:
 	$(T) chapters
 
-events:
-	$(T) events
-
-misconnect:
-	$(T) misconnect
+metrics-chapters:
+	$(T) metrics --chapters
 
 exports:
 	$(T) exports
@@ -50,7 +52,7 @@ render:
 marts:
 	$(T) marts
 
-pipeline: data warehouse simulate recovery chapters events misconnect manifest render marts exports
+pipeline: data warehouse metrics simulate recovery chapters metrics-chapters exports manifest render marts
 
 gates:
 	$(PY) scripts/check_no_em_dash.py

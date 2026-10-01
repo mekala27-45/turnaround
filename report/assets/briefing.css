@@ -1,0 +1,19 @@
+/* The briefing as a document: Spectral at 16px on white, figures in tabular numerals, one chapter per
+   printed page. The same tokens as the site's light theme. */
+body { margin: 0; background: #FCFBF8; color: #141210; font-family: Spectral, Georgia, serif; font-size: 16px; line-height: 1.55; }
+main { max-width: 46rem; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+h1, h2, h3 { font-family: "Libre Franklin", "Helvetica Neue", Arial, sans-serif; letter-spacing: -0.01em; line-height: 1.15; }
+h1 { font-size: 2rem; font-weight: 800; margin: 0 0 0.75rem; }
+h2 { font-size: 1.45rem; font-weight: 800; margin: 2.5rem 0 0.75rem; padding-top: 0.75rem; border-top: 1px solid #D9D5CE; }
+blockquote { margin: 1rem 0; padding: 0.5rem 1rem; border-left: 3px solid #C8552B; color: #5A5651; }
+code { font-family: "Courier Prime", ui-monospace, monospace; font-size: 0.9em; }
+ul { padding-left: 1.25rem; }
+li + li { margin-top: 0.4rem; }
+table { border-collapse: collapse; font-variant-numeric: tabular-nums; }
+@media print {
+  body { background: #fff; }
+  main { max-width: none; padding: 0; }
+  h2 { break-before: page; border-top: none; padding-top: 0; margin-top: 0; }
+  h2:first-of-type { break-before: auto; }
+  @page { margin: 18mm 16mm; }
+}

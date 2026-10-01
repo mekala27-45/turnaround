@@ -55,6 +55,38 @@ MODELS = {
 }
 
 
+SOURCE_NAMES = {
+    "simulated": "the simulated airline network with known truth",
+    "real:bts": "BTS Reporting Carrier On-Time Performance",
+    "real:bts+faa": "BTS on time files joined to the FAA aircraft registry",
+    "real:bts+open_meteo": "BTS on time files with Open-Meteo weather",
+    "real:faa": "the FAA releasable aircraft registry",
+    "real:ourairports": "OurAirports",
+    "real:open_meteo": "Open-Meteo historical weather",
+    "recorded": "a recorded observation",
+    "mixed": "several sources",
+    "static": "the stated policy",
+    "api": "the live API",
+}
+
+MODEL_NAMES = {
+    "padding": "padding against the unimpeded reference",
+    "pelt": "PELT changepoints",
+    "density": "the density test with placebos",
+    "rotations": "rotations from tail numbers",
+    "propagation": "the propagation model",
+    "fixed_effects": "fixed effects on weighted cells",
+    "raw": "raw averages",
+    "weather_fe": "the weather fixed effects model",
+    "detector": "the disruption detector",
+    "event_study": "the event study",
+    "misconnect": "the misconnect curve",
+    "bootstrap": "the day block bootstrap",
+    "reconcile": "the metric layer reconcile",
+    "api": "the live API",
+}
+
+
 class Provenance(StrictModel):
     source: str
     model: str
@@ -256,9 +288,9 @@ class Manifest(MutableStrictModel):
         if entry is None:
             raise KeyError(f"manifest has no entry {key!r}")
         p = entry.provenance
-        parts = [f"Source: {p.source}"]
+        parts = [f"Source: {SOURCE_NAMES.get(p.source, p.source)}"]
         if p.model != "none":
-            parts.append(f"model {p.model}")
+            parts.append(f"model: {MODEL_NAMES.get(p.model, p.model)}")
         parts.append(p.population)
         if p.condition is not None:
             parts.append(f"condition {p.condition}")

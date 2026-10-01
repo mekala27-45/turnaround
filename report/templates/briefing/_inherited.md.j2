@@ -1,0 +1,12 @@
+## {{ number }}. {{ v('plan.4.title') }}
+
+<!-- chart: inherited -->
+**{{ message('inherited') }}.**
+
+Rotations rebuilt from tail numbers: {{ v('ch4.rotations') }} on {{ v('ch4.tails') }} aircraft, {{ v('ch4.broken_chain') }} broken chains split and {{ v('ch4.impossible') }} impossible sequences quarantined. Each minute of inbound lateness beyond the turn, less a minimum turn of {{ v('ch4.min_turn') }}, passed {{ v('ch4.rho') }} minutes to the next departure ({{ v('ch4.rho.low') }} to {{ v('ch4.rho.high') }}).
+
+That makes {{ v('ch4.share') }} of arrival delay minutes inherited, against {{ v('ch4.reported_share') }} reported as late aircraft; {{ v('ch4.halving_buffer') }} of extra turn halves what is passed on.
+
+*Method.* Plan `{{ v('plan.4.hash') }}`. {{ v('plan.4.estimator') }} {{ v('plan.4.interval') }}
+
+**What the ops director would push back on.** Tail numbers miss some aircraft swaps; the chain rules split the ones that break the airport sequence, and the fixed effects remove storms that delay both legs.

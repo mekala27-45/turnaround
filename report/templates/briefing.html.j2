@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+{{ inline('report/assets/head.html') }}
+<title>Why flights are late: the operations review</title>
+<style>
+{{ inline('report/assets/briefing.css') }}
+</style>
+</head>
+<body>
+<main>
+{% filter markdown %}{% include 'briefing.md.j2' %}{% endfilter %}
+</main>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!-- chapter: decision | {{ number }} | decision -->
+## {{ number }}. {{ v('plan.8.title') }}
+
+<!-- claim -->
+**{{ message('decision') }}.**
+
+<!-- step: curve -->
+For the traveler, the safest flight is the aircraft's first of the day: in the reporting years the first leg of an aircraft's day arrived on time {{ v('ch8.first_on_time') }} of the time, against {{ v('ch8.later_on_time') }} for the legs after it, a difference of {{ v('ch8.first_advantage') }} (interval {{ v('ch8.first_advantage.low') }} to {{ v('ch8.first_advantage.high') }}). By the clock, departures scheduled at {{ v('ch8.best_hour') }} were on time {{ v('ch8.best_hour_rate') }} of the time and those at {{ v('ch8.worst_hour') }} {{ v('ch8.worst_hour_rate') }}; {{ v('ch8.best_month') }} was the best month to fly and {{ v('ch8.worst_month') }} the worst.
+
+<!-- step: hubs -->
+A connection is missed when the inbound flight is cancelled or diverted, or lands too late to leave {{ v('policy.min_connection') }} to change planes. At {{ v('ch8.hub1.code') }}, the busiest airport, the chance of missing falls under {{ v('ch8.line') }} with a scheduled buffer of {{ v('ch8.hub1.buffer') }} (interval {{ v('ch8.hub1.low') }} to {{ v('ch8.hub1.high') }}); at {{ v('ch8.hub2.code') }} it takes {{ v('ch8.hub2.buffer') }}, and at {{ v('ch8.hub3.code') }} {{ v('ch8.hub3.buffer') }}. Across the {{ v('ch8.hubs') }} busiest airports the buffer runs from {{ v('ch8.buffer_min') }} to {{ v('ch8.buffer_max') }}, and the planner page answers for any connection at them.
+
+<!-- step: buffers -->
+For the airline, a minute added to every turn takes delay off the rest of the aircraft's day only where a late inbound reaches into the turn, which was {{ v('ch8.binding_share') }} of turns in the reporting years. Counting the minute it saves on the next flight and the share that would have carried further down the day, a buffer minute saves {{ v('ch8.trade_overall') }} arrival minutes on average. {% if raw('ch8.trade_pays_airports') > 0 %}It pays for itself, saving more than the minute it costs, at {{ v('ch8.trade_pays_airports') }} of the busiest airports, led by {{ v('ch8.trade_best_airport') }} at {{ v('ch8.trade_best_saved') }} minutes per minute.{% else %}It does not pay for itself at any of the busiest airports on this count; the most it saves is {{ v('ch8.trade_best_saved') }} minutes per minute, at {{ v('ch8.trade_best_airport') }}, so a buffer is worth adding only where turns are reached far more often than average.{% endif %}
+
+<!-- method -->
+*Method.* Plan `{{ v('plan.8.hash') }}`. {{ v('plan.8.estimator') }} {{ v('plan.8.test') }} {{ v('plan.8.split') }} {{ v('plan.8.interval') }} {{ v('plan.8.simulator') }}
+
+<!-- pushback -->
+**What the ops director would push back on.** A connection on one ticket is protected: the airline holds the outbound for a late inbound with many connecting passengers and rebooks the rest. The curve counts a missed connection the way the schedule would, so it overstates misconnects for well protected connections and understates the cost of the ones missed on the last flight of the night. The minimum connection time is also one number here, and at an airport where the gates are a train ride apart it is not one number.
+
+<!-- /chapter -->

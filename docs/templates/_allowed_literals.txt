@@ -3,3 +3,12 @@ CC BY 4.0
 Apache 2.0
 A14
 1987
+# The FAA's name for the thirty airports it reports delays at.
+Core 30
+# The PowerShell file extension in script names.
+.ps1
+# The API version in a route.
+/v1/
+# Percentile names in the latency figures.
+p50
+p99

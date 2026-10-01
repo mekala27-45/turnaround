@@ -1,0 +1,12 @@
+## {{ number }}. {{ v('plan.2.title') }}
+
+<!-- chart: padding -->
+**{{ message('padding') }}.**
+
+In {{ v('ch2.last_year') }} the average flight carried {{ v('ch2.padding.last') }} of padding, {{ v('ch2.share_last') }} of its scheduled block and {{ v('ch2.hours_last') }} of scheduled time across the year. On matched cells padding moved {{ v('ch2.padding.change') }} while actual block time moved {{ v('ch2.actual.change') }}.
+
+PELT found {{ v('ch2.changepoints') }} carrier steps of a minute or more{% if has('ch2.biggest.carrier') %}; the largest was {{ v('ch2.biggest.carrier') }} in {{ v('ch2.biggest.date') }}, {{ v('ch2.biggest.step') }}{% endif %}.
+
+*Method.* Plan `{{ v('plan.2.hash') }}`. {{ v('plan.2.estimator') }} {{ v('plan.2.interval') }}
+
+**What the ops director would push back on.** The unimpeded reference is fixed on the fitting years, so congestion growth shows as padding that shrank, the conservative direction.

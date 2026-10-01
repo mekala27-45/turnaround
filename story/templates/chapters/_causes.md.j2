@@ -1,0 +1,22 @@
+<!-- chapter: causes | {{ number }} | causes -->
+## {{ number }}. {{ v('plan.6.title') }}
+
+<!-- claim -->
+**{{ message('causes') }}.**
+
+<!-- step: reported -->
+Every flight that arrives fifteen or more minutes late carries a breakdown of its delay into five reported causes. Over the window, the carriers put {{ v('metric.reported_late_aircraft_share') }} of the cause minutes on a late aircraft, {{ v('metric.reported_carrier_share') }} on the carrier, {{ v('metric.reported_nas_share') }} on the national airspace system, {{ v('metric.reported_weather_share') }} on weather and {{ v('metric.reported_security_share') }} on security. These fields record what was reported, by the carrier, under rules that keep the weather field for extreme weather; ordinary weather that slows the airspace is coded to the national airspace system.
+
+<!-- step: nas -->
+The national airspace system's share is highest at {{ v('ch6.nas_top3') }}, airports where capacity, not the weather and not the airline, sets the pace much of the day.
+
+<!-- step: estimated -->
+Measured from the weather itself (precipitation, snow, gusts, low cloud, thunder, fog and freezing precipitation at the origin when the flight leaves and at the destination when it lands, on {{ v('ch6.flights_modelled') }} flights between two of the FAA's Core 30 airports, with the inbound aircraft's lateness held constant), weather explains {{ v('ch6.weather_share') }} of arrival delay minutes (interval {{ v('ch6.weather_share.low') }} to {{ v('ch6.weather_share.high') }}). The weather field on the same flights records {{ v('ch6.reported_weather_share') }}, and the national airspace system field {{ v('ch6.reported_nas_share') }}.
+
+<!-- method -->
+*Method.* Plan `{{ v('plan.6.hash') }}`. {{ v('plan.6.estimator') }} {{ v('plan.6.split') }} {{ v('plan.6.interval') }} On the simulator, where storms add a known number of minutes and the reported weather field records only a planted share of them, the estimate came within {{ v('recovery.weather_error') }} of the true share on average and its interval covered the truth in {{ v('recovery.weather_coverage') }} of runs, while the reported field showed {{ v('recovery.weather_reported') }} against a true {{ v('recovery.weather_true') }}. {{ weather_attribution }}
+
+<!-- pushback -->
+**What the ops director would push back on.** Airport weather is not en route weather: a line of storms between two cities delays a flight that leaves and lands under clear skies. That is right, and it makes this estimate a floor on weather's share rather than a ceiling; that weather lands in the national airspace system field and in the model's hour and month effects. The other objection is that the model adds weather terms together, when a thunderstorm at a hub at five in the afternoon does more than the sum of its parts. The hour effects absorb when storms usually hit, not how hard, so the worst afternoons are the ones this estimate understates most.
+
+<!-- /chapter -->

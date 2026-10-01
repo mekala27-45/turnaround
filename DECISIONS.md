@@ -55,3 +55,67 @@ The releasable registry carries the registrant's name and street address for eve
 including private owners. Only the tail number, manufacturer, model, type, engine type, seats and
 year built survive ingest; the identifier scan fails on any registrant column name or the raw
 registry header in a committed file.
+
+## 2026-09-30: reversal, the density test standardizes against its placebos
+
+The first version of chapter 3's test reported where the statistic at fifteen minutes ranked among
+the fifty placebo thresholds. A rank among fifty cannot go below one in fifty-one, so after
+Benjamini-Hochberg across a dozen carriers no carrier could ever pass, planted or not: the recovery
+study showed zero power on carriers with bunching planted at a third of the flights over the line.
+The test now standardizes the statistic by the placebos' mean and standard deviation and reads a
+normal tail; the rank is still reported beside it. The change was made on the simulator, before the
+plan was registered and before any real flight was tested.
+
+## 2026-09-30: reversal, propagation takes carrier by date and hour fixed effects
+
+The first propagation model had carrier and origin by date fixed effects only. On the simulator it
+overstated rho, because consecutive legs share the way delay builds through the day and share the
+days a whole carrier falls over, and both made a late inbound look like the cause of a late
+outbound. Carrier by date replaced carrier, departure hour was added, the simulator gained a
+physical floor (no airframe leaves before it lands) and a heavy tail of long own delays, and the
+recovery study was run again under a new code version so no cached run from the old model survived.
+
+## 2026-09-30: reversal, padding change on matched cells with fixed weights
+
+Chapter 2 first compared the mean padding of every flight in 2015 with every flight in the latest
+year. On the partial window that mixed two things: schedules growing on the same routes, and
+carriers moving into long routes, which carry more padding in minutes. The change is now measured on
+route, carrier, three hour block and month cells flown in both years, each weighted by its mean
+flights across the two, with actual block time on the same cells beside it, and the interval
+resamples days within each year so each year keeps its own days.
+
+## 2026-09-30: reversal, the registry join matches by validity, not by the latest record
+
+N-numbers are reassigned when an aircraft is deregistered, so the latest registry record for a tail
+number is often a different airframe (a 2019 business jet for a 1998 regional jet). The join now
+takes a record only when the airframe could have flown the flights: built between 1975 and the year
+it was last seen, a turbine engine type, certified before it was first seen, and either still
+registered or cancelled after it was first seen; the current record wins over a deregistered one,
+and a tail with no valid record is left unmatched and counted rather than given a guess.
+
+## 2026-09-30: weather measures the direct effect, inherited weather stays in chapter 4
+
+A storm at the hub delays the inbound aircraft and then the outbound one. Regressing arrival delay on
+the weather at both ends alone would count the inbound's lateness as weather and again as inherited
+delay in chapter 4. The weather model carries the inbound aircraft's carried minutes (chapter 4's
+term, at its minimum turn) as a control, so the weather share is what the weather did to the flight
+directly; the weather that came in on a late aircraft is part of the inherited share. On the
+simulator the storm coefficients come back at the planted thirty and twelve minutes with it.
+
+## 2026-09-30: an alert is an episode, and a miss costs fifty false pages
+
+A three day storm flagged three days running is one call to the duty manager, not three. Alerts
+became episodes (open above the threshold, stay open while the score stays above half of it), false
+alarms are counted as episodes that touch no listed event, and the episode's length is the unit's
+recovery time, which is what chapter 7's carrier trait test compares. A missed disruption is costed
+at fifty false episodes: an operations center that learns of a meltdown from the news loses a day of
+coordinated response, and a false page costs an analyst an hour. The cost and the grid were fixed in
+the plan before the threshold was chosen.
+
+## 2026-09-30: the calculator holds out the latest month
+
+The calculator's cells are built from the reporting years up to the month before the latest
+published one, and the latest month's flights at the twenty hubs are kept apart as the outcome the
+scorer reads. A check for that month is scored against flights its estimate never saw, which is the
+late arriving truth Day 13 graded its forecasts on, and the demo queue is made for that month so the
+log has scored checks from the first day.

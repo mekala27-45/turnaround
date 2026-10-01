@@ -1,0 +1,22 @@
+<!-- chapter: meltdowns | {{ number }} | meltdowns -->
+## {{ number }}. {{ v('plan.7.title') }}
+
+<!-- claim -->
+**{{ message('meltdowns') }}.**
+
+<!-- step: first -->
+A meltdown shows in the daily numbers before it shows in the news. The detector scores every carrier's day, and every day at the {{ v('ch7.airports') }} busiest airports, against that carrier's or airport's own previous four weeks, on the share of flights cancelled and the mean arrival delay. Its alert threshold was chosen on {{ v('policy.fit_years') }} by cost, with a missed disruption costed at {{ v('ch7.cost_miss') }} false alarms, and landed at {{ v('ch7.threshold') }} robust standard deviations, {{ v('ch7.interior') }}. On the reporting years it flagged {{ v('ch7.test.detected') }} of the {{ v('ch7.test.events') }} disruptions in the known events table, at a cost of {{ v('ch7.test.false_per_thousand') }} false alarm episodes per thousand carrier and airport days.{% if has('ch7.study.WN.carrier') %} The chart opens on {{ v('ch7.study.WN.carrier') }} in {{ v('ch7.study.WN.onset') }}: its cancellation rate against every other carrier at its busiest airports ({{ v('ch7.study.WN.airports') }}), with the disruption shaded. The storm hit everyone; the gap is the carrier's own.{% endif %}
+
+<!-- step: second -->
+{% if has('ch7.study.DL.carrier') %}{{ v('ch7.study.DL.carrier') }} in {{ v('ch7.study.DL.onset') }} is the second panel: an outage of the software that runs its crew and aircraft scheduling, against the same kind of peer control. Over its window it cancelled {{ v('ch7.study.DL.excess_cancelled') }} more flights than its peers' rate implies, and its passengers sat through {{ v('ch7.study.DL.excess_delay_hours') }} of delay beyond theirs.{% else %}The second event study did not run on this data.{% endif %}{% if has('ch7.study.WN.carrier') %} {{ v('ch7.study.WN.carrier') }}'s excess over its window was {{ v('ch7.study.WN.excess_cancelled') }} flights and {{ v('ch7.study.WN.excess_delay_hours') }} of delay.{% endif %}
+
+<!-- step: recovery -->
+{% if has('ch7.study.WN.carrier') and has('ch7.study.DL.carrier') %}Recovery is the number that separates them: {{ v('ch7.study.WN.carrier') }} took {% if raw('ch7.study.WN.recovery_days') is not none %}{{ v('ch7.study.WN.recovery_days') }} days{% else %}more than three weeks{% endif %} from onset to get back inside its own normal gap to its peers for three days running, and {{ v('ch7.study.DL.carrier') }} took {% if raw('ch7.study.DL.recovery_days') is not none %}{{ v('ch7.study.DL.recovery_days') }}{% else %}more than three weeks{% endif %}. {% endif %}Across every alert episode in the window, {% if raw('ch7.trait.p') is none %}too few carriers had enough alert episodes to test whether recovery speed is a trait of the carrier.{% elif raw('ch7.trait.p') < 0.05 %}carriers differ in how long their episodes last (Kruskal-Wallis H {{ v('ch7.trait.statistic') }}, permutation p {{ v('ch7.trait.p') }}, {{ v('ch7.trait.carriers') }} carriers): how fast an airline recovers is a property of the airline, not only of the storm.{% else %}carriers do not differ reliably in how long their episodes last (Kruskal-Wallis H {{ v('ch7.trait.statistic') }}, permutation p {{ v('ch7.trait.p') }}, {{ v('ch7.trait.carriers') }} carriers), so the two meltdowns above are not evidence of a carrier trait on their own.{% endif %}
+
+<!-- method -->
+*Method.* Plan `{{ v('plan.7.hash') }}`. {{ v('plan.7.estimator') }} {{ v('plan.7.test') }} {{ v('plan.7.split') }} {{ v('plan.7.family') }} On the simulator the detector caught the planted meltdown in {{ v('recovery.detector_recall') }} of runs, {{ v('recovery.detector_lag') }} after onset on average, with {{ v('recovery.detector_precision') }} of its alerts landing on a planted meltdown or storm day. The known events table, with a citation for each row, is on the disruptions page.
+
+<!-- pushback -->
+**What the ops director would push back on.** The peer control is not a clean control: the other carriers at the same airports were hit by the same storm, and some of them carried the stranded carrier's passengers. The first is the point, since the storm is differenced out; the second pushes the excess down, so the published excess is a floor. Recovery time also depends on what broke: a crew scheduling system rebuilt by hand takes longer than a fleet grounded for an inspection, and two meltdowns are two stories, which is why the trait claim rests on every alert episode in the window rather than on them.
+
+<!-- /chapter -->

@@ -1,0 +1,12 @@
+## {{ number }}. {{ v('plan.8.title') }}
+
+<!-- chart: decision -->
+**{{ message('decision') }}.**
+
+The first leg of the aircraft's day is on time {{ v('ch8.first_on_time') }} of the time against {{ v('ch8.later_on_time') }} for later legs ({{ v('ch8.first_advantage') }}, interval {{ v('ch8.first_advantage.low') }} to {{ v('ch8.first_advantage.high') }}). {{ v('ch8.best_hour') }} departures were on time {{ v('ch8.best_hour_rate') }} of the time, {{ v('ch8.worst_hour') }} departures {{ v('ch8.worst_hour_rate') }}.
+
+To stay under a {{ v('ch8.line') }} chance of missing a connection: {{ v('ch8.hub1.buffer') }} at {{ v('ch8.hub1.code') }}, {{ v('ch8.hub2.buffer') }} at {{ v('ch8.hub2.code') }}, {{ v('ch8.hub3.buffer') }} at {{ v('ch8.hub3.code') }}. For the airline, a buffer minute saves {{ v('ch8.trade_overall') }} arrival minutes across the rest of the aircraft's day on average.
+
+*Method.* Plan `{{ v('plan.8.hash') }}`. {{ v('plan.8.estimator') }} {{ v('plan.8.interval') }}
+
+**What the ops director would push back on.** Connections on one ticket are protected by the airline; the curve counts misconnects the way the schedule would.

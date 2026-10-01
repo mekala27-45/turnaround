@@ -1,12 +1,13 @@
 # Why your flight is late
 
-*A data story in eight chapters, about a {{ reading_minutes }} minute read. Every number below is rendered from the analysis manifest; none was typed.*
+*A data story in {{ v('story.chapters') }} chapters, about {{ reading_minutes }} minutes to read. Every number below is rendered from the analysis manifest; none was typed.*
 
-**{{ v('story.standfirst') }}**
+**{{ message('inherited') }}: {{ v('ch4.share') }} of arrival delay minutes in the reporting years were inherited from the aircraft's previous flight, against {{ v('ch4.reported_share') }} in the field the airlines report.**
 
 {{ statement() }}
 
 {% for chapter in story_chapters %}
+{% set number = loop.index %}
 {% include 'chapters/_' ~ chapter ~ '.md.j2' %}
 
 {% endfor %}
@@ -21,6 +22,6 @@ No published number has been corrected since the first release. Corrections will
 {% endfor %}
 ## How this was built
 
-{{ v('story.built_1') }} {{ v('story.built_2') }} {{ v('story.built_3') }}
+Every scheduled domestic flight of the reporting carriers from {{ v('data.first_month') }} to {{ v('data.last_month') }}, {{ v('data.rows_millions') }} rows, went through named quarantine rules into a dbt warehouse whose metric layer defines each number once and reconciles it at {{ v('metrics.grains') }} grains. Each chapter's plan was hashed before its estimate touched a real flight, and each estimator was first run on a simulated airline network where the answer is known. The story, the memo, the site and the workbook all render from one manifest, so a number here is the number everywhere.
 
 The method appendix, the definitions, the warehouse and the simulator's recovery study are on the [data page](data/), and every chart's SQL is one click from the chart.

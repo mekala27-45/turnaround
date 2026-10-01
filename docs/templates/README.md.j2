@@ -1,0 +1,87 @@
+# turnaround
+
+**Why your flight is late: a data story in {{ v('story.chapters') }} chapters, built on every scheduled domestic flight in the United States from {{ v('data.first_month') }} to {{ v('data.last_month') }}.**
+
+The window starts in {{ v('data.first_month') }}, the year American Airlines and US Airways moved onto one operating certificate, the last of the legacy carrier mergers, so the carriers in the data are the carriers flying today; it runs to the latest month the Bureau of Transportation Statistics has published ({{ v('data.last_month') }}), more than ten complete years. Every row in it is used, {{ v('data.rows') }} scheduled flights of {{ v('data.carriers') }} reporting carriers, with nothing sampled. Two sources are narrower than the flights and say so: hourly weather is pulled at the FAA's Core 30 airports rather than at every airport (the free weather tier cannot carry every airport for the window in a day; the weather estimate uses flights between two of them), and the FAA registry join covers {{ v('registry.flight_join_rate') }} of flights. {% if raw('checklist.missing') == 'none' %}All {{ v('checklist.total') }} mandatory steps are done; the checklist below gives the evidence for each.{% else %}Mandatory steps not yet done: {{ v('checklist.missing') }} (numbered as in the checklist below); the build is not called complete until that list is empty.{% endif %}
+
+- **The story:** {{ v('live.site_url') }}
+- **The misconnect calculator's API:** {{ v('deploy.base_url') }} ({{ v('deploy.status') }}{% if raw('deploy.passed') == 'yes' %}, verified from {{ v('deploy.client') }} on {{ v('deploy.checked_at') }}: a check for {{ v('deploy.connection') }} in {{ v('deploy.travel_month') }} at a {{ v('deploy.buffer') }} buffer came back at {{ v('deploy.probability') }} ({{ v('deploy.low') }} to {{ v('deploy.high') }}) on {{ v('deploy.flights') }} flights and read back with its audit row written before the response{% endif %})
+- **The briefing:** [report/briefing.md](report/briefing.md), rendered from the same manifest as the site
+
+{{ statement() }}
+
+## The eight findings
+
+| Chapter | The finding | The number |
+|---|---|---|
+| {{ v('plan.1.title') }} | {{ message('definition') }} | on time rate {{ v('ch1.on_time.change') }} ({{ v('ch1.on_time.change.low') }} to {{ v('ch1.on_time.change.high') }}); actual gate to gate {{ v('ch1.actual.change') }} on the same routes |
+| {{ v('plan.2.title') }} | {{ message('padding') }} | padding {{ v('ch2.padding.change') }} ({{ v('ch2.padding.change.low') }} to {{ v('ch2.padding.change.high') }}) on matched cells, {{ v('ch2.first_year') }} to {{ v('ch2.last_year') }} |
+| {{ v('plan.3.title') }} | {{ message('line') }} | {{ v('ch3.flagged') }} of {{ v('ch3.carriers') }} carriers after Benjamini-Hochberg; pooled z {{ v('ch3.pooled.z') }} against {{ v('ch3.placebos') }} placebos |
+| {{ v('plan.4.title') }} | {{ message('inherited') }} | {{ v('ch4.share') }} inherited ({{ v('ch4.share.low') }} to {{ v('ch4.share.high') }}) against {{ v('ch4.reported_share') }} reported |
+| {{ v('plan.5.title') }} | {{ message('ranking') }} | {{ v('ch5.moved') }} of {{ v('ch5.carriers') }} carriers move; {{ v('ch5.up.carrier') }} {{ v('ch5.up.raw_rank') }} to {{ v('ch5.up.adjusted_rank') }}, {{ v('ch5.down.carrier') }} {{ v('ch5.down.raw_rank') }} to {{ v('ch5.down.adjusted_rank') }} |
+| {{ v('plan.6.title') }} | {{ message('causes') }} | weather explains {{ v('ch6.weather_share') }} ({{ v('ch6.weather_share.low') }} to {{ v('ch6.weather_share.high') }}); the weather field records {{ v('ch6.reported_weather_share') }} |
+| {{ v('plan.7.title') }} | {{ message('meltdowns') }} | {{ v('ch7.test.detected') }} of {{ v('ch7.test.events') }} reporting year disruptions flagged at threshold {{ v('ch7.threshold') }}, {{ v('ch7.interior') }} |
+| {{ v('plan.8.title') }} | {{ message('decision') }} | first leg on time {{ v('ch8.first_on_time') }} against {{ v('ch8.later_on_time') }}; {{ v('ch8.hub1.code') }} needs {{ v('ch8.hub1.buffer') }} to stay under {{ v('ch8.line') }} |
+
+Every chapter is a claim that could have come out the other way: a plan hashed before the estimate touched a real flight, an estimator first proven on a simulated airline where the answer is known, a result with an interval, one chart with one message and the SQL behind it, a method note, and a paragraph on what an operations director would push back on.
+
+## What is in it
+
+- **A modeled warehouse.** dbt over DuckDB: {{ v('warehouse.models') }} models and {{ v('warehouse.tests') }} tests over the flights, the aircraft, the airports and the weather, with named quarantine rules that flag and count and delete nothing, and a metric layer that defines each of {{ v('metrics.count') }} metrics once, two ways, reconciled at {{ v('metrics.grains') }} grains with {{ v('metrics.disagreements') }} disagreements.
+- **A simulator with known truth.** A synthetic network of {{ v('sim.carriers') }} carriers and {{ v('sim.airports') }} airports with known padding steps, a known propagation coefficient, known carrier effects on routes of known difficulty, planted bunching, a planted meltdown and storms whose minutes the reported cause field under records by design. The recovery study ran {{ v('recovery.conditions') }} conditions with {{ v('recovery.seeds') }} seeds each.
+- **The aircraft's day.** Every rotation rebuilt from tail numbers with integrity rules: {{ v('ch4.rotations') }} rotations, the inherited share of delay, and the buffer curve.
+- **The reader's tools.** A misconnect calculator on a live API with a check log scored against the month it was asked about, an explorer with an SQL box over the marts in the browser, a workbook with live formulas, Tableau and Power BI companions.
+
+## Skills
+
+| Skill | Where it lives |
+|---|---|
+| SQL | `warehouse/`, `metrics/`, the SQL behind every chart |
+| Data modeling, analytics engineering | `warehouse/` (dbt models, tests, exposures) |
+| Data quality | the quarantine rules (`packages/contracts`) and the quarantine report on the data page |
+| Metric definitions and governance | `metrics/metrics.yml`, `docs/definitions.md` |
+| Statistics: inference | `packages/stats` (block bootstrap by day, cluster robust errors) |
+| Statistics: multiple comparisons | Benjamini-Hochberg across carriers in {{ v('plan.3.title') }} |
+| Regression with fixed effects | {{ v('plan.4.title') }}, {{ v('plan.5.title') }}, {{ v('plan.6.title') }} (`packages/stats/fe.py`, weighted cells and the direct solve) |
+| Changepoint detection | {{ v('plan.2.title') }} (PELT) |
+| Density and bunching tests | {{ v('plan.3.title') }} |
+| Event studies, quasi experiments | {{ v('plan.7.title') }} (`packages/events/study.py`) |
+| Simulation and estimator validation | `packages/sim`, the recovery study (`packages/evaluation`) |
+| Anomaly detection | `packages/events` |
+| Probability for decisions | {{ v('plan.8.title') }}, the misconnect curves (`packages/misconnect`) |
+| Data storytelling | `story/`, the sticky chart layout, the method notes |
+| Dashboards and BI | `exports/tableau`, `exports/powerbi`, `/explore` |
+| Spreadsheet modeling | `exports/workbook.xlsx` with live formulas |
+| APIs and persistence | `packages/api`, `fly.toml`, `scripts/check_persistence.py` |
+| Visualization | `web/`, the validated palette, one message per chart |
+| Communication | `report/briefing.md`, the pushback paragraphs |
+| Reproducibility | the claim gate, the rederive, the corrections log |
+| Data licensing and provenance | `data/PROVENANCE.md`, the four declared sources |
+
+## Definition of done
+
+{% for n in range(1, raw('checklist.total') + 1) %}
+{{ n }}. **{{ v('checklist.' ~ n ~ '.status') }}.** {{ v('checklist.' ~ n ~ '.text') }}. *Evidence:* {{ v('checklist.' ~ n ~ '.evidence') }}
+{% endfor %}
+
+## Run it
+
+```
+make setup        # uv sync and the site's packages
+make data         # every monthly file into typed, flagged parquet; airports, aircraft, weather
+make warehouse    # dbt build and test, then the shipped marts
+make metrics      # the metric layer's reconcile
+make simulate     # the demonstration network and its truth
+make recovery     # every estimator on every condition and seed
+make chapters     # plans registered, then the eight chapters
+make metrics-chapters exports manifest render marts
+make gates        # dash, vocabulary, statement, claim gate, identifier scan, palette
+make test         # with the Postgres tests when TURNAROUND_TEST_DATABASE_URL is set
+make rederive     # everything again from the raw files in a worktree, and a diff
+```
+
+The raw files are fetched on a machine that can reach the hosts (`deploy/fetch-data.ps1`); `docs/runbook.md` has the order, the timings and what to do when a host refuses.
+
+## Data and licenses
+
+Code: Apache 2.0. Data: the Bureau of Transportation Statistics' Reporting Carrier On-Time Performance files and the FAA's releasable aircraft registry are U.S. government works in the public domain; OurAirports is public domain; Open-Meteo's historical weather is CC BY 4.0, attributed in `data/weather/ATTRIBUTION.md` and on every page that shows it. `data/PROVENANCE.md` lists every file with its source and its checksum. This is a portfolio analysis and a demonstration API with a token gate on writes and no other authentication.

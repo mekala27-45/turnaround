@@ -1,0 +1,19 @@
+<!-- chapter: inherited | {{ number }} | inherited -->
+## {{ number }}. {{ v('plan.4.title') }}
+
+<!-- claim -->
+**{{ message('inherited') }}.**
+
+<!-- step: curve -->
+A delay reported on a flight is not a delay caused on that flight. To separate the two, every flown leg with a tail number was put back in order on its aircraft's day: {{ v('ch4.legs') }} legs, {{ v('ch4.rotations') }} rotations, {{ v('ch4.tails') }} aircraft. A leg is linked to the one before it only when it leaves from the airport that one landed at, after it landed, within {{ v('policy.rotation_gap_hours') }}. {{ v('ch4.broken_chain') }} pairs broke the chain, most of them aircraft swaps the tail number does not show, and were split rather than joined; {{ v('ch4.impossible') }} were impossible sequences, quarantined and counted. On the {{ v('ch4.test_links') }} linked legs of the reporting years, each minute the inbound aircraft arrived beyond the scheduled turn, less a minimum turn of {{ v('ch4.min_turn') }}, put {{ v('ch4.rho') }} minutes onto the next departure (interval {{ v('ch4.rho.low') }} to {{ v('ch4.rho.high') }}). That makes {{ v('ch4.share') }} of all arrival delay minutes inherited from an earlier flight (interval {{ v('ch4.share.low') }} to {{ v('ch4.share.high') }}), against {{ v('ch4.reported_share') }} in the late aircraft field the airlines report.
+
+<!-- step: halving -->
+The chart shows where a buffer would have stopped it. The longer the scheduled turn, the less of a late arrival reaches the next departure, and beyond the minimum turn {{ v('ch4.halving_buffer') }} of extra buffer halves the minutes passed on. The aircraft's day explorer on the rotations page shows the worst day of each month leg by leg.
+
+<!-- method -->
+*Method.* Plan `{{ v('plan.4.hash') }}`. {{ v('plan.4.estimator') }} {{ v('plan.4.split') }} {{ v('plan.4.interval') }} On the simulator the minimum turn was found exactly in {{ v('recovery.min_turn_exact') }} of runs; rho was off by {{ v('recovery.rho_bias.weak') }} on average when the truth was weak propagation and by {{ v('recovery.rho_bias.strong') }} when it was strong, with interval coverage of {{ v('recovery.rho_coverage.weak') }} and {{ v('recovery.rho_coverage.strong') }}, and the inherited share came within {{ v('recovery.inherited_error') }} of the truth. {% if raw('recovery.rho_coverage.weak') < 0.9 %}The coverage is below the nominal level: the interval carries the sampling error only, not the model's small bias, so read the bounds as narrower than the uncertainty.{% endif %}
+
+<!-- pushback -->
+**What the ops director would push back on.** Tail numbers miss aircraft swaps, so some links join two different aircraft. The chain rules split a pair whenever the next leg does not leave from where the last one landed, which is what most swaps look like, and the simulator plants swaps to check that they are split; a swap between two aircraft at the same airport inside the same turn is invisible to any reconstruction from public data. The second objection is that a late inbound and a late outbound can share a cause, a storm or a ground stop, without one causing the other. The carrier by date and airport by date fixed effects take that shared cause out, which is why the coefficient is lower than the raw correlation between the two delays.
+
+<!-- /chapter -->

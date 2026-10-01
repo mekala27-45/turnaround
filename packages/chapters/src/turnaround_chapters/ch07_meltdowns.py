@@ -71,6 +71,7 @@ class MeltdownResult:
     trait_statistic: float
     trait_p_value: float
     trait_carriers: int
+    episodes: pl.DataFrame
     sql_daily: str
 
 
@@ -233,6 +234,7 @@ def estimate(
         trait_statistic=statistic,
         trait_p_value=p_value,
         trait_carriers=eligible,
+        episodes=found,
         sql_daily=detect.daily_sql(source, "carrier").strip(),
     )
 

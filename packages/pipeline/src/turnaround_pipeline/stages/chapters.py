@@ -585,9 +585,10 @@ def _chapter4(
     monthly.write_parquet(p.marts / "mart_inherited_month.parquet", compression="zstd", statistics=False)
     worst = ch04_inherited.worst_days(con, legs=legs, test_first=w.test_first, test_last=w.last_year)
     worst.write_parquet(p.marts / "rotation_worst_days.parquet", compression="zstd", statistics=False)
-    sample_days = [d.isoformat() for d in worst.sort("score", descending=True)["worst_day"].head(3).to_list()]
-    timelines = ch04_inherited.rotations_on(con, legs=legs, days=sample_days)
+    sample_days = [d.isoformat() for d in worst["worst_day"].to_list()]
+    timelines = ch04_inherited.sample_rotations(con, legs=legs, days=sample_days, per_day=20)
     timelines.write_parquet(p.marts / "rotation_samples.parquet", compression="zstd", statistics=False)
+    s.put("ch4.sample_days", len(sample_days), "int")
     message = ch04_inherited.message(r)
     callout = (
         f"rho = {r.estimate.rho:.3f} on {r.test_links:,} linked legs: {r.share * 100:.1f}% of arrival delay minutes were "
@@ -972,6 +973,13 @@ def _chapter7(
         ["float1", "float1"],
         [[t, c] for t, c in zip(op.grid, op.costs, strict=True)],
     )
+    test_episodes = detect_episodes(r, POLICY.test_first_year)
+    s.table(
+        "ch7.top_episodes",
+        ["Unit", "First day", "Days", "Peak score"],
+        ["text", "text", "int", "float1"],
+        test_episodes or [["none", "", 0, None]],
+    )
     s.table(
         "ch7.recovery_by_carrier",
         ["Carrier", "Alert episodes", "Median days", "Mean days", "Longest"],
@@ -985,7 +993,8 @@ def _chapter7(
                 x["longest_days"],
             ]
             for x in r.recovery_by_carrier.to_dicts()
-        ],
+        ]
+        or [["no carrier alert episodes", 0, None, None, None]],
     )
     panels: list[Panel] = []
     for st in r.studies:
@@ -1069,6 +1078,21 @@ def _chapter7(
             [e.name, e.first_alert.isoformat() if e.first_alert else None, e.lag_days] for e in r.events
         ],
     ).write(charts_dir)
+
+
+def detect_episodes(r: ch07_meltdowns.MeltdownResult, first_year: int, top: int = 25) -> list[list[Any]]:
+    """The reporting years' alert episodes with the highest peak scores, ties broken by unit and day."""
+    found = r.episodes.filter(pl.col("start") >= date(first_year, 1, 1))
+    found = found.sort(["peak", "unit", "start"], descending=[True, False, False]).head(top)
+    return [
+        [
+            str(x["unit"]).replace("carrier:", "carrier ").replace("airport:", "airport "),
+            x["start"].isoformat(),
+            x["days"],
+            x["peak"],
+        ]
+        for x in found.to_dicts()
+    ]
 
 
 # Chapter 8 ---------------------------------------------------------------------------------------
@@ -1230,7 +1254,8 @@ def _chapter8(
                 "yes" if x["pays"] else "no",
             ]
             for x in r.trade_airports.to_dicts()
-        ],
+        ]
+        or [["none", 0, None, None, "no"]],
     )
     routes = r.trade_routes.head(10).to_dicts()
     s.table(

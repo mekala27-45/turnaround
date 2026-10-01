@@ -25,7 +25,7 @@ def definition() -> Plan:
         test="The change from the first full year to the latest full year in each series, with day bootstrap intervals.",
         split="Descriptive over every year; nothing is fit, so there is nothing to choose on the fitting years.",
         family="None; two series, one comparison.",
-        interval=f"Block bootstrap over days, {POLICY.bootstrap_replicates} replicates, percentile {POLICY.interval_level:.0%}.",
+        interval=f"Block bootstrap over days, {POLICY.bootstrap_replicates} replicates, {POLICY.interval_level:.0%} percentile intervals.",
         simulator=(
             "A two year simulated network whose padding steps on known dates while the flying does not change: the "
             "panel's scheduled block change against the true padding change, and whether the actual block change's "

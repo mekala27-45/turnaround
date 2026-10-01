@@ -157,6 +157,35 @@ def rotations_on(con: duckdb.DuckDBPyConnection, *, legs: str, days: list[str]) 
     ).pl()
 
 
+def sample_rotations(
+    con: duckdb.DuckDBPyConnection, *, legs: str, days: list[str], per_day: int = 20
+) -> pl.DataFrame:
+    """The legs of the most delayed rotations on each of the given days, ranked by the departure delay
+    minutes the rotation's legs carried (ties broken by rotation id), for the aircraft's day page."""
+    if not days:
+        return pl.DataFrame()
+    listed = ", ".join(f"date '{d}'" for d in days)
+    return con.execute(
+        f"""
+        with chosen as (
+            select flight_date, rotation_id, sum(greatest(dep_delay, 0)) as delay_minutes
+            from {legs} where flight_date in ({listed})
+            group by flight_date, rotation_id
+        ),
+        ranked as (
+            select *, row_number() over (partition by flight_date order by delay_minutes desc, rotation_id) as rank
+            from chosen
+        )
+        select l.flight_date, l.tail_number, l.carrier, l.rotation_id, l.leg_index, l.day_leg_index,
+               l.origin, l.dest, l.sched_dep_utc, l.sched_arr_utc, l.dep_delay, l.arr_delay, l.sched_turn,
+               l.link_status, l.prev_arr_delay, r.rank
+        from {legs} l
+        join ranked r on r.rotation_id = l.rotation_id and r.flight_date = l.flight_date and r.rank <= {per_day}
+        order by l.flight_date, r.rank, l.leg_index
+        """
+    ).pl()
+
+
 def message(r: InheritedResult) -> str:
     share = r.share
     if share >= 0.5:

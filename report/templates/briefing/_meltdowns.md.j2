@@ -1,0 +1,12 @@
+## {{ number }}. {{ v('plan.7.title') }}
+
+<!-- chart: meltdowns -->
+**{{ message('meltdowns') }}.**
+
+The detector's threshold of {{ v('ch7.threshold') }} was chosen on the fitting years by cost ({{ v('ch7.interior') }}) and flagged {{ v('ch7.test.detected') }} of {{ v('ch7.test.events') }} reporting year disruptions, at {{ v('ch7.test.false_per_thousand') }} false alarm episodes per thousand unit days.
+
+{% if has('ch7.study.WN.carrier') %}{{ v('ch7.study.WN.carrier') }} in {{ v('ch7.study.WN.onset') }} cancelled {{ v('ch7.study.WN.excess_cancelled') }} more flights than its peers' rate implies.{% endif %}{% if has('ch7.study.DL.carrier') %} {{ v('ch7.study.DL.carrier') }} in {{ v('ch7.study.DL.onset') }} cancelled {{ v('ch7.study.DL.excess_cancelled') }} more.{% endif %}
+
+*Method.* Plan `{{ v('plan.7.hash') }}`. {{ v('plan.7.estimator') }} {{ v('plan.7.interval') }}
+
+**What the ops director would push back on.** The peers were hit by the same storm and carried some stranded passengers, so the excess is a floor.

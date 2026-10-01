@@ -177,4 +177,4 @@ def message(r: DefinitionResult) -> str:
         flying = "flights took longer while the schedule did not"
     else:
         flying = "neither the schedule nor the flying changed much"
-    return f"The on time rate {rate} while {flying}"
+    return f"The on time rate {rate}, and {flying}"

@@ -1,0 +1,12 @@
+## {{ number }}. {{ v('plan.6.title') }}
+
+<!-- chart: causes -->
+**{{ message('causes') }}.**
+
+Over the window carriers put {{ v('metric.reported_late_aircraft_share') }} of cause minutes on a late aircraft, {{ v('metric.reported_nas_share') }} on the air traffic system and {{ v('metric.reported_weather_share') }} on weather. The air traffic system's share is highest at {{ v('ch6.nas_top3') }}.
+
+Measured from the weather at both ends, weather explains {{ v('ch6.weather_share') }} of arrival delay minutes ({{ v('ch6.weather_share.low') }} to {{ v('ch6.weather_share.high') }}) against {{ v('ch6.reported_weather_share') }} in the weather field on the same flights.
+
+*Method.* Plan `{{ v('plan.6.hash') }}`. {{ v('plan.6.estimator') }} {{ v('plan.6.interval') }}
+
+**What the ops director would push back on.** Airport weather is not en route weather, so the estimate is a floor on weather's share.

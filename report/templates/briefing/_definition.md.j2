@@ -1,0 +1,12 @@
+## {{ number }}. {{ v('plan.1.title') }}
+
+<!-- chart: definition -->
+**{{ message('definition') }}.**
+
+The on time rate moved {{ v('ch1.on_time.change') }} (interval {{ v('ch1.on_time.change.low') }} to {{ v('ch1.on_time.change.high') }}) from {{ v('ch1.first_year') }} to {{ v('ch1.last_year') }}. On {{ v('ch1.panel_routes') }} routes flown every year, the scheduled gate to gate time moved {{ v('ch1.sched.change') }} and the actual time {{ v('ch1.actual.change') }}.
+
+The rate grades the airline against its own estimate. When the estimate grows faster than the flying, the rate improves without a single flight getting faster.
+
+*Method.* Plan `{{ v('plan.1.hash') }}`. {{ v('plan.1.estimator') }} {{ v('plan.1.interval') }}
+
+**What the ops director would push back on.** Longer schedules reflect real congestion, not gaming. Agreed, which is why the actual time sits beside the scheduled time; the claim is only that the rate measures the airline against a target it sets.
