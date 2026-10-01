@@ -1,0 +1,390 @@
+@import "tailwindcss";
+
+/* Every color is a token generated from src/theme/palette.json, which the palette validator
+   checks in both modes. Light is the default: newsprint surfaces for a long read. Dark is a full
+   theme, not an inversion, built for the explorer and the data pages; print always takes light.
+   Series never borrow a status color. */
+@import "./tokens.css";
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-hairline: var(--hairline);
+  --color-ink: var(--ink);
+  --color-ink2: var(--ink2);
+  --color-control: var(--control);
+  --color-lead: var(--lead);
+  --color-good: var(--good);
+  --color-warning: var(--warning);
+  --color-serious: var(--serious);
+  --color-critical: var(--critical);
+  --font-sans: var(--font-franklin), system-ui, sans-serif;
+  --font-display: var(--font-franklin), system-ui, sans-serif;
+  --font-serif: var(--font-spectral), Georgia, serif;
+  --font-mono: var(--font-courier), ui-monospace, monospace;
+}
+
+/* Element defaults sit in the base layer, so a utility class on an element still wins. */
+@layer base {
+  html {
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  body {
+    background: var(--surface);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    /* 15px for the interface and tables; the story sets 18px Spectral, the memo 16px. */
+    font-size: 15px;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+  }
+  h1,
+  h2 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  h3 {
+    font-weight: 650;
+  }
+
+  a {
+    color: inherit;
+    text-underline-offset: 2px;
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+td.num,
+th.num,
+dd.num {
+  text-align: right;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Running text keeps a readable measure; tables and charts use the full width. */
+.prose {
+  max-width: 70ch;
+}
+.prose p + p {
+  margin-top: 0.75rem;
+}
+
+/* Tables: hairline rules, figures right aligned on tabular numerals. */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+.data-table th,
+.data-table td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: top;
+  text-align: left;
+}
+.data-table th {
+  color: var(--ink2);
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+.data-table th.num,
+.data-table td.num {
+  text-align: right;
+  white-space: nowrap;
+}
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.data-table caption {
+  text-align: left;
+  color: var(--ink2);
+  font-size: 0.8125rem;
+  padding-bottom: 0.4rem;
+}
+/* Dense tables, such as a chart's data, set their figures in the mono face. */
+.data-table.dense {
+  font-size: 0.8125rem;
+}
+.data-table.dense td.num {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+.data-table tr[data-status="warning"] td:first-child {
+  box-shadow: inset 3px 0 0 var(--warning);
+}
+
+.card {
+  background: var(--raised);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  /* A card never widens the page: a wide table or the tile grid scrolls inside it instead. */
+  min-width: 0;
+  max-width: 100%;
+}
+
+main {
+  overflow-x: clip;
+}
+
+/* A chart's own background: the gap between stacked segments is drawn in it. */
+.chart {
+  --chart-bg: var(--raised);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--hairline) 0%, var(--surface) 50%, var(--hairline) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 4px;
+  opacity: 0.7;
+}
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--lead);
+  outline-offset: 2px;
+}
+
+/* The range input: a real control, styled only as far as color and size. */
+input[type="range"] {
+  accent-color: var(--lead);
+  width: 100%;
+  height: 28px;
+}
+
+input[type="number"],
+input[type="password"],
+select {
+  background: var(--raised);
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 0.25rem 0.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The operations review: the body face at 16px and a 68 character measure, a sheet on screen,
+   plain paper in print. */
+.memo {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+}
+.memo > p,
+.memo > ul,
+.memo > ol,
+.memo section > p,
+.memo section > ul,
+.memo section > ol,
+.memo h1,
+.memo h2,
+.memo h3 {
+  max-width: 68ch;
+}
+.memo h2 {
+  font-size: 1.5rem;
+  margin: 2.5rem 0 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--hairline);
+}
+.memo p + p {
+  margin-top: 0.75rem;
+}
+.memo ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.memo li + li {
+  margin-top: 0.35rem;
+}
+.memo table {
+  font-family: var(--font-sans);
+}
+
+@media print {
+  @page {
+    margin: 18mm 16mm;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  nav,
+  .no-print {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+  .memo,
+  .memo * {
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  /* Each section of the memo starts a page; the first follows the title on page one. */
+  .memo section {
+    break-before: page;
+  }
+  .memo section:first-of-type {
+    break-before: auto;
+  }
+  .memo h2 {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+    break-after: avoid;
+  }
+  .memo table,
+  .memo figure,
+  .memo tr {
+    break-inside: avoid;
+  }
+  .memo [role="region"] {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .memo .data-table th,
+  .memo .data-table td {
+    border-bottom-color: #999 !important;
+  }
+  .report-sheet {
+    border: none !important;
+    padding: 0 !important;
+  }
+  a {
+    text-decoration: none;
+  }
+}
+
+/* The long read: Spectral at 18px, a line height of 1.6 and a measure of 66 characters. */
+.longread {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 66ch;
+}
+.longread p + p {
+  margin-top: 1rem;
+}
+.longread strong {
+  font-weight: 600;
+}
+.longread code,
+.mono,
+.sql {
+  font-family: var(--font-mono);
+}
+.sql {
+  white-space: pre-wrap;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 0.75rem;
+  overflow-x: auto;
+}
+.memo {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 1.55;
+}
+.kicker {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  font-weight: 650;
+}
+.chapter-number {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  color: var(--lead);
+}
+/* The sticky chart: on wide screens the chart stays beside the text; on phones and under reduced
+   motion the chapter stacks, chart above text, and every state is shown in turn. */
+.story-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+}
+@media (min-width: 1024px) {
+  .story-grid {
+    grid-template-columns: minmax(0, 66ch) minmax(0, 1fr);
+    gap: 3rem;
+  }
+  .story-sticky {
+    position: sticky;
+    top: 5rem;
+    align-self: start;
+  }
+}
+@media (max-width: 1023px) {
+  .story-sticky {
+    order: -1;
+  }
+}
+.story-step {
+  padding: 1rem 0;
+  min-height: 40vh;
+}
+@media (max-width: 1023px), (prefers-reduced-motion: reduce) {
+  .story-step {
+    min-height: 0;
+  }
+}
+.story-step[data-active="true"] {
+  border-left: 3px solid var(--lead);
+  padding-left: 1rem;
+  margin-left: -1.2rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
