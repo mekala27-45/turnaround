@@ -62,7 +62,7 @@ export function ExploreClient() {
   );
   const years = useMart<{ year: number }>(`select distinct year from ${rm} order by year`);
 
-  const sqlMonthly = `select year, month, sum(scheduled) as scheduled, sum(flown) as flown,\n       sum(on_time) / sum(flown) as on_time_rate,\n       sum(arr_delay_sum) / sum(flown) as mean_delay,\n       sum(padding_sum) / sum(flown) as padding\nfrom ${rm}\n${where(pick, { carrier: true, route: true, year: true, month: true })}\ngroup by year, month order by year, month`;
+  const sqlMonthly = `select year, month, sum(scheduled) as scheduled, sum(flown) as flown,\n       sum(on_time) / sum(flown) as on_time_rate,\n       sum(arr_delay_sum) / sum(flown) as mean_delay,\n       sum(padding_sum) / nullif(sum(padding_flights), 0) as padding\nfrom ${rm}\n${where(pick, { carrier: true, route: true, year: true, month: true })}\ngroup by year, month order by year, month`;
   const monthly = useMart<{ year: number; month: number; scheduled: number; flown: number; on_time_rate: number; mean_delay: number; padding: number }>(sqlMonthly);
 
   const sqlByMonth = `select month, sum(flown) as flown, sum(on_time) / sum(flown) as on_time_rate\nfrom ${rm}\n${where(pick, { carrier: true, route: true, year: true })}\ngroup by month order by month`;

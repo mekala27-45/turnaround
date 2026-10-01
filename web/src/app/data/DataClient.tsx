@@ -6,9 +6,23 @@ import { mart } from "@/lib/data";
 import { formatValue, type Scalar } from "@/lib/format";
 import { useMart } from "@/lib/useMart";
 
+// The rules in the order packages/contracts lists them; the mart has one count column per rule.
+const RULES = [
+  ["duplicate_key", "Duplicate key"],
+  ["actual_without_scheduled", "Actual without scheduled"],
+  ["negative_time", "Negative time"],
+  ["elapsed_mismatch", "Elapsed mismatch"],
+  ["cause_mismatch", "Cause mismatch"],
+  ["tail_missing", "Tail missing"],
+  ["tail_format", "Tail format"],
+  ["revision", "Revision"],
+] as const;
+type RuleName = (typeof RULES)[number][0];
+type QuarantineRow = { carrier: string; year: number; month: number; rows: number; excluded: number } & Record<RuleName, number>;
+
 export function QuarantineByMonth() {
-  const sql = `select carrier, year, month, rows, excluded\nfrom ${mart("quarantine")}\norder by year, month, carrier`;
-  const q = useMart<{ carrier: string; year: number; month: number; rows: number; excluded: number }>(sql);
+  const sql = `select carrier, year, month, rows, ${RULES.map(([r]) => r).join(", ")}, excluded\nfrom ${mart("quarantine")}\norder by year, month, carrier`;
+  const q = useMart<QuarantineRow>(sql);
   const rows = q.rows ?? [];
   const total = rows.reduce((a, r) => a + r.rows, 0);
   const excluded = rows.reduce((a, r) => a + r.excluded, 0);
@@ -16,10 +30,14 @@ export function QuarantineByMonth() {
     <Figure
       testId="quarantine-by-month"
       message={total ? `${formatValue(excluded / total, "pct2")} of rows were excluded from everything by a quarantine rule` : "The quarantine report by carrier and month"}
-      subtitle="Rows and rows excluded by carrier and month"
+      subtitle="Rows flagged by each rule, by carrier and month; a row can trip more than one rule"
       source="Source: BTS Reporting Carrier On-Time Performance (real), the warehouse's mart_quarantine."
       sql={sql}
-      table={{ columns: ["Carrier", "Year", "Month", "Rows", "Excluded"], formats: ["text", "year", "int", "int", "int"], rows: rows.map((r) => [r.carrier, r.year, r.month, r.rows, r.excluded]) }}
+      table={{
+        columns: ["Carrier", "Year", "Month", "Rows", ...RULES.map(([, label]) => label), "Excluded"],
+        formats: ["text", "year", "int", "int", ...RULES.map(() => "int"), "int"],
+        rows: rows.map((r) => [r.carrier, r.year, r.month, r.rows, ...RULES.map(([name]) => r[name]), r.excluded]),
+      }}
     >
       {q.rows ? (
         <p className="text-sm text-ink2">
