@@ -93,6 +93,9 @@ def run(p: Paths, *, stages: tuple[str, ...] = ("warehouse", "chapters")) -> Man
         s.put(f"metric.{metric.name}", values[metric.name], metric.fmt)
     s.put("metrics.summary_year", str(summary_year) if summary_year is not None else "none", "text")
     for metric in metrics:
+        s.put(f"metric_sql.{metric.name}.flight", metric.flight, "text")
+        s.put(f"metric_sql.{metric.name}.mart", metric.mart, "text")
+    for metric in metrics:
         if metric.name in year_values:
             s.put(f"metric.{metric.name}.summary_year", year_values[metric.name], metric.fmt)
     s.table(

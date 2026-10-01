@@ -120,8 +120,10 @@ def evaluate(m: Manifest, facts: dict[str, Any]) -> list[Item]:
         has(
             "data.months", "quarantine.by_rule", "registry.flight_join_rate", "airports.count", "weather.rows"
         )
+        and raw("data.gaps") == "none"
         and facts["provenance"],
-        f"{v('data.months')} monthly files from {v('data.first_month')} to {v('data.last_month')}, {v('data.rows')} rows; "
+        f"{v('data.months')} monthly files from {v('data.first_month')} to {v('data.last_month')} "
+        f"(missing: {v('data.gaps')}), {v('data.rows')} rows; "
         f"quarantine by rule and by carrier and month on the data page; registry join {v('registry.flight_join_rate')} of flights; "
         f"{v('airports.count')} airports; {v('weather.rows')} hourly weather rows; data/PROVENANCE.md.",
     )

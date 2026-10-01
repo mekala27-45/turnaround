@@ -226,6 +226,21 @@ def run(p: Paths) -> Manifest:
     bts.put("data.rows_millions", rows, "millions1")
     bts.put("data.files_bytes", sum(r.bytes for r in reports), "int")
     bts.put("data.layout_matches", sum(r.layout_matches_readme for r in reports), "int")
+    present = {(r.year, r.month) for r in reports}
+    expected: list[tuple[int, int]] = []
+    y, mo = first
+    while (y, mo) <= last:
+        expected.append((y, mo))
+        y, mo = (y + 1, 1) if mo == 12 else (y, mo + 1)
+    gaps = [f"{a}-{b:02d}" for a, b in expected if (a, b) not in present]
+    bts.put("data.months_expected", len(expected), "int")
+    bts.put("data.gaps", ", ".join(gaps) if gaps else "none", "text")
+    bts.table(
+        "data.files",
+        ["File", "Rows", "Bytes", "SHA-256 (first 16)"],
+        ["text", "int", "int", "text"],
+        [[r.file, r.rows, r.bytes, r.sha256[:16]] for r in sorted(reports, key=lambda r: (r.year, r.month))],
+    )
     totals = quarantine.select(pl.exclude(["carrier", "year", "month"])).sum()
     flagged_any = 0
     rule_rows: list[list[str | int | float | None]] = []
