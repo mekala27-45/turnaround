@@ -232,10 +232,12 @@ def evaluate(m: Manifest, facts: dict[str, Any]) -> list[Item]:
         and raw("palette.failures") == 0
         and 40 <= commits <= 60
         and rederive.get("drift") == 0
+        and str(rederive.get("where", "in place")) != "in place"
         and bool(release.get("tag_pushed"))
         and facts["license"],
         f"coverage {coverage if coverage is not None else 'not measured'} percent; mypy {q.get('mypy', 'not run')}; ruff {q.get('ruff', 'not run')}; "
-        f"palette {v('palette.validated')}; {commits} commits; rederive {rederive.get('status', 'not run')}; "
+        f"palette {v('palette.validated')}; {commits} commits; rederive {rederive.get('status', 'not run')}"
+        f"{' in a worktree' if str(rederive.get('where', 'in place')) != 'in place' else ''}; "
         f"tag {'pushed' if release.get('tag_pushed') else 'not pushed'}; Apache 2.0 with the four data sources' terms.",
     )
     return items

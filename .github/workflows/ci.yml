@@ -37,7 +37,7 @@ jobs:
         run: |
           uv run python scripts/check_no_em_dash.py
           uv run python scripts/check_vocabulary.py
-      - name: Claim gate (the story, the memo and every document re-rendered from the manifest and diffed)
+      - name: Claim gate (every document re-rendered from the manifest and diffed)
         run: uv run python scripts/check_published_numbers.py
       - name: The statement on every document, the story and the memo
         run: uv run python scripts/check_statement.py
@@ -60,12 +60,106 @@ jobs:
           --health-interval 5s --health-timeout 5s --health-retries 10
     env:
       TURNAROUND_TEST_DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/turnaround_test
+      # A dependency CI provides cannot turn into a skip: a missing one fails the test that needs it.
       TURNAROUND_REQUIRE_POSTGRES: "1"
+      TURNAROUND_REQUIRE_LIBREOFFICE: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: LibreOffice for the workbook's recalculation test
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libreoffice-calc-nogui
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: "3.12"
       - run: uv sync --frozen
+      - name: The dependencies this job promises, probed
+        run: uv run python scripts/probe_dependencies.py --require postgres,libreoffice,duckdb,dbt
       - name: Tests with the coverage floor
         run: uv run pytest --cov --cov-report=term-missing:skip-covered --cov-report=xml
+      # The check migrates with alembic from an empty database, so it gets one of its own rather
+      # than the one the test fixtures filled.
+      - name: The check log observed out of process
+        run: |
+          uv run python -c "import psycopg; c = psycopg.connect('postgresql://postgres:postgres@localhost:5432/postgres', autocommit=True); c.execute('drop database if exists turnaround_check'); c.execute('create database turnaround_check')"
+          uv run python scripts/check_persistence.py --start-server
+        env:
+          TURNAROUND_TEST_DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/turnaround_check
+      - name: A short load test against the API on the committed marts
+        run: |
+          uv run python -c "import psycopg; c = psycopg.connect('postgresql://postgres:postgres@localhost:5432/postgres', autocommit=True); c.execute('drop database if exists turnaround_load'); c.execute('create database turnaround_load')"
+          (cd packages/api && uv run alembic -c alembic.ini upgrade head)
+          uv run uvicorn turnaround_api.main:app --port 8090 --log-level warning &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8090/v1/health > /dev/null && break; sleep 1; done
+          uv run pytest -q -p no:cacheprovider tests/api/test_load.py
+        env:
+          DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/turnaround_load
+          TURNAROUND_WRITE_TOKEN: ci-token
+          TURNAROUND_LOADTEST_BASE: http://127.0.0.1:8090
+          TURNAROUND_REQUIRE_LOADTEST: "1"
+      - name: The three notebooks run on the committed results
+        run: uv run pytest --nbmake notebooks -p no:cacheprovider
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - name: Build against the test server's mock API, which refuses HEAD and answers a first 503
+        run: npm run build:e2e
+      - run: npx playwright install --with-deps chromium
+      - name: Every route, the sticky charts, the method notes and SQL toggles, the explorer, the slope chart, the timeline, a saved check and the recorded session, phone layouts
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: web/playwright-report
+          retention-days: 7
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --frozen
+        working-directory: .
+      - name: The statement on every built page, and the identifier scan over the built site
+        working-directory: .
+        run: |
+          uv run python scripts/check_statement.py
+          uv run python scripts/scan_for_planted_identifiers.py
+
+  containers:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: turnaround_container
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the pipeline image (its build probes LibreOffice, dbt, DuckDB and Node)
+        run: docker build -f Dockerfile.pipeline -t turnaround-pipeline .
+      - name: Inside the pipeline container, the dependencies and the tests that need them
+        run: |
+          docker run --rm turnaround-pipeline python scripts/probe_dependencies.py --require duckdb,dbt,libreoffice,node
+          docker run --rm -e TURNAROUND_REQUIRE_LIBREOFFICE=1 turnaround-pipeline pytest -q -p no:cacheprovider tests/exports tests/gates tests/core
+      - name: Build the API image and answer health against Postgres
+        run: |
+          docker build -f Dockerfile.api -t turnaround-api .
+          docker run -d --name api --network host \
+            -e DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5432/turnaround_container \
+            -e TURNAROUND_WRITE_TOKEN=ci-token -e PORT=8080 turnaround-api
+          for i in $(seq 1 60); do curl -sf http://127.0.0.1:8080/v1/health && break; sleep 2; done
+          curl -sf http://127.0.0.1:8080/v1/health | python3 -c "import json,sys; b=json.load(sys.stdin); assert b['database']=='ok' and b['statement'], b; print('api container healthy:', b['model_version'])"
+          docker logs api | tail -20

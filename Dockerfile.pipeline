@@ -1,0 +1,23 @@
+# The pipeline: every stage from the raw files to the rendered documents, with what the tests probe
+# for installed rather than skipped: LibreOffice to recalculate the workbook, dbt over DuckDB for the
+# warehouse, Node for the palette validator, git for the rederive's worktree.
+#
+#   docker build -f Dockerfile.pipeline -t turnaround-pipeline .
+#   docker run --rm -v "$PWD/data/external:/app/data/external:ro" turnaround-pipeline make pipeline
+FROM python:3.12-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy \
+    DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libreoffice-calc-nogui nodejs git make ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir "uv>=0.8,<0.9"
+WORKDIR /app
+COPY pyproject.toml uv.lock README.md ./
+COPY packages ./packages
+RUN uv sync --frozen --no-install-workspace
+COPY . .
+RUN uv sync --frozen
+ENV PATH="/app/.venv/bin:$PATH" TURNAROUND_ENV=pipeline
+# The container fails its own build if a dependency the tests would otherwise skip for is missing.
+RUN python scripts/probe_dependencies.py --require duckdb,dbt,libreoffice,node
+CMD ["make", "check"]

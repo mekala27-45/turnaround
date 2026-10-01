@@ -1,0 +1,69 @@
+name: pages
+
+# Builds the static site in web/ and publishes it to GitHub Pages under /turnaround. The site reads the
+# manifest, the story and the marts committed in web/public/data. The live API is named by the
+# TURNAROUND_API_URL repository variable; when the variable is empty the site uses the deployed
+# address, and when the API is asleep the planner answers from the recorded session and says so.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npx playwright install --with-deps chromium
+      # The tests run against a build pointed at the test server's mock API (which refuses HEAD and
+      # answers a first 503), so they pass whether the live API is awake or not and never need the
+      # network; the build that ships points at the live API.
+      - name: Build against the mock API and run every route, the story's states, the planner, phone layouts
+        run: npm run build:e2e && npx playwright test
+        env:
+          NEXT_PUBLIC_BASE_PATH: /turnaround
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /turnaround
+          NEXT_PUBLIC_TURNAROUND_API: ${{ vars.TURNAROUND_API_URL }}
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: web/playwright-report
+          retention-days: 7
+      # Pages has to be enabled once in the repository's settings with GitHub Actions as the source;
+      # the workflow's token cannot enable it.
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
