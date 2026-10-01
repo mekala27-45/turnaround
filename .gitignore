@@ -37,6 +37,10 @@ web/test-results/
 web/playwright-report/
 web/tsconfig.tsbuildinfo
 web/public/duckdb/
+# The site's data folder is written from the committed results by `turnaround marts` (in CI too);
+# only the recorded session, which a run against the API produces, is kept in the repository.
+web/public/data/*
+!web/public/data/recorded_session.json
 web/src/app/tokens.css
 
 # Local environment and what the deploy scripts write on the machine that runs them
