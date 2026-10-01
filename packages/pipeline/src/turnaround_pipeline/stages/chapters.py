@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import csv
 import json
+import os
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -133,7 +134,9 @@ def run(
     chapters_dir = p.results / "chapters"
     chapters_dir.mkdir(parents=True, exist_ok=True)
 
-    con = connect(p, memory_limit="5GB")
+    # DuckDB shares the machine with the estimators' arrays (twenty million linked legs and their
+    # design in chapter 4), so its buffer is held well under the memory there is; it spills past it.
+    con = connect(p, memory_limit=os.environ.get("TURNAROUND_CHAPTERS_DUCKDB_MEMORY", "2500MB"))
     db = warehouse_db or p.warehouse_db
     con.execute(f"attach '{db.as_posix()}' as wh")
     w = window(con, flights)

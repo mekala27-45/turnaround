@@ -32,7 +32,7 @@ class FixedEffectsError(ValueError):
 def _codes(group: npt.ArrayLike) -> npt.NDArray[np.int64]:
     values = np.asarray(group)
     if values.dtype.kind in "iu" and values.min(initial=0) >= 0:
-        return values.astype(np.int64)
+        return values.astype(np.int64, copy=False)
     _, inverse = np.unique(values, return_inverse=True)
     return inverse.astype(np.int64)
 
@@ -44,10 +44,12 @@ def demean(
     *,
     tol: float = 1e-10,
     max_iter: int = 5000,
+    copy: bool = True,
 ) -> tuple[Array, int, bool]:
     """Sweep every grouping out of every column of ``values``; returns the residuals, the iterations
-    used and whether the sweep converged."""
-    out = np.array(values, dtype=np.float64, copy=True)
+    used and whether the sweep converged. With ``copy=False`` a float64 array is swept in place, which
+    is how twenty million linked legs fit in memory with their design."""
+    out = np.array(values, dtype=np.float64, copy=True) if copy else np.asarray(values, dtype=np.float64)
     if out.ndim == 1:
         out = out[:, None]
     w = np.asarray(weights, dtype=np.float64)
@@ -176,9 +178,10 @@ def cluster_scores(x_tilde: Array, resid: Array, weights: Array, cluster: npt.Ar
     """Per cluster sums of w * e * x, one row per cluster. Exact when every cell lies in one cluster."""
     code = _codes(cluster)
     size = int(code.max()) + 1
-    contribution = (weights * resid)[:, None] * x_tilde
+    # Column by column: the full rows by regressors product would double the memory of the design.
+    weighted = weights * resid
     return np.column_stack(
-        [np.bincount(code, weights=contribution[:, j], minlength=size) for j in range(x_tilde.shape[1])]
+        [np.bincount(code, weights=weighted * x_tilde[:, j], minlength=size) for j in range(x_tilde.shape[1])]
     )
 
 

@@ -121,33 +121,37 @@ def fit_rho(links: Links, m: int, *, level_z: float = 1.959963984540054) -> tupl
 
 
 def buffer_curve(links: Links, bins: Sequence[int]) -> list[CurvePoint]:
-    """Reduced form: slope of departure delay on a late inbound's minutes, by scheduled turnaround bin."""
-    late = np.maximum(links.prev_arr_delay, 0.0)
+    """Reduced form: slope of departure delay on a late inbound's minutes, by scheduled turnaround bin.
+
+    Built for the size of the real reporting years (tens of millions of links). Only the links whose
+    scheduled turn falls in the bins enter, which is the same fit as weighting the others zero, and
+    the outcome and the bins' columns are one float64 block swept in place."""
     edges = list(bins)
-    columns = []
-    counts = []
-    for lo, hi in zip(edges[:-1], edges[1:], strict=True):
-        inside = (links.sched_turn >= lo) & (links.sched_turn < hi)
-        columns.append(np.where(inside, late, 0.0))
-        counts.append(int(inside.sum()))
-    keep = (links.sched_turn >= edges[0]) & (links.sched_turn < edges[-1])
-    w = keep.astype(np.float64)
-    design = np.column_stack(columns)
-    stacked, _, _ = demean(np.column_stack([links.dep_delay, design]), w, _groups(links))
-    y, x = stacked[keep, 0], stacked[keep, 1:]
-    present = np.array(counts) > 0
-    x = x[:, present]
+    keep = np.flatnonzero((links.sched_turn >= edges[0]) & (links.sched_turn < edges[-1]))
+    turn = links.sched_turn[keep]
+    which = np.searchsorted(np.asarray(edges[1:-1], dtype=np.float64), turn, side="right")
+    del turn
+    counts = [int(np.count_nonzero(which == j)) for j in range(len(edges) - 1)]
+    present = [j for j, n in enumerate(counts) if n > 0]
+    stacked = np.zeros((keep.shape[0], 1 + len(present)))
+    stacked[:, 0] = links.dep_delay[keep]
+    late = np.maximum(links.prev_arr_delay[keep], 0.0)
+    for column, j in enumerate(present, start=1):
+        inside = which == j
+        stacked[inside, column] = late[inside]
+    del late, which
+    groups = [g[keep] for g in _groups(links)]
+    demean(stacked, np.ones(keep.shape[0]), groups, copy=False)
+    del groups
+    y, x = stacked[:, 0], stacked[:, 1:]
     bread_inverse = np.linalg.inv(x.T @ x)
     beta = bread_inverse @ (x.T @ y)
     resid = y - x @ beta
     vcov = vcov_from_scores(bread_inverse, cluster_scores(x, resid, np.ones(x.shape[0]), links.cluster[keep]))
-    out: list[CurvePoint] = []
-    j = 0
-    for (lo, hi), n, ok in zip(zip(edges[:-1], edges[1:], strict=True), counts, present, strict=True):
-        if ok:
-            out.append(CurvePoint(int(lo), int(hi), float(beta[j]), float(np.sqrt(vcov[j, j])), n))
-            j += 1
-    return out
+    return [
+        CurvePoint(int(edges[j]), int(edges[j + 1]), float(beta[i]), float(np.sqrt(vcov[i, i])), counts[j])
+        for i, j in enumerate(present)
+    ]
 
 
 def inherited_minutes(links: Links, rho: float, m: int) -> float:
@@ -203,24 +207,28 @@ def load_links(con: object, legs_table: str, where: str = "true") -> Links:
     import duckdb
 
     assert isinstance(con, duckdb.DuckDBPyConnection)
-    frame = con.execute(
+    # The groupings arrive as dense integer codes ranked in DuckDB, not as strings: twenty million
+    # Python strings per grouping would not fit beside the arrays. Codes are labels only; the fit is
+    # the same whatever numbers name the groups.
+    arrays = con.execute(
         f"""
         select dep_delay::double as dep_delay, prev_arr_delay::double as prev_arr_delay,
-               sched_turn::double as sched_turn, carrier || ':' || cast(flight_date as varchar) as carrier_day,
-               origin || ':' || cast(flight_date as varchar) as origin_day,
-               cast(dep_hour as integer) as dep_hour_local,
-               tail_number || ':' || cast(cast(sched_dep_utc as date) as varchar) as tail_day
+               sched_turn::double as sched_turn,
+               (dense_rank() over (order by carrier, flight_date) - 1)::bigint as carrier_day,
+               (dense_rank() over (order by origin, flight_date) - 1)::bigint as origin_day,
+               (dense_rank() over (order by dep_hour) - 1)::bigint as dep_hour_local,
+               (dense_rank() over (order by tail_number, cast(sched_dep_utc as date)) - 1)::bigint as tail_day
         from {legs_table}
         where link_status = 'linked' and ({where})
         order by flight_id
         """
-    ).pl()
+    ).fetchnumpy()
     return Links(
-        dep_delay=frame["dep_delay"].to_numpy(),
-        prev_arr_delay=frame["prev_arr_delay"].to_numpy(),
-        sched_turn=frame["sched_turn"].to_numpy(),
-        carrier_day=encode(frame["carrier_day"].to_numpy()),
-        origin_day=encode(frame["origin_day"].to_numpy()),
-        dep_hour=encode(frame["dep_hour_local"].to_numpy()),
-        cluster=encode(frame["tail_day"].to_numpy()),
+        dep_delay=np.asarray(arrays["dep_delay"], dtype=np.float64),
+        prev_arr_delay=np.asarray(arrays["prev_arr_delay"], dtype=np.float64),
+        sched_turn=np.asarray(arrays["sched_turn"], dtype=np.float64),
+        carrier_day=np.asarray(arrays["carrier_day"], dtype=np.int64),
+        origin_day=np.asarray(arrays["origin_day"], dtype=np.int64),
+        dep_hour=np.asarray(arrays["dep_hour_local"], dtype=np.int64),
+        cluster=np.asarray(arrays["tail_day"], dtype=np.int64),
     )
