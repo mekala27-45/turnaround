@@ -1,0 +1,186 @@
+{
+ "id": "inherited",
+ "kind": "line",
+ "message": "About a third of arrival delay was inherited from the aircraft's previous flight, and a scheduled turn of 75 minutes halves what is passed on",
+ "notes": [],
+ "panels": [
+  {
+   "annotations": [
+    {
+     "state": "halving",
+     "text": "half passed on at 75 min",
+     "x": 75.0,
+     "y": null
+    }
+   ],
+   "bands": [],
+   "rules": [],
+   "series": [
+    {
+     "dashed": false,
+     "high": [
+      1.52583,
+      1.09746,
+      1.04758,
+      1.04166,
+      0.960947,
+      0.81652,
+      0.656821,
+      0.439543,
+      0.261671
+     ],
+     "label": null,
+     "low": [
+      1.48206,
+      1.08817,
+      1.04166,
+      1.03522,
+      0.954718,
+      0.806459,
+      0.645504,
+      0.428209,
+      0.251352
+     ],
+     "name": "Passed on",
+     "points": [
+      [
+       15.0,
+       1.50395
+      ],
+      [
+       35.0,
+       1.09282
+      ],
+      [
+       45.0,
+       1.04462
+      ],
+      [
+       55.0,
+       1.03844
+      ],
+      [
+       67.5,
+       0.957833
+      ],
+      [
+       82.5,
+       0.811489
+      ],
+      [
+       105.0,
+       0.651163
+      ],
+      [
+       150.0,
+       0.433876
+      ],
+      [
+       240.0,
+       0.256512
+      ]
+     ],
+     "role": "delay"
+    }
+   ],
+   "title": "The buffer curve",
+   "y_format": null,
+   "y_label": null
+  }
+ ],
+ "source": "Source: BTS Reporting Carrier On-Time Performance, model: the propagation model, scheduled flights 2023 to 2026-07, as of 2026-10-01.",
+ "sql": "select * from wh.int_legs where link_status = 'linked' and year(flight_date) between 2023 and 2026",
+ "states": [
+  {
+   "caption": "How much of a late inbound arrival the next departure inherits, by scheduled turn.",
+   "highlight": [],
+   "id": "curve",
+   "show": []
+  },
+  {
+   "caption": "The buffer at which the minutes passed on halve.",
+   "highlight": [],
+   "id": "halving",
+   "show": [
+    "halving"
+   ]
+  }
+ ],
+ "subtitle": "Departure delay minutes passed on per minute of late inbound arrival, by scheduled turnaround",
+ "table_columns": [
+  "Turn from",
+  "Turn to",
+  "Legs",
+  "Slope",
+  "Standard error"
+ ],
+ "table_rows": [
+  [
+   0,
+   30,
+   223551,
+   1.50395,
+   0.0111651
+  ],
+  [
+   30,
+   40,
+   1747421,
+   1.09282,
+   0.00237063
+  ],
+  [
+   40,
+   50,
+   3901417,
+   1.04462,
+   0.00150984
+  ],
+  [
+   50,
+   60,
+   3970697,
+   1.03844,
+   0.00164336
+  ],
+  [
+   60,
+   75,
+   4338922,
+   0.957833,
+   0.00158893
+  ],
+  [
+   75,
+   90,
+   1573575,
+   0.811489,
+   0.00256652
+  ],
+  [
+   90,
+   120,
+   1111771,
+   0.651163,
+   0.0028869
+  ],
+  [
+   120,
+   180,
+   712102,
+   0.433876,
+   0.00289141
+  ],
+  [
+   180,
+   300,
+   428630,
+   0.256512,
+   0.00263229
+  ]
+ ],
+ "x_format": "min0",
+ "x_label": "Scheduled turnaround, minutes",
+ "y_format": "float2",
+ "y_label": "Minutes passed on per late minute"
+}

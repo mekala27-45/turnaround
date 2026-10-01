@@ -1,0 +1,450 @@
+{
+ "id": "ranking",
+ "kind": "slope",
+ "message": "The ranking changes once you hold constant what each carrier flies: PSA Airlines rises 4 places and Hawaiian Airlines falls 7",
+ "notes": [],
+ "panels": [
+  {
+   "annotations": [],
+   "bands": [],
+   "rules": [],
+   "series": [
+    {
+     "dashed": false,
+     "high": null,
+     "label": "Endeavor Air",
+     "low": null,
+     "name": "9E",
+     "points": [
+      [
+       "Raw",
+       1.0
+      ],
+      [
+       "Adjusted",
+       1.0
+      ]
+     ],
+     "role": "control"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "Republic Airways",
+     "low": null,
+     "name": "YX",
+     "points": [
+      [
+       "Raw",
+       2.0
+      ],
+      [
+       "Adjusted",
+       2.0
+      ]
+     ],
+     "role": "control"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "Envoy Air",
+     "low": null,
+     "name": "MQ",
+     "points": [
+      [
+       "Raw",
+       5.0
+      ],
+      [
+       "Adjusted",
+       3.0
+      ]
+     ],
+     "role": "early"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "Delta Air Lines",
+     "low": null,
+     "name": "DL",
+     "points": [
+      [
+       "Raw",
+       4.0
+      ],
+      [
+       "Adjusted",
+       4.0
+      ]
+     ],
+     "role": "control"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "United Airlines",
+     "low": null,
+     "name": "UA",
+     "points": [
+      [
+       "Raw",
+       7.0
+      ],
+      [
+       "Adjusted",
+       5.0
+      ]
+     ],
+     "role": "early"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "SkyWest Airlines",
+     "low": null,
+     "name": "OO",
+     "points": [
+      [
+       "Raw",
+       9.0
+      ],
+      [
+       "Adjusted",
+       6.0
+      ]
+     ],
+     "role": "early"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "PSA Airlines",
+     "low": null,
+     "name": "OH",
+     "points": [
+      [
+       "Raw",
+       11.0
+      ],
+      [
+       "Adjusted",
+       7.0
+      ]
+     ],
+     "role": "early"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "Southwest Airlines",
+     "low": null,
+     "name": "WN",
+     "points": [
+      [
+       "Raw",
+       6.0
+      ],
+      [
+       "Adjusted",
+       8.0
+      ]
+     ],
+     "role": "delay"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "Alaska Airlines",
+     "low": null,
+     "name": "AS",
+     "points": [
+      [
+       "Raw",
+       3.0
+      ],
+      [
+       "Adjusted",
+       9.0
+      ]
+     ],
+     "role": "delay"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "Spirit Airlines",
+     "low": null,
+     "name": "NK",
+     "points": [
+      [
+       "Raw",
+       10.0
+      ],
+      [
+       "Adjusted",
+       10.0
+      ]
+     ],
+     "role": "control"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "JetBlue Airways",
+     "low": null,
+     "name": "B6",
+     "points": [
+      [
+       "Raw",
+       13.0
+      ],
+      [
+       "Adjusted",
+       11.0
+      ]
+     ],
+     "role": "early"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "American Airlines",
+     "low": null,
+     "name": "AA",
+     "points": [
+      [
+       "Raw",
+       14.0
+      ],
+      [
+       "Adjusted",
+       12.0
+      ]
+     ],
+     "role": "early"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "Allegiant Air",
+     "low": null,
+     "name": "G4",
+     "points": [
+      [
+       "Raw",
+       12.0
+      ],
+      [
+       "Adjusted",
+       13.0
+      ]
+     ],
+     "role": "delay"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "Frontier Airlines",
+     "low": null,
+     "name": "F9",
+     "points": [
+      [
+       "Raw",
+       15.0
+      ],
+      [
+       "Adjusted",
+       14.0
+      ]
+     ],
+     "role": "early"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "Hawaiian Airlines",
+     "low": null,
+     "name": "HA",
+     "points": [
+      [
+       "Raw",
+       8.0
+      ],
+      [
+       "Adjusted",
+       15.0
+      ]
+     ],
+     "role": "delay"
+    }
+   ],
+   "title": "Raw against adjusted",
+   "y_format": null,
+   "y_label": null
+  }
+ ],
+ "source": "Source: BTS on time files joined to the FAA aircraft registry, model: fixed effects on weighted cells, scheduled flights 2023 to 2026-07, as of 2026-10-01.",
+ "sql": "select carrier, route, year * 100 + month as period, dep_hour, coalesce(type_code, 'unknown') as type_code,\n       count(*) as flights, avg(arr_delay) as arr_delay\nfrom wh.fct_flights\nwhere not cancelled and not diverted and arr_delay is not null and (year between 2023 and 2026)\ngroup by all",
+ "states": [
+  {
+   "caption": "The raw ranking: mean arrival delay against the average carrier.",
+   "highlight": [],
+   "id": "raw",
+   "show": []
+  },
+  {
+   "caption": "Held constant what each carrier flies.",
+   "highlight": [],
+   "id": "adjusted",
+   "show": [
+    "adjusted"
+   ]
+  },
+  {
+   "caption": "The largest moves.",
+   "highlight": [
+    "OH",
+    "HA"
+   ],
+   "id": "movers",
+   "show": []
+  }
+ ],
+ "subtitle": "Carrier rank on mean arrival delay, raw and adjusted for route, month, hour and aircraft type",
+ "table_columns": [
+  "Carrier",
+  "Raw rank",
+  "Raw effect",
+  "Adjusted rank",
+  "Adjusted effect",
+  "Adjusted se"
+ ],
+ "table_rows": [
+  [
+   "9E",
+   1,
+   -7.385,
+   1,
+   -13.1361,
+   0.510496
+  ],
+  [
+   "YX",
+   2,
+   -6.2619,
+   2,
+   -8.69671,
+   0.340695
+  ],
+  [
+   "MQ",
+   5,
+   -2.36049,
+   3,
+   -6.10093,
+   0.345267
+  ],
+  [
+   "DL",
+   4,
+   -3.62534,
+   4,
+   -2.91784,
+   0.172908
+  ],
+  [
+   "UA",
+   7,
+   -1.17552,
+   5,
+   -2.55316,
+   0.175685
+  ],
+  [
+   "OO",
+   9,
+   0.161185,
+   6,
+   -2.38181,
+   0.316477
+  ],
+  [
+   "OH",
+   11,
+   4.18972,
+   7,
+   -1.57568,
+   0.440805
+  ],
+  [
+   "WN",
+   6,
+   -1.63122,
+   8,
+   1.70863,
+   0.156443
+  ],
+  [
+   "AS",
+   3,
+   -3.97868,
+   9,
+   2.77674,
+   0.195901
+  ],
+  [
+   "NK",
+   10,
+   3.13678,
+   10,
+   3.09082,
+   0.289973
+  ],
+  [
+   "B6",
+   13,
+   5.98785,
+   11,
+   3.75969,
+   0.302471
+  ],
+  [
+   "AA",
+   14,
+   6.17731,
+   12,
+   5.16592,
+   0.170177
+  ],
+  [
+   "G4",
+   12,
+   5.56222,
+   13,
+   6.86015,
+   0.584737
+  ],
+  [
+   "F9",
+   15,
+   8.02712,
+   14,
+   8.54163,
+   0.283248
+  ],
+  [
+   "HA",
+   8,
+   -0.662068,
+   15,
+   11.4216,
+   0.415576
+  ]
+ ],
+ "x_format": "text",
+ "x_label": "",
+ "y_format": "int",
+ "y_label": "Rank, 1 is the least delay"
+}

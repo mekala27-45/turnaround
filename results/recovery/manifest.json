@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-30",
+ "as_of": "2026-10-01",
  "figures": {},
  "seed": 20261001,
  "tables": {
@@ -35,7 +35,7 @@
     "pct0"
    ],
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -232,7 +232,7 @@
   "recovery.bunching_fpr": {
    "fmt": "pct1",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -246,7 +246,7 @@
   "recovery.bunching_power": {
    "fmt": "pct0",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -260,7 +260,7 @@
   "recovery.changepoint_date_error": {
    "fmt": "days1",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -274,7 +274,7 @@
   "recovery.changepoint_recall": {
    "fmt": "pct0",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -288,7 +288,7 @@
   "recovery.changepoints_false": {
    "fmt": "float2",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -302,7 +302,7 @@
   "recovery.conditions": {
    "fmt": "int",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -316,7 +316,7 @@
   "recovery.definition.actual_coverage": {
    "fmt": "pct0",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -330,7 +330,7 @@
   "recovery.definition.sched_error": {
    "fmt": "min2",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -344,7 +344,7 @@
   "recovery.definition.seeds": {
    "fmt": "int",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -358,7 +358,7 @@
   "recovery.detector_lag": {
    "fmt": "days1",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -372,7 +372,7 @@
   "recovery.detector_precision": {
    "fmt": "pct0",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -386,7 +386,7 @@
   "recovery.detector_recall": {
    "fmt": "pct0",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -400,7 +400,7 @@
   "recovery.flights_per_run": {
    "fmt": "int",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -414,7 +414,7 @@
   "recovery.inherited_error": {
    "fmt": "apts1",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -428,7 +428,7 @@
   "recovery.min_turn_exact": {
    "fmt": "pct0",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -442,7 +442,7 @@
   "recovery.padding_mae": {
    "fmt": "min2",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -456,7 +456,7 @@
   "recovery.rank_adjusted.moderate": {
    "fmt": "float2",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -470,7 +470,7 @@
   "recovery.rank_adjusted.none": {
    "fmt": "float2",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -484,7 +484,7 @@
   "recovery.rank_adjusted.strong": {
    "fmt": "float2",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -498,7 +498,7 @@
   "recovery.rank_raw.moderate": {
    "fmt": "float2",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -512,7 +512,7 @@
   "recovery.rank_raw.none": {
    "fmt": "float2",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -526,7 +526,7 @@
   "recovery.rank_raw.strong": {
    "fmt": "float2",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -540,7 +540,7 @@
   "recovery.rho_bias.strong": {
    "fmt": "sfloat3",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -554,7 +554,7 @@
   "recovery.rho_bias.weak": {
    "fmt": "sfloat3",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -568,7 +568,7 @@
   "recovery.rho_coverage.strong": {
    "fmt": "pct0",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -582,7 +582,7 @@
   "recovery.rho_coverage.weak": {
    "fmt": "pct0",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -596,7 +596,7 @@
   "recovery.runs": {
    "fmt": "int",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -610,7 +610,7 @@
   "recovery.seeds": {
    "fmt": "int",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -624,7 +624,7 @@
   "recovery.weather_bias": {
    "fmt": "pts1",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -638,7 +638,7 @@
   "recovery.weather_coverage": {
    "fmt": "pct0",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -652,7 +652,7 @@
   "recovery.weather_error": {
    "fmt": "apts1",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -666,7 +666,7 @@
   "recovery.weather_reported": {
    "fmt": "pct1",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -680,7 +680,7 @@
   "recovery.weather_true": {
    "fmt": "pct1",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -694,7 +694,7 @@
   "recovery.worst.bunching": {
    "fmt": "text",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -708,7 +708,7 @@
   "recovery.worst.detector": {
    "fmt": "text",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -722,7 +722,7 @@
   "recovery.worst.padding": {
    "fmt": "text",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -736,7 +736,7 @@
   "recovery.worst.propagation": {
    "fmt": "text",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -750,7 +750,7 @@
   "recovery.worst.ranking": {
    "fmt": "text",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -764,7 +764,7 @@
   "recovery.worst.raw_ranking": {
    "fmt": "text",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",
@@ -778,7 +778,7 @@
   "recovery.worst.weather": {
    "fmt": "text",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/recovery.py",

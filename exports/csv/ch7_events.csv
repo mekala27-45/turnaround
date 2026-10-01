@@ -1,0 +1,14 @@
+Event,Onset,Window,Units,Flagged,First alert,Days after onset
+Boeing 737 MAX grounding,2019-03-13,fitting,WN;AA;UA,yes,2019-03-13,0
+COVID-19 collapse in air travel,2020-03-15,fitting,all,yes,2020-03-17,2
+Winter Storm Uri in Texas,2021-02-14,fitting,DFW;DAL;IAH;HOU;AUS;SAT,yes,2021-02-14,0
+Southwest scheduling crisis,2022-12-21,fitting,WN,yes,2022-12-22,1
+Winter Storm Elliott,2022-12-21,fitting,all,yes,2022-12-22,1
+FAA NOTAM system outage,2023-01-11,reporting,all,yes,2023-01-11,0
+Alaska 1282 and the 737-9 grounding,2024-01-06,reporting,AS;UA,yes,2024-01-06,0
+CrowdStrike outage and Delta's recovery,2024-07-19,reporting,DL,yes,2024-07-19,0
+Hurricane Milton,2024-10-08,reporting,TPA;MCO;SRQ;RSW;PIE;SFB,yes,2024-10-08,0
+Newark radar outages and flight caps,2025-04-28,reporting,EWR,yes,2025-05-01,3
+Alaska Airlines IT outage and ground stop,2025-10-23,reporting,AS,yes,2025-10-23,0
+FAA flight reductions during the federal shutdown,2025-11-07,reporting,all,yes,2025-11-08,1
+January 2026 winter storm,2026-01-24,reporting,all,yes,2026-01-24,0

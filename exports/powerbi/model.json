@@ -1,0 +1,171 @@
+{
+ "statement": "Public data from the Bureau of Transportation Statistics, the FAA and OurAirports, with weather from Open-Meteo under CC BY 4.0. Carriers and airports are real and appear as they do in the public record; no individual traveler appears. The findings are a portfolio analysis, not an official ranking and not travel advice.",
+ "tables": [
+  {
+   "name": "carrier_month",
+   "source": "exports/tableau/mart_carrier_month.csv"
+  },
+  {
+   "name": "route_month",
+   "source": "exports/tableau/mart_route_month/ (a folder, one CSV per year)"
+  },
+  {
+   "name": "inherited_month",
+   "source": "exports/csv/mart_inherited_month.csv"
+  },
+  {
+   "name": "ranking",
+   "source": "exports/csv/ch5_ranking.csv",
+   "rows": 15
+  },
+  {
+   "name": "carrier",
+   "source": "data/carriers.csv"
+  }
+ ],
+ "relationships": [
+  {
+   "from": "carrier_month[carrier]",
+   "to": "carrier[code]",
+   "cardinality": "many to one"
+  },
+  {
+   "from": "route_month[carrier]",
+   "to": "carrier[code]",
+   "cardinality": "many to one"
+  },
+  {
+   "from": "inherited_month[carrier]",
+   "to": "carrier[code]",
+   "cardinality": "many to one"
+  }
+ ],
+ "measures": [
+  {
+   "name": "scheduled_flights",
+   "table": "carrier_month",
+   "dax": "SUM('carrier_month'[scheduled])",
+   "format": "int",
+   "description": "Scheduled flights that passed every rule that excludes a row from everything."
+  },
+  {
+   "name": "cancellation_rate",
+   "table": "carrier_month",
+   "dax": "DIVIDE(SUM('carrier_month'[cancelled]), SUM('carrier_month'[scheduled]))",
+   "format": "pct2",
+   "description": "Cancelled flights over scheduled flights."
+  },
+  {
+   "name": "completion_factor",
+   "table": "carrier_month",
+   "dax": "1 - DIVIDE(SUM('carrier_month'[cancelled]), SUM('carrier_month'[scheduled]))",
+   "format": "pct2",
+   "description": "Scheduled flights that were not cancelled, over scheduled flights; the airline industry's own name for one minus the cancellation rate."
+  },
+  {
+   "name": "diversion_rate",
+   "table": "carrier_month",
+   "dax": "DIVIDE(SUM('carrier_month'[diverted]), SUM('carrier_month'[scheduled]))",
+   "format": "pct2",
+   "description": "Diverted flights over scheduled flights."
+  },
+  {
+   "name": "on_time_rate",
+   "table": "carrier_month",
+   "dax": "DIVIDE(SUM('carrier_month'[on_time]), SUM('carrier_month'[flown]))",
+   "format": "pct1",
+   "description": "Flights that flew to their destination and arrived less than fifteen minutes after the scheduled arrival (the A14 convention), over flights that flew to their destination. Cancelled and diverted flights are in neither count, which is the convention and one of the things chapter 1 is about."
+  },
+  {
+   "name": "mean_arrival_delay",
+   "table": "carrier_month",
+   "dax": "DIVIDE(SUM('carrier_month'[arr_delay_sum]), SUM('carrier_month'[flown]))",
+   "format": "min1",
+   "description": "Mean arrival delay in minutes of flights that flew to their destination; early arrivals count as negative."
+  },
+  {
+   "name": "median_arrival_delay",
+   "table": "carrier_month",
+   "dax": "-- computed in the extract from the minute counts; DAX has no exact median over pre-aggregated counts",
+   "format": "min0",
+   "description": "The median arrival delay of flights that flew, read from whole minute counts."
+  },
+  {
+   "name": "mean_scheduled_block",
+   "table": "carrier_month",
+   "dax": "DIVIDE(SUM('carrier_month'[crs_elapsed_sum]), SUM('carrier_month'[flown]))",
+   "format": "min1",
+   "description": "Mean scheduled gate to gate time of flights that flew."
+  },
+  {
+   "name": "mean_actual_block",
+   "table": "carrier_month",
+   "dax": "DIVIDE(SUM('carrier_month'[actual_elapsed_sum]), SUM('carrier_month'[flown]))",
+   "format": "min1",
+   "description": "Mean actual gate to gate time of flights that flew."
+  },
+  {
+   "name": "mean_padding",
+   "table": "carrier_month",
+   "dax": "DIVIDE(SUM('carrier_month'[padding_sum]), SUM('carrier_month'[padding_flights]))",
+   "format": "min1",
+   "description": "Mean scheduled block time minus the unimpeded reference (the 10th percentile of actual gate to gate time on the route, three hour block and season over the fitting years), over flights with a reference."
+  },
+  {
+   "name": "padding_share",
+   "table": "carrier_month",
+   "dax": "DIVIDE(SUM('carrier_month'[padding_sum]), SUM('carrier_month'[padding_block_sum]))",
+   "format": "pct1",
+   "description": "Padding minutes over scheduled block minutes, for flights with a reference."
+  },
+  {
+   "name": "reported_late_aircraft_share",
+   "table": "carrier_month",
+   "dax": "DIVIDE(SUM('carrier_month'[cause_late_aircraft_sum]), (SUM('carrier_month'[cause_late_aircraft_sum]) + SUM('carrier_month'[cause_carrier_sum]) + SUM('carrier_month'[cause_nas_sum]) + SUM('carrier_month'[cause_weather_sum]) + SUM('carrier_month'[cause_security_sum])))",
+   "format": "pct1",
+   "description": "The reported late aircraft cause's minutes over all reported cause minutes; a field the carrier fills in, not a measured cause."
+  },
+  {
+   "name": "reported_carrier_share",
+   "table": "carrier_month",
+   "dax": "DIVIDE(SUM('carrier_month'[cause_carrier_sum]), (SUM('carrier_month'[cause_late_aircraft_sum]) + SUM('carrier_month'[cause_carrier_sum]) + SUM('carrier_month'[cause_nas_sum]) + SUM('carrier_month'[cause_weather_sum]) + SUM('carrier_month'[cause_security_sum])))",
+   "format": "pct1",
+   "description": "The reported carrier cause's minutes over all reported cause minutes."
+  },
+  {
+   "name": "reported_nas_share",
+   "table": "carrier_month",
+   "dax": "DIVIDE(SUM('carrier_month'[cause_nas_sum]), (SUM('carrier_month'[cause_late_aircraft_sum]) + SUM('carrier_month'[cause_carrier_sum]) + SUM('carrier_month'[cause_nas_sum]) + SUM('carrier_month'[cause_weather_sum]) + SUM('carrier_month'[cause_security_sum])))",
+   "format": "pct1",
+   "description": "The reported national airspace system cause's minutes over all reported cause minutes."
+  },
+  {
+   "name": "reported_weather_share",
+   "table": "carrier_month",
+   "dax": "DIVIDE(SUM('carrier_month'[cause_weather_sum]), (SUM('carrier_month'[cause_late_aircraft_sum]) + SUM('carrier_month'[cause_carrier_sum]) + SUM('carrier_month'[cause_nas_sum]) + SUM('carrier_month'[cause_weather_sum]) + SUM('carrier_month'[cause_security_sum])))",
+   "format": "pct1",
+   "description": "The reported weather cause's minutes over all reported cause minutes."
+  },
+  {
+   "name": "reported_security_share",
+   "table": "carrier_month",
+   "dax": "DIVIDE(SUM('carrier_month'[cause_security_sum]), (SUM('carrier_month'[cause_late_aircraft_sum]) + SUM('carrier_month'[cause_carrier_sum]) + SUM('carrier_month'[cause_nas_sum]) + SUM('carrier_month'[cause_weather_sum]) + SUM('carrier_month'[cause_security_sum])))",
+   "format": "pct2",
+   "description": "The reported security cause's minutes over all reported cause minutes."
+  },
+  {
+   "name": "inherited_share",
+   "table": "inherited_month",
+   "dax": "DIVIDE(SUM('inherited_month'[inherited_minutes_sum]), SUM('inherited_month'[arr_delay_pos_sum]))",
+   "format": "pct1",
+   "description": "Arrival delay minutes the propagation model attributes to the aircraft's previous leg, over the arrival delay minutes of flown legs; computed per leg in chapter 4 and written to the warehouse."
+  },
+  {
+   "name": "fair_ranking_effect",
+   "table": "ranking",
+   "dax": "AVERAGE('ranking'[adjusted_effect])",
+   "format": "smin2",
+   "description": "Chapter 5's adjusted carrier effect on arrival delay, minutes against the flight weighted average carrier."
+  }
+ ]
+}

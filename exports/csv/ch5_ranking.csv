@@ -1,0 +1,16 @@
+Carrier,Flights,Raw rank,Raw effect,Adjusted rank,Adjusted effect,Interval,Moved
+Endeavor Air,391977,1,-7.385004246,1,-13.13607673,-14.14 to -12.14 min,same
+Republic Airways,1119192,2,-6.261901746,2,-8.696707879,-9.36 to -8.03 min,same
+Envoy Air,975162,5,-2.360492026,3,-6.100930428,-6.78 to -5.42 min,up 2
+Delta Air Lines,3572228,4,-3.625342927,4,-2.917841679,-3.26 to -2.58 min,same
+United Airlines,2729655,7,-1.175518648,5,-2.553162618,-2.90 to -2.21 min,up 2
+SkyWest Airlines,2713958,9,0.1611846892,6,-2.381812718,-3.00 to -1.76 min,up 3
+PSA Airlines,784660,11,4.189724014,7,-1.575681137,-2.44 to -0.71 min,up 4
+Southwest Airlines,5003261,6,-1.631221046,8,1.708629477,+1.40 to +2.02 min,down 2
+Alaska Airlines,918478,3,-3.978677817,9,2.776736684,+2.39 to +3.16 min,down 6
+Spirit Airlines,749263,10,3.136776621,10,3.09081625,+2.52 to +3.66 min,same
+JetBlue Airways,866026,13,5.987845965,11,3.75969119,+3.17 to +4.35 min,up 2
+American Airlines,3411235,14,6.177306557,12,5.165920613,+4.83 to +5.50 min,up 2
+Allegiant Air,435740,12,5.56222168,13,6.860150021,+5.71 to +8.01 min,down 1
+Frontier Airlines,695137,15,8.027119934,14,8.541634012,+7.99 to +9.10 min,up 1
+Hawaiian Airlines,236810,8,-0.6620679876,15,11.42161084,+10.61 to +12.24 min,down 7

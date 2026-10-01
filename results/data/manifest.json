@@ -1,0 +1,1779 @@
+{
+ "as_of": "2026-10-01",
+ "figures": {},
+ "seed": 20261001,
+ "tables": {
+  "data.by_year": {
+   "columns": [
+    "Year",
+    "Flights",
+    "Carriers"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "int"
+   ],
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "rows": [
+    [
+     "2015",
+     5819079,
+     14
+    ],
+    [
+     "2016",
+     5617658,
+     12
+    ],
+    [
+     "2017",
+     5674621,
+     12
+    ],
+    [
+     "2018",
+     7206195,
+     18
+    ],
+    [
+     "2019",
+     7422037,
+     17
+    ],
+    [
+     "2020",
+     4688354,
+     17
+    ],
+    [
+     "2021",
+     5995397,
+     17
+    ],
+    [
+     "2022",
+     6729125,
+     17
+    ],
+    [
+     "2023",
+     6847899,
+     15
+    ],
+    [
+     "2024",
+     7079061,
+     15
+    ],
+    [
+     "2025",
+     7001619,
+     14
+    ],
+    [
+     "2026",
+     4120343,
+     13
+    ]
+   ]
+  },
+  "data.files": {
+   "columns": [
+    "File",
+    "Rows",
+    "Bytes",
+    "SHA-256 (first 16)"
+   ],
+   "formats": [
+    "text",
+    "int",
+    "int",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "rows": [
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2015_1.zip",
+     469968,
+     23061477,
+     "8868b27abf89df04"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2015_2.zip",
+     429191,
+     21229556,
+     "2a68ad83560b5ba5"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2015_3.zip",
+     504312,
+     24808787,
+     "7cd3568901d5eb57"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2015_4.zip",
+     485151,
+     23625575,
+     "ed518452e9c630d5"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2015_5.zip",
+     496993,
+     24332076,
+     "b0679c955296b26c"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2015_6.zip",
+     503897,
+     25759795,
+     "792c315d7737a118"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2015_7.zip",
+     520718,
+     26205185,
+     "b675ccf0b763c6e1"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2015_8.zip",
+     510536,
+     25727968,
+     "75d5d8c9bf30b0dc"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2015_9.zip",
+     464946,
+     22575111,
+     "a2f1d7c2203e7c94"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2015_10.zip",
+     486165,
+     23879320,
+     "4f689e7b9e6410bc"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2015_11.zip",
+     467972,
+     23598907,
+     "a0be321e409219da"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2015_12.zip",
+     479230,
+     24458072,
+     "463af4e59bcdbc16"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2016_1.zip",
+     445827,
+     22645736,
+     "b43b3fc96070a861"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2016_2.zip",
+     423889,
+     21625501,
+     "5d970bde6fd57530"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2016_3.zip",
+     479122,
+     24478430,
+     "e1470fa6fd0ccea8"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2016_4.zip",
+     461630,
+     23347686,
+     "d8da8ca68cfa9073"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2016_5.zip",
+     479358,
+     23828963,
+     "410798763940aea2"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2016_6.zip",
+     487637,
+     24791926,
+     "1265d9c22b2c3e38"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2016_7.zip",
+     502457,
+     27269670,
+     "1c54e91116cd8809"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2016_8.zip",
+     498347,
+     26997150,
+     "3d50251088a6cd09"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2016_9.zip",
+     454878,
+     24130587,
+     "bd8827b519c2f103"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2016_10.zip",
+     472626,
+     24343522,
+     "b8e0b3e2c97a4b45"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2016_11.zip",
+     450938,
+     23494141,
+     "54fc94f0abcb2207"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2016_12.zip",
+     460949,
+     24065817,
+     "42bdb4ee36dbdc28"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_1.zip",
+     450017,
+     23377636,
+     "b324cc73e75733c2"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_2.zip",
+     410517,
+     20985199,
+     "be95630d0a5602d0"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_3.zip",
+     488597,
+     25582475,
+     "91abd03a7b162dc0"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_4.zip",
+     468329,
+     24777834,
+     "75380f433c63f592"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_5.zip",
+     486483,
+     25724973,
+     "bdda27c302ef6965"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_6.zip",
+     494266,
+     26590778,
+     "1b3f1ed15862872e"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_7.zip",
+     509070,
+     26793154,
+     "1fcdffe88c8c8d1d"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_8.zip",
+     510451,
+     27330600,
+     "f9bb54f2297e4038"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_9.zip",
+     458727,
+     23799967,
+     "68530e9355bf3fd4"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_10.zip",
+     479797,
+     25213844,
+     "1b59a7486e5fad44"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_11.zip",
+     454162,
+     23400520,
+     "ca171bcb94f83536"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2017_12.zip",
+     464205,
+     24829541,
+     "9f84e7a002276646"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2018_1.zip",
+     570138,
+     29202589,
+     "d9722f0134287273"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2018_2.zip",
+     520769,
+     26783225,
+     "8f7f283402b784f6"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2018_3.zip",
+     612034,
+     30193999,
+     "8f39974ed7886cb8"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2018_4.zip",
+     596078,
+     30781043,
+     "d35e81cfce45a634"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2018_5.zip",
+     616573,
+     31736637,
+     "2dc7e1aaf04e2dec"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2018_6.zip",
+     626217,
+     32226333,
+     "0e7a70532dac2088"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2018_7.zip",
+     645317,
+     32887569,
+     "d3fcf16100dd59ed"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2018_8.zip",
+     637103,
+     33006511,
+     "6aae45cee01d6dda"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2018_9.zip",
+     585765,
+     29882599,
+     "32b9423c827b45ff"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2018_10.zip",
+     616128,
+     31418901,
+     "fbe490583915f3fc"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2018_11.zip",
+     586231,
+     29969446,
+     "409d05a88e646c21"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2018_12.zip",
+     593842,
+     30387123,
+     "c5269bc44df69060"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2019_1.zip",
+     583985,
+     29527308,
+     "e0d43e9fca6a298a"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2019_2.zip",
+     533175,
+     27392090,
+     "f875de8d70c18229"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2019_3.zip",
+     632074,
+     31992570,
+     "cacf26234b805c20"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2019_4.zip",
+     612023,
+     31115601,
+     "6da5230e97bfa1ff"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2019_5.zip",
+     636390,
+     32950743,
+     "31ba30855fa8e163"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2019_6.zip",
+     636691,
+     33597362,
+     "22baf5bd22a7ecb9"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2019_7.zip",
+     659029,
+     34226844,
+     "60cc698891cc7a07"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2019_8.zip",
+     658461,
+     34112844,
+     "bfe19fa8fd705998"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2019_9.zip",
+     605979,
+     30508709,
+     "7673b6d53aa11ea0"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2019_10.zip",
+     636014,
+     32419572,
+     "6da37bf93019ac33"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2019_11.zip",
+     602453,
+     31005144,
+     "6ec48d19a3d4813c"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2019_12.zip",
+     625763,
+     33113829,
+     "e146e2068c060862"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2020_1.zip",
+     607346,
+     30636034,
+     "51a1c727d7103982"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2020_2.zip",
+     574268,
+     29495988,
+     "6596cd3c1ff9cb9c"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2020_3.zip",
+     648229,
+     30370031,
+     "c3f6a248d2d16a80"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2020_4.zip",
+     313382,
+     12878743,
+     "5f8b91120234f429"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2020_5.zip",
+     180617,
+     8640843,
+     "7ea09b2420fcdc31"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2020_6.zip",
+     223732,
+     10599043,
+     "1ad82d56670b360d"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2020_7.zip",
+     352888,
+     16735556,
+     "3307d8a06f3f1061"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2020_8.zip",
+     376715,
+     18096690,
+     "3670b6c598f5af44"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2020_9.zip",
+     323347,
+     15606322,
+     "e2f708c5acd4fcea"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2020_10.zip",
+     352106,
+     16897944,
+     "084f98e07f9cbe77"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2020_11.zip",
+     364367,
+     17835131,
+     "f1c4ab06ffb77f39"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2020_12.zip",
+     371357,
+     18544493,
+     "f83766cf64df6a7c"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2021_1.zip",
+     361428,
+     17937103,
+     "058bc6f1f017824e"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2021_2.zip",
+     332468,
+     16566293,
+     "d3cd897cf27c0c08"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2021_3.zip",
+     444476,
+     22052696,
+     "9ca9cab885ac61e2"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2021_4.zip",
+     450637,
+     22456535,
+     "24801da98cf769b6"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2021_5.zip",
+     495544,
+     24793587,
+     "f7c1bc0e3f8fca82"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2021_6.zip",
+     546124,
+     28441672,
+     "6fd695a0fb6fced4"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2021_7.zip",
+     583258,
+     30524039,
+     "756b7b741cfce3d7"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2021_8.zip",
+     579179,
+     30286200,
+     "c46387fe04caed6a"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2021_9.zip",
+     538051,
+     27453392,
+     "6c883fa9768260f8"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2021_10.zip",
+     564788,
+     29062376,
+     "0cf734917438db10"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2021_11.zip",
+     547559,
+     28360983,
+     "2a809f9c05610a5d"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2021_12.zip",
+     551885,
+     29177719,
+     "7d2a51f0b91ac0e6"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2022_1.zip",
+     537902,
+     27656931,
+     "ca1ae860eaa54f1f"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2022_2.zip",
+     495713,
+     24207473,
+     "e9124a0af49f69fd"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2022_3.zip",
+     564853,
+     27939418,
+     "90ed43e200ba70e1"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2022_4.zip",
+     556502,
+     27701512,
+     "a6ebfb5e37929860"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2022_5.zip",
+     578819,
+     28677421,
+     "cf67d5b1da3fbdce"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2022_6.zip",
+     577283,
+     28846680,
+     "c92a18dc11037422"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2022_7.zip",
+     594957,
+     29564713,
+     "edcdae5b306b609e"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2022_8.zip",
+     589810,
+     29039357,
+     "e8903c63285608c3"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2022_9.zip",
+     557494,
+     27239747,
+     "f158ff276b75d42e"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2022_10.zip",
+     572287,
+     27884935,
+     "4133e6e526a038ce"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2022_11.zip",
+     546410,
+     27124951,
+     "3a4343f5a2e59d00"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2022_12.zip",
+     557095,
+     27855593,
+     "93ef0f6ede001547"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2023_1.zip",
+     538837,
+     27068766,
+     "327924faa362d360"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2023_2.zip",
+     502749,
+     24730977,
+     "bfa6eb7bebb53f10"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2023_3.zip",
+     580322,
+     28954576,
+     "1a61dce7c50e5c4f"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2023_4.zip",
+     561441,
+     27994592,
+     "adf3ecf6e3763a55"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2023_5.zip",
+     579958,
+     28333534,
+     "aec2e926b11e55f8"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2023_6.zip",
+     577262,
+     29075972,
+     "67dc6b993ba2e7c2"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2023_7.zip",
+     601866,
+     30208166,
+     "b1b73635dcb2add3"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2023_8.zip",
+     602987,
+     29539237,
+     "d374aa3ec2b844d4"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2023_9.zip",
+     569338,
+     28047499,
+     "4e7bc3f76857accd"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2023_10.zip",
+     598968,
+     29452902,
+     "a92cc51c6bb1e7fc"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2023_11.zip",
+     563777,
+     27573257,
+     "9ad54595568704a1"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2023_12.zip",
+     570394,
+     28818502,
+     "c8391a3f06749b6e"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_1.zip",
+     547271,
+     27573265,
+     "fe089b45523f9d4a"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_2.zip",
+     519221,
+     25086854,
+     "8463683d100504a9"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_3.zip",
+     591767,
+     29313663,
+     "e2c5021406f480e8"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_4.zip",
+     582185,
+     28540589,
+     "d8b1e88626a7375d"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_5.zip",
+     609743,
+     31139902,
+     "03e4ae26c2d1247d"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_6.zip",
+     611132,
+     31226761,
+     "4f329439fd6892aa"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_7.zip",
+     634613,
+     34427174,
+     "4d992fee134137b3"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_8.zip",
+     619025,
+     30854511,
+     "58d651379af90cc4"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_9.zip",
+     582622,
+     28433978,
+     "c0df7503b0050ca4"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_10.zip",
+     615497,
+     29418453,
+     "a417136d6c166373"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_11.zip",
+     575404,
+     28149354,
+     "26b6e89e7c1f6616"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_12.zip",
+     590581,
+     30150370,
+     "a324577aa76d1f0a"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2025_1.zip",
+     539747,
+     27108664,
+     "868387dcedaef1b8"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2025_2.zip",
+     504884,
+     25302583,
+     "12dc8dbdb3c8b3c2"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2025_3.zip",
+     600872,
+     30544825,
+     "9c80fbc2112cdbf3"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2025_4.zip",
+     583950,
+     29369186,
+     "f3718431e988e2af"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2025_5.zip",
+     605648,
+     30830593,
+     "17c3419d7169b313"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2025_6.zip",
+     611575,
+     31131411,
+     "087b75e4e059516c"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2025_7.zip",
+     631428,
+     32208704,
+     "74309a3a734d5104"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2025_8.zip",
+     602378,
+     30864245,
+     "405668b8a8072662"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2025_9.zip",
+     562439,
+     28151630,
+     "adc722b1c1494445"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2025_10.zip",
+     605844,
+     30723803,
+     "05d14d3fd67fa3e0"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2025_11.zip",
+     570550,
+     28847755,
+     "6d5b68eea3ebb25f"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2025_12.zip",
+     582304,
+     30337431,
+     "a2af96d186bc9997"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2026_1.zip",
+     544003,
+     27312195,
+     "9ff58f560519dbc8"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2026_2.zip",
+     515037,
+     25811524,
+     "a18b6de822a63bb8"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2026_3.zip",
+     612102,
+     31150791,
+     "c0864d5dabd52251"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2026_4.zip",
+     597919,
+     30504623,
+     "70e685ffa6042e6c"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2026_5.zip",
+     611735,
+     31716693,
+     "4e7b96999440afec"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2026_6.zip",
+     607577,
+     31606062,
+     "acd9d03e223e079e"
+    ],
+    [
+     "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2026_7.zip",
+     631970,
+     33075361,
+     "61d657eb17f5b6f8"
+    ]
+   ]
+  },
+  "quarantine.by_rule": {
+   "columns": [
+    "Rule",
+    "What it catches",
+    "Rows",
+    "Share",
+    "Excluded from"
+   ],
+   "formats": [
+    "text",
+    "text",
+    "int",
+    "pct2",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "rows": [
+    [
+     "duplicate key",
+     "a second row with the same carrier, date, flight number, origin, destination and scheduled departure",
+     4,
+     5.390734739e-08,
+     "everything"
+    ],
+    [
+     "actual without scheduled",
+     "an actual departure, arrival or elapsed time with no scheduled time to measure it against",
+     2,
+     2.69536737e-08,
+     "everything"
+    ],
+    [
+     "impossible time",
+     "a negative taxi time, or an air time or an actual or scheduled elapsed time at or below zero or longer than the longest a domestic flight can take",
+     31,
+     4.177819423e-07,
+     "everything"
+    ],
+    [
+     "elapsed mismatch",
+     "actual elapsed time that differs from taxi out plus air time plus taxi in by more than the tolerance",
+     15,
+     2.021525527e-07,
+     "everything"
+    ],
+    [
+     "status conflict",
+     "a row flagged both cancelled and diverted, which cannot both have happened to one flight",
+     13,
+     1.75198879e-07,
+     "everything"
+    ],
+    [
+     "missing actual",
+     "a flight neither cancelled nor diverted that reports no departure delay, no arrival delay, no actual elapsed time or no air time",
+     974,
+     1.312643909e-05,
+     "everything"
+    ],
+    [
+     "cause mismatch",
+     "reported delay causes that do not sum to the arrival delay within the tolerance",
+     119,
+     1.603743585e-06,
+     "the cause shares in chapter 6"
+    ],
+    [
+     "tail missing",
+     "no tail number on the row",
+     338715,
+     0.004564806793,
+     "the rotations of chapter 4"
+    ],
+    [
+     "tail format",
+     "a tail number that is not a valid FAA registration (N, a digit 1 to 9, at most two trailing letters) even after a missing leading N is restored, such as an airline's own fleet number",
+     1142859,
+     0.01540212428,
+     "the registry join; the rotations keep the row, since the value still names one aircraft"
+    ],
+    [
+     "revision",
+     "a row that a later download of the same month changed (the later kept, the change counted)",
+     0,
+     0.0,
+     "nothing; the earlier version is the one that is replaced"
+    ]
+   ]
+  }
+ },
+ "values": {
+  "airports.count": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every airport code in the flights",
+    "seed": null,
+    "seeds": null,
+    "source": "real:ourairports"
+   },
+   "value": 397
+  },
+  "airports.missing": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every airport code in the flights",
+    "seed": null,
+    "seeds": null,
+    "source": "real:ourairports"
+   },
+   "value": 0
+  },
+  "airports.missing_codes": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every airport code in the flights",
+    "seed": null,
+    "seeds": null,
+    "source": "real:ourairports"
+   },
+   "value": "none"
+  },
+  "airports.zones": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every airport code in the flights",
+    "seed": null,
+    "seeds": null,
+    "source": "real:ourairports"
+   },
+   "value": 22
+  },
+  "data.carriers": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 20
+  },
+  "data.fetched_on": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": "2026-10-01"
+  },
+  "data.files_bytes": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 3757025147
+  },
+  "data.first_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": "January 2015"
+  },
+  "data.gaps": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": "none"
+  },
+  "data.last_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": "July 2026"
+  },
+  "data.layout_matches": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 139
+  },
+  "data.months": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 139
+  },
+  "data.months_expected": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 139
+  },
+  "data.next_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": "August 2026"
+  },
+  "data.next_month_unpublished": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 1
+  },
+  "data.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 74201388
+  },
+  "data.rows_millions": {
+   "fmt": "millions1",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 74201388
+  },
+  "data.tails_restored": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 950473
+  },
+  "data.tails_restored_carriers": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": "G4, WN, YX"
+  },
+  "data.tails_restored_share": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 0.01280936955
+  },
+  "quarantine.actual_without_scheduled.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 2
+  },
+  "quarantine.actual_without_scheduled.share": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 2.69536737e-08
+  },
+  "quarantine.cause_mismatch.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 119
+  },
+  "quarantine.cause_mismatch.share": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 1.603743585e-06
+  },
+  "quarantine.duplicate_key.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 4
+  },
+  "quarantine.duplicate_key.share": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 5.390734739e-08
+  },
+  "quarantine.elapsed_mismatch.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 15
+  },
+  "quarantine.elapsed_mismatch.share": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 2.021525527e-07
+  },
+  "quarantine.impossible_time.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 31
+  },
+  "quarantine.impossible_time.share": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 4.177819423e-07
+  },
+  "quarantine.missing_actual.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 974
+  },
+  "quarantine.missing_actual.share": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 1.312643909e-05
+  },
+  "quarantine.revision.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 0
+  },
+  "quarantine.revision.share": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 0.0
+  },
+  "quarantine.status_conflict.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 13
+  },
+  "quarantine.status_conflict.share": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 1.75198879e-07
+  },
+  "quarantine.tail_format.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 1142859
+  },
+  "quarantine.tail_format.share": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 0.01540212428
+  },
+  "quarantine.tail_missing.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 338715
+  },
+  "quarantine.tail_missing.share": {
+   "fmt": "pct2",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "every row of every monthly file in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 0.004564806793
+  },
+  "registry.flight_join_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "tail numbers in the flights that pass the format rule",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts+faa"
+   },
+   "value": 0.9014685599
+  },
+  "registry.has_reference": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "tail numbers in the flights that pass the format rule",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts+faa"
+   },
+   "value": 0
+  },
+  "registry.tail_join_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "tail numbers in the flights that pass the format rule",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts+faa"
+   },
+   "value": 0.799346956
+  },
+  "registry.tails": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "tail numbers in the flights that pass the format rule",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts+faa"
+   },
+   "value": 9494
+  },
+  "registry.tails_dereg": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "tail numbers in the flights that pass the format rule",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts+faa"
+   },
+   "value": 869
+  },
+  "registry.tails_master": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "tail numbers in the flights that pass the format rule",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts+faa"
+   },
+   "value": 6720
+  },
+  "registry.tails_unmatched": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "tail numbers in the flights that pass the format rule",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts+faa"
+   },
+   "value": 1905
+  },
+  "weather.airports": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "hourly weather at the FAA Core 30",
+    "seed": null,
+    "seeds": null,
+    "source": "real:open_meteo"
+   },
+   "value": 30
+  },
+  "weather.first_hour": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "hourly weather at the FAA Core 30",
+    "seed": null,
+    "seeds": null,
+    "source": "real:open_meteo"
+   },
+   "value": "2015-01-01 00:00"
+  },
+  "weather.last_hour": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "hourly weather at the FAA Core 30",
+    "seed": null,
+    "seeds": null,
+    "source": "real:open_meteo"
+   },
+   "value": "2026-09-24 23:00"
+  },
+  "weather.null_temperature": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "hourly weather at the FAA Core 30",
+    "seed": null,
+    "seeds": null,
+    "source": "real:open_meteo"
+   },
+   "value": 0
+  },
+  "weather.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/data.py",
+    "population": "hourly weather at the FAA Core 30",
+    "seed": null,
+    "seeds": null,
+    "source": "real:open_meteo"
+   },
+   "value": 3085200
+  }
+ }
+}

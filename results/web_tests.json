@@ -1,0 +1,153 @@
+{
+ "measured_at": "2026-10-01T22:27:20+00:00",
+ "passed": 29,
+ "failed": 0,
+ "skipped": 0,
+ "tests": [
+  {
+   "title": "/ loads with the statement, a pushback paragraph and no console errors",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "/explore/ loads with the statement, a pushback paragraph and no console errors",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "/rank/ loads with the statement, a pushback paragraph and no console errors",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "/rotations/ loads with the statement, a pushback paragraph and no console errors",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "/events/ loads with the statement, a pushback paragraph and no console errors",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "/planner/ loads with the statement, a pushback paragraph and no console errors",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "/data/ loads with the statement, a pushback paragraph and no console errors",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "/report/ loads with the statement, a pushback paragraph and no console errors",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "the story's first chapter chart advances through its states as the reader scrolls",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "the method note expands inline with the plan hash, and the SQL toggle shows the SQL",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "the story prints its reading time and ends with the corrections section",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "a selection in the explorer changes every chart",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "the SQL box runs a query over the marts in the browser",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "the ranking page draws the slope chart with every carrier named at both ends",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "the rotation timeline draws the aircraft's day and marks the leg that inherited the most",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "the planner saves a check through the API once the mock wakes, and shows its id",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "with the API asleep the planner answers from the recorded session and says so",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "the test server refuses HEAD, as the host does",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "the data page shows the quarantine report, the reconciliation and the recovery small multiples",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "the briefing has a print button and a section per chapter",
+   "project": "desktop",
+   "status": "passed"
+  },
+  {
+   "title": "/ has no horizontal page scroll at phone width",
+   "project": "phone",
+   "status": "passed"
+  },
+  {
+   "title": "/explore/ has no horizontal page scroll at phone width",
+   "project": "phone",
+   "status": "passed"
+  },
+  {
+   "title": "/rank/ has no horizontal page scroll at phone width",
+   "project": "phone",
+   "status": "passed"
+  },
+  {
+   "title": "/rotations/ has no horizontal page scroll at phone width",
+   "project": "phone",
+   "status": "passed"
+  },
+  {
+   "title": "/events/ has no horizontal page scroll at phone width",
+   "project": "phone",
+   "status": "passed"
+  },
+  {
+   "title": "/planner/ has no horizontal page scroll at phone width",
+   "project": "phone",
+   "status": "passed"
+  },
+  {
+   "title": "/data/ has no horizontal page scroll at phone width",
+   "project": "phone",
+   "status": "passed"
+  },
+  {
+   "title": "/report/ has no horizontal page scroll at phone width",
+   "project": "phone",
+   "status": "passed"
+  },
+  {
+   "title": "on a phone the story stacks: every chapter shows its whole chart",
+   "project": "phone",
+   "status": "passed"
+  }
+ ]
+}

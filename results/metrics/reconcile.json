@@ -1,0 +1,25 @@
+{
+ "cells": 3501,
+ "disagreements": 0,
+ "grains": 4,
+ "metrics": 17,
+ "values": {
+  "cancellation_rate": 0.01933965297117403,
+  "completion_factor": 0.980660347028826,
+  "diversion_rate": 0.00245455718813398,
+  "inherited_share": 0.3486844460999612,
+  "mean_actual_block": 139.04650214496573,
+  "mean_arrival_delay": 5.1455570765531435,
+  "mean_padding": 19.09674059170293,
+  "mean_scheduled_block": 144.5482683316394,
+  "median_arrival_delay": -6.0,
+  "on_time_rate": 0.8082885172991313,
+  "padding_share": 0.1324772853327399,
+  "reported_carrier_share": 0.34247444523672904,
+  "reported_late_aircraft_share": 0.38890243406961694,
+  "reported_nas_share": 0.21026289589147634,
+  "reported_security_share": 0.0017520778396139282,
+  "reported_weather_share": 0.05660814696256374,
+  "scheduled_flights": 74200349.0
+ }
+}

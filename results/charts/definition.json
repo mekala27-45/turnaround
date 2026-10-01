@@ -1,0 +1,316 @@
+{
+ "id": "definition",
+ "kind": "multiples",
+ "message": "The on time rate fell, and flights took longer gate to gate and the schedule grew as much",
+ "notes": [],
+ "panels": [
+  {
+   "annotations": [
+    {
+     "state": "base",
+     "text": "81.4%",
+     "x": 2015,
+     "y": 0.813889
+    },
+    {
+     "state": "base",
+     "text": "77.7%",
+     "x": 2025,
+     "y": 0.776926
+    }
+   ],
+   "bands": [],
+   "rules": [],
+   "series": [
+    {
+     "dashed": false,
+     "high": null,
+     "label": null,
+     "low": null,
+     "name": "On time rate",
+     "points": [
+      [
+       2015,
+       0.813889
+      ],
+      [
+       2016,
+       0.825891
+      ],
+      [
+       2017,
+       0.815487
+      ],
+      [
+       2018,
+       0.808775
+      ],
+      [
+       2019,
+       0.80886
+      ],
+      [
+       2020,
+       0.901827
+      ],
+      [
+       2021,
+       0.828124
+      ],
+      [
+       2022,
+       0.789223
+      ],
+      [
+       2023,
+       0.794362
+      ],
+      [
+       2024,
+       0.791829
+      ],
+      [
+       2025,
+       0.776926
+      ]
+     ],
+     "role": "ink"
+    }
+   ],
+   "title": "Share of flown flights arriving less than 15 minutes late",
+   "y_format": "pct0",
+   "y_label": "On time"
+  },
+  {
+   "annotations": [],
+   "bands": [],
+   "rules": [],
+   "series": [
+    {
+     "dashed": false,
+     "high": null,
+     "label": null,
+     "low": null,
+     "name": "Actual",
+     "points": [
+      [
+       2015,
+       138.895
+      ],
+      [
+       2016,
+       139.125
+      ],
+      [
+       2017,
+       139.988
+      ],
+      [
+       2018,
+       140.614
+      ],
+      [
+       2019,
+       140.782
+      ],
+      [
+       2020,
+       137.944
+      ],
+      [
+       2021,
+       139.023
+      ],
+      [
+       2022,
+       139.965
+      ],
+      [
+       2023,
+       140.949
+      ],
+      [
+       2024,
+       141.906
+      ],
+      [
+       2025,
+       143.319
+      ]
+     ],
+     "role": "ink"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": "the schedule",
+     "low": null,
+     "name": "Scheduled",
+     "points": [
+      [
+       2015,
+       143.861
+      ],
+      [
+       2016,
+       144.431
+      ],
+      [
+       2017,
+       145.255
+      ],
+      [
+       2018,
+       145.624
+      ],
+      [
+       2019,
+       146.391
+      ],
+      [
+       2020,
+       145.49
+      ],
+      [
+       2021,
+       145.754
+      ],
+      [
+       2022,
+       145.814
+      ],
+      [
+       2023,
+       146.71
+      ],
+      [
+       2024,
+       147.53
+      ],
+      [
+       2025,
+       148.499
+      ]
+     ],
+     "role": "delay"
+    }
+   ],
+   "title": "Gate to gate minutes on the same routes",
+   "y_format": "min0",
+   "y_label": "Minutes"
+  }
+ ],
+ "source": "Source: BTS Reporting Carrier On-Time Performance, model: the day block bootstrap, every scheduled flight, 2015 to 2026-07, as of 2026-10-01.",
+ "sql": "select year, flight_date,\n           count(*) filter (where arr_delay < 15) as on_time,\n           count(*) as flown\n    from wh.fct_flights\n    where not cancelled and not diverted and arr_delay is not null\n    group by year, flight_date\n    order by flight_date",
+ "states": [
+  {
+   "caption": "The on time rate by year.",
+   "highlight": [
+    "On time rate"
+   ],
+   "id": "rate",
+   "show": []
+  },
+  {
+   "caption": "The minutes flights actually spent gate to gate on the same routes.",
+   "highlight": [
+    "Actual"
+   ],
+   "id": "actual",
+   "show": []
+  },
+  {
+   "caption": "The minutes the schedule allowed on those routes.",
+   "highlight": [
+    "Scheduled"
+   ],
+   "id": "scheduled",
+   "show": []
+  }
+ ],
+ "subtitle": "On time rate, and scheduled and actual gate to gate minutes on a fixed panel of routes, by year",
+ "table_columns": [
+  "Year",
+  "On time",
+  "Scheduled block",
+  "Actual block"
+ ],
+ "table_rows": [
+  [
+   2015,
+   0.813889,
+   143.861,
+   138.895
+  ],
+  [
+   2016,
+   0.825891,
+   144.431,
+   139.125
+  ],
+  [
+   2017,
+   0.815487,
+   145.255,
+   139.988
+  ],
+  [
+   2018,
+   0.808775,
+   145.624,
+   140.614
+  ],
+  [
+   2019,
+   0.80886,
+   146.391,
+   140.782
+  ],
+  [
+   2020,
+   0.901827,
+   145.49,
+   137.944
+  ],
+  [
+   2021,
+   0.828124,
+   145.754,
+   139.023
+  ],
+  [
+   2022,
+   0.789223,
+   145.814,
+   139.965
+  ],
+  [
+   2023,
+   0.794362,
+   146.71,
+   140.949
+  ],
+  [
+   2024,
+   0.791829,
+   147.53,
+   141.906
+  ],
+  [
+   2025,
+   0.776926,
+   148.499,
+   143.319
+  ],
+  [
+   2026,
+   0.7693,
+   null,
+   null
+  ]
+ ],
+ "x_format": "year",
+ "x_label": "Year",
+ "y_format": "",
+ "y_label": ""
+}

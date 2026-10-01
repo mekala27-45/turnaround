@@ -1,0 +1,21 @@
+Carrier,Alert episodes,Median days,Mean days,Longest
+US Airways,1,1.0,1.0,1
+Virgin America,4,1.0,1.25,2
+Endeavor Air,34,1.0,1.676470588,10
+Republic Airways,42,1.0,1.857142857,11
+Envoy Air,25,1.0,1.96,10
+Alaska Airlines,9,1.0,2.444444444,10
+ExpressJet Airlines,10,1.0,2.5,11
+American Airlines,14,1.5,2.571428571,9
+JetBlue Airways,34,2.0,1.970588235,6
+PSA Airlines,23,2.0,2.391304348,11
+Delta Air Lines,20,2.0,2.5,12
+United Airlines,20,2.0,2.7,13
+Frontier Airlines,13,2.0,2.846153846,14
+Southwest Airlines,9,2.0,2.888888889,8
+Allegiant Air,13,2.0,3.153846154,14
+SkyWest Airlines,4,2.0,3.75,10
+Spirit Airlines,16,2.5,2.75,7
+Horizon Air,2,3.0,3.0,3
+Mesa Airlines,4,4.0,5.25,12
+Hawaiian Airlines,6,5.0,6.5,14

@@ -1,0 +1,148 @@
+{
+ "as_of": "2026-10-01",
+ "figures": {},
+ "seed": 20261001,
+ "tables": {},
+ "values": {
+  "exports.csv.files": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/exports.py",
+    "population": "the exports, from the marts and the chapter tables",
+    "seed": null,
+    "seeds": null,
+    "source": "mixed"
+   },
+   "value": 19
+  },
+  "exports.csv.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/exports.py",
+    "population": "the exports, from the marts and the chapter tables",
+    "seed": null,
+    "seeds": null,
+    "source": "mixed"
+   },
+   "value": 1062
+  },
+  "exports.powerbi.measures": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/exports.py",
+    "population": "the exports, from the marts and the chapter tables",
+    "seed": null,
+    "seeds": null,
+    "source": "mixed"
+   },
+   "value": 18
+  },
+  "exports.tableau.mart_carrier_month.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/exports.py",
+    "population": "the exports, from the marts and the chapter tables",
+    "seed": null,
+    "seeds": null,
+    "source": "mixed"
+   },
+   "value": 2086
+  },
+  "exports.tableau.mart_route_month.rows": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/exports.py",
+    "population": "the exports, from the marts and the chapter tables",
+    "seed": null,
+    "seeds": null,
+    "source": "mixed"
+   },
+   "value": 1206533
+  },
+  "exports.workbook.chapter_sheets": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/exports.py",
+    "population": "the exports, from the marts and the chapter tables",
+    "seed": null,
+    "seeds": null,
+    "source": "mixed"
+   },
+   "value": 18
+  },
+  "exports.workbook.default_year": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/exports.py",
+    "population": "the exports, from the marts and the chapter tables",
+    "seed": null,
+    "seeds": null,
+    "source": "mixed"
+   },
+   "value": "2025"
+  },
+  "exports.workbook.formulas": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/exports.py",
+    "population": "the exports, from the marts and the chapter tables",
+    "seed": null,
+    "seeds": null,
+    "source": "mixed"
+   },
+   "value": 12
+  },
+  "exports.workbook.named_ranges": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/exports.py",
+    "population": "the exports, from the marts and the chapter tables",
+    "seed": null,
+    "seeds": null,
+    "source": "mixed"
+   },
+   "value": 26
+  },
+  "exports.workbook.sheets": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/exports.py",
+    "population": "the exports, from the marts and the chapter tables",
+    "seed": null,
+    "seeds": null,
+    "source": "mixed"
+   },
+   "value": 23
+  }
+ }
+}

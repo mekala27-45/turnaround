@@ -1,0 +1,21 @@
+{
+ "counts": {
+  "errors": 0,
+  "failed": 0,
+  "models": 18,
+  "passed": 206,
+  "skipped": 0,
+  "tests": 206,
+  "warned": 0
+ },
+ "mart_rows": {
+  "mart_airport_day": 1381898,
+  "mart_carrier_day": 63438,
+  "mart_carrier_month": 2086,
+  "mart_delay_histogram": 634827,
+  "mart_hour_profile": 23116,
+  "mart_leg_position": 1086,
+  "mart_quarantine": 2086,
+  "mart_route_month": 1206533
+ }
+}

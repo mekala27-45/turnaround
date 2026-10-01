@@ -1,0 +1,123 @@
+{
+ "id": "causes",
+ "kind": "bars",
+ "message": "Weather explains more delay than the weather field records",
+ "notes": [],
+ "panels": [
+  {
+   "annotations": [],
+   "bands": [],
+   "rules": [],
+   "series": [
+    {
+     "dashed": false,
+     "high": null,
+     "label": null,
+     "low": null,
+     "name": "Reported weather field",
+     "points": [
+      [
+       "Reported weather field",
+       0.0423302
+      ]
+     ],
+     "role": "control"
+    },
+    {
+     "dashed": false,
+     "high": null,
+     "label": null,
+     "low": null,
+     "name": "Reported air traffic system field",
+     "points": [
+      [
+       "Reported air traffic system field",
+       0.22254
+      ]
+     ],
+     "role": "control"
+    },
+    {
+     "dashed": false,
+     "high": [
+      0.199233
+     ],
+     "label": null,
+     "low": [
+      0.177124
+     ],
+     "name": "Estimated from the weather",
+     "points": [
+      [
+       "Estimated from the weather",
+       0.188179
+      ]
+     ],
+     "role": "delay"
+    }
+   ],
+   "title": "Flights between two Core 30 airports, reporting years",
+   "y_format": null,
+   "y_label": null
+  }
+ ],
+ "source": "Source: BTS on time files with Open-Meteo weather, model: the weather fixed effects model, scheduled flights 2023 to 2026-07, flights between two Core 30 airports for the weather model, as of 2026-10-01.",
+ "sql": "select f.flight_id, f.flight_date, f.origin || ':' || cast(f.dep_hour as varchar) as origin_hour,\n           f.dest || ':' || cast(cast(f.crs_arr_local // 60 as integer) % 24 as varchar) as dest_hour,\n           f.year * 100 + f.month as period, f.arr_delay,\n           least(coalesce(origin_precipitation, 0), 10) as origin_precip,\n           least(coalesce(origin_snowfall, 0), 5) as origin_snow,\n           greatest(coalesce(origin_wind_gusts, 0) - 40.0, 0) as origin_gust,\n           coalesce(origin_low_cloud, 0) / 100.0 as origin_low_cloud,\n           coalesce(origin_thunder, false)::int as origin_thunder,\n           coalesce(origin_fog, false)::int as origin_fog,\n           coalesce(origin_freezing, false)::int as origin_freezing,\n           least(coalesce(dest_precipitation, 0), 10) as dest_precip,\n           least(coalesce(dest_snowfall, 0), 5) as dest_snow,\n           greatest(coalesce(dest_wind_gusts, 0) - 40.0, 0) as dest_gust,\n           coalesce(dest_low_cloud, 0) / 100.0 as dest_low_cloud,\n           coalesce(dest_thunder, false)::int as dest_thunder,\n           coalesce(dest_fog, false)::int as dest_fog,\n           coalesce(dest_freezing, false)::int as dest_freezing,\n           coalesce(greatest(0, l.prev_arr_delay - (l.sched_turn - 45)), 0) as carried,\n           f.cause_weather, f.cause_nas, f.cause_ok\n    from (select * from wh.fct_flights where year between 2023 and 2026) f\n    left join wh.int_legs l on l.flight_id = f.flight_id and l.link_status = 'linked'\n    where f.weather_both_ends and not f.cancelled and not f.diverted and f.arr_delay is not null\n    order by f.flight_id",
+ "states": [
+  {
+   "caption": "What the carriers reported.",
+   "highlight": [
+    "Reported weather field"
+   ],
+   "id": "reported",
+   "show": []
+  },
+  {
+   "caption": "Where most weather goes in the reporting: the air traffic system field.",
+   "highlight": [
+    "Reported air traffic system field"
+   ],
+   "id": "nas",
+   "show": []
+  },
+  {
+   "caption": "What the weather itself explains.",
+   "highlight": [
+    "Estimated from the weather"
+   ],
+   "id": "estimated",
+   "show": []
+  }
+ ],
+ "subtitle": "Share of arrival delay minutes: the reported cause fields beside the weather model's estimate",
+ "table_columns": [
+  "Measure",
+  "Share",
+  "Low",
+  "High"
+ ],
+ "table_rows": [
+  [
+   "Reported weather field",
+   0.0423302,
+   null,
+   null
+  ],
+  [
+   "Reported air traffic system field",
+   0.22254,
+   null,
+   null
+  ],
+  [
+   "Estimated from the weather",
+   0.188179,
+   0.177124,
+   0.199233
+  ]
+ ],
+ "x_format": "pct0",
+ "x_label": "Share of arrival delay minutes",
+ "y_format": "text",
+ "y_label": ""
+}

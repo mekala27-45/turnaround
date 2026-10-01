@@ -1,0 +1,176 @@
+{
+ "as_of": "2026-10-01",
+ "figures": {},
+ "seed": 20261001,
+ "tables": {},
+ "values": {
+  "warehouse.models": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/warehouse.py",
+    "population": "the dbt warehouse over every flight in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 18
+  },
+  "warehouse.rows.mart_airport_day": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/warehouse.py",
+    "population": "the dbt warehouse over every flight in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 1381898
+  },
+  "warehouse.rows.mart_carrier_day": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/warehouse.py",
+    "population": "the dbt warehouse over every flight in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 63438
+  },
+  "warehouse.rows.mart_carrier_month": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/warehouse.py",
+    "population": "the dbt warehouse over every flight in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 2086
+  },
+  "warehouse.rows.mart_delay_histogram": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/warehouse.py",
+    "population": "the dbt warehouse over every flight in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 634827
+  },
+  "warehouse.rows.mart_hour_profile": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/warehouse.py",
+    "population": "the dbt warehouse over every flight in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 23116
+  },
+  "warehouse.rows.mart_leg_position": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/warehouse.py",
+    "population": "the dbt warehouse over every flight in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 1086
+  },
+  "warehouse.rows.mart_quarantine": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/warehouse.py",
+    "population": "the dbt warehouse over every flight in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 2086
+  },
+  "warehouse.rows.mart_route_month": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/warehouse.py",
+    "population": "the dbt warehouse over every flight in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 1206533
+  },
+  "warehouse.tests": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/warehouse.py",
+    "population": "the dbt warehouse over every flight in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 206
+  },
+  "warehouse.tests_failed": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/warehouse.py",
+    "population": "the dbt warehouse over every flight in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 0
+  },
+  "warehouse.tests_passed": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/warehouse.py",
+    "population": "the dbt warehouse over every flight in the window",
+    "seed": null,
+    "seeds": null,
+    "source": "real:bts"
+   },
+   "value": 206
+  }
+ }
+}

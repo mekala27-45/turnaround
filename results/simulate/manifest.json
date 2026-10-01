@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-30",
+ "as_of": "2026-10-01",
  "figures": {},
  "seed": 20261001,
  "tables": {
@@ -17,7 +17,7 @@
     "text"
    ],
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -82,7 +82,7 @@
   "sim.airports": {
    "fmt": "int",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -96,7 +96,7 @@
   "sim.bunching_carriers": {
    "fmt": "text",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -110,7 +110,7 @@
   "sim.bunching_share": {
    "fmt": "pct0",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -124,7 +124,7 @@
   "sim.carriers": {
    "fmt": "int",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -138,7 +138,7 @@
   "sim.days": {
    "fmt": "int",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -152,7 +152,7 @@
   "sim.flights": {
    "fmt": "int",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -166,7 +166,7 @@
   "sim.inherited_share": {
    "fmt": "pct1",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -180,7 +180,7 @@
   "sim.meltdown_carrier": {
    "fmt": "text",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -194,7 +194,7 @@
   "sim.meltdown_days": {
    "fmt": "int",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -208,7 +208,7 @@
   "sim.meltdown_start": {
    "fmt": "text",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -222,7 +222,7 @@
   "sim.min_turn": {
    "fmt": "min0",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -236,7 +236,7 @@
   "sim.propagation": {
    "fmt": "float2",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -250,7 +250,7 @@
   "sim.reported_weather_share": {
    "fmt": "pct1",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -264,7 +264,7 @@
   "sim.routes": {
    "fmt": "int",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -278,7 +278,7 @@
   "sim.storm_airport_days": {
    "fmt": "int",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -292,7 +292,7 @@
   "sim.swap_rate": {
    "fmt": "pct1",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -306,7 +306,7 @@
   "sim.tails": {
    "fmt": "int",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -320,7 +320,7 @@
   "sim.weather_reported_fraction": {
    "fmt": "pct0",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -334,7 +334,7 @@
   "sim.weather_share": {
    "fmt": "pct1",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
@@ -348,7 +348,7 @@
   "sim.weather_storm_minutes": {
    "fmt": "min0",
    "provenance": {
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "condition": null,
     "model": "none",
     "origin": "stages/simulate.py",
