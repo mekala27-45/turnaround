@@ -1,0 +1,146 @@
+# Every metric the story, the explorer, the memo, the workbook and the BI extracts use, defined once.
+#
+# Each metric carries two expressions, and that is the point of the file:
+#
+#   flight: SQL over fct_flights, the grain. This is the definition.
+#   mart:   SQL over the additive columns of a shipped mart (mart_carrier_month unless mart_source
+#           says otherwise), which is what the site's DuckDB-WASM, the workbook and the BI model run.
+#
+# `turnaround metrics` evaluates both at four grains (overall, by carrier, by year, by carrier and
+# year) and fails when any cell disagrees beyond floating point. A metric layer without that check
+# is a document about the code; with it, a mart that drops a filter breaks the build.
+#
+# `fmt` is the manifest format every surface prints the metric in. `dax` is generated from `mart`.
+
+version: 1
+
+metrics:
+  - name: scheduled_flights
+    kind: sum
+    fmt: int
+    description: Scheduled flights that passed every rule that excludes a row from everything.
+    flight: count(*)
+    mart: sum(scheduled)
+
+  - name: cancellation_rate
+    kind: proportion
+    fmt: pct2
+    description: Cancelled flights over scheduled flights.
+    flight: avg(cancelled::int)
+    mart: sum(cancelled) / sum(scheduled)
+
+  - name: completion_factor
+    kind: proportion
+    fmt: pct2
+    description: Scheduled flights that were not cancelled, over scheduled flights; the airline industry's own name for one minus the cancellation rate.
+    flight: 1 - avg(cancelled::int)
+    mart: 1 - sum(cancelled) / sum(scheduled)
+
+  - name: diversion_rate
+    kind: proportion
+    fmt: pct2
+    description: Diverted flights over scheduled flights.
+    flight: avg(diverted::int)
+    mart: sum(diverted) / sum(scheduled)
+
+  - name: on_time_rate
+    kind: proportion
+    fmt: pct1
+    description: >
+      Flights that flew to their destination and arrived less than fifteen minutes after the scheduled
+      arrival (the A14 convention), over flights that flew to their destination. Cancelled and diverted
+      flights are in neither count, which is the convention and one of the things chapter 1 is about.
+    flight: avg((arr_delay < 15)::int) filter (where not cancelled and not diverted)
+    mart: sum(on_time) / sum(flown)
+
+  - name: mean_arrival_delay
+    kind: mean
+    fmt: min1
+    description: Mean arrival delay in minutes of flights that flew to their destination; early arrivals count as negative.
+    flight: avg(arr_delay) filter (where not cancelled and not diverted)
+    mart: sum(arr_delay_sum) / sum(flown)
+
+  - name: median_arrival_delay
+    kind: quantile
+    fmt: min0
+    description: The median arrival delay of flights that flew, read from whole minute counts.
+    flight: quantile_disc(least(greatest(arr_delay, -60), 300), 0.5) filter (where not cancelled and not diverted and arr_delay is not null)
+    mart_source: mart_delay_histogram
+    mart: median_from_histogram
+
+  - name: mean_scheduled_block
+    kind: mean
+    fmt: min1
+    description: Mean scheduled gate to gate time of flights that flew.
+    flight: avg(crs_elapsed) filter (where not cancelled and not diverted)
+    mart: sum(crs_elapsed_sum) / sum(flown)
+
+  - name: mean_actual_block
+    kind: mean
+    fmt: min1
+    description: Mean actual gate to gate time of flights that flew.
+    flight: avg(actual_elapsed) filter (where not cancelled and not diverted)
+    mart: sum(actual_elapsed_sum) / sum(flown)
+
+  - name: mean_padding
+    kind: mean
+    fmt: min1
+    description: >
+      Mean scheduled block time minus the unimpeded reference (the 10th percentile of actual gate to gate
+      time on the route, three hour block and season over the fitting years), over flights with a reference.
+    flight: avg(padding)
+    mart: sum(padding_sum) / sum(padding_flights)
+
+  - name: padding_share
+    kind: ratio
+    fmt: pct1
+    description: Padding minutes over scheduled block minutes, for flights with a reference.
+    flight: sum(padding) / sum(crs_elapsed) filter (where padding is not null)
+    mart: sum(padding_sum) / sum(padding_block_sum)
+
+  - name: reported_late_aircraft_share
+    kind: ratio
+    fmt: pct1
+    description: The reported late aircraft cause's minutes over all reported cause minutes; a field the carrier fills in, not a measured cause.
+    flight: sum(cause_late_aircraft) filter (where cause_ok) / sum(cause_late_aircraft + cause_carrier + cause_nas + cause_weather + cause_security) filter (where cause_ok)
+    mart: sum(cause_late_aircraft_sum) / (sum(cause_late_aircraft_sum) + sum(cause_carrier_sum) + sum(cause_nas_sum) + sum(cause_weather_sum) + sum(cause_security_sum))
+
+  - name: reported_carrier_share
+    kind: ratio
+    fmt: pct1
+    description: The reported carrier cause's minutes over all reported cause minutes.
+    flight: sum(cause_carrier) filter (where cause_ok) / sum(cause_late_aircraft + cause_carrier + cause_nas + cause_weather + cause_security) filter (where cause_ok)
+    mart: sum(cause_carrier_sum) / (sum(cause_late_aircraft_sum) + sum(cause_carrier_sum) + sum(cause_nas_sum) + sum(cause_weather_sum) + sum(cause_security_sum))
+
+  - name: reported_nas_share
+    kind: ratio
+    fmt: pct1
+    description: The reported national airspace system cause's minutes over all reported cause minutes.
+    flight: sum(cause_nas) filter (where cause_ok) / sum(cause_late_aircraft + cause_carrier + cause_nas + cause_weather + cause_security) filter (where cause_ok)
+    mart: sum(cause_nas_sum) / (sum(cause_late_aircraft_sum) + sum(cause_carrier_sum) + sum(cause_nas_sum) + sum(cause_weather_sum) + sum(cause_security_sum))
+
+  - name: reported_weather_share
+    kind: ratio
+    fmt: pct1
+    description: The reported weather cause's minutes over all reported cause minutes.
+    flight: sum(cause_weather) filter (where cause_ok) / sum(cause_late_aircraft + cause_carrier + cause_nas + cause_weather + cause_security) filter (where cause_ok)
+    mart: sum(cause_weather_sum) / (sum(cause_late_aircraft_sum) + sum(cause_carrier_sum) + sum(cause_nas_sum) + sum(cause_weather_sum) + sum(cause_security_sum))
+
+  - name: reported_security_share
+    kind: ratio
+    fmt: pct2
+    description: The reported security cause's minutes over all reported cause minutes.
+    flight: sum(cause_security) filter (where cause_ok) / sum(cause_late_aircraft + cause_carrier + cause_nas + cause_weather + cause_security) filter (where cause_ok)
+    mart: sum(cause_security_sum) / (sum(cause_late_aircraft_sum) + sum(cause_carrier_sum) + sum(cause_nas_sum) + sum(cause_weather_sum) + sum(cause_security_sum))
+
+  - name: inherited_share
+    kind: ratio
+    fmt: pct1
+    stage: chapters
+    description: >
+      Arrival delay minutes the propagation model attributes to the aircraft's previous leg, over the
+      arrival delay minutes of flown legs; computed per leg in chapter 4 and written to the warehouse.
+    flight_source: legs_inherited
+    flight: sum(inherited_minutes) / sum(arr_delay_pos)
+    mart_source: mart_inherited_month
+    mart: sum(inherited_minutes_sum) / sum(arr_delay_pos_sum)

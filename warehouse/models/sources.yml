@@ -1,0 +1,36 @@
+version: 2
+
+sources:
+  - name: bts
+    description: >
+      The Bureau of Transportation Statistics Reporting Carrier On-Time Performance monthly files,
+      every month from January 2015 to the latest published, typed and flagged by the quarantine
+      rules in packages/contracts and written one parquet file per month by `make data`.
+    meta:
+      external_location: "read_parquet('../data/flights/{name}_*.parquet')"
+    tables:
+      - name: flights
+        description: One row per scheduled flight as reported, quarantined rows included with their flags.
+        columns:
+          - name: flight_id
+            description: Year and month times ten million plus the row number within the monthly file.
+
+  - name: reference
+    description: Airports from OurAirports, aircraft from the FAA registry, UTC offsets from the time zone database.
+    tables:
+      - name: airports
+        meta:
+          external_location: "read_csv('../data/airports.csv', header = true, auto_detect = true)"
+      - name: aircraft
+        meta:
+          external_location: "read_parquet('../data/aircraft/aircraft.parquet')"
+      - name: tz_offsets
+        meta:
+          external_location: "read_parquet('../.cache/tz_offsets.parquet')"
+
+  - name: open_meteo
+    description: Hourly weather at the FAA Core 30 from Open-Meteo, CC BY 4.0.
+    tables:
+      - name: hourly
+        meta:
+          external_location: "read_parquet('../data/weather/hourly.parquet')"

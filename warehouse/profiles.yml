@@ -1,0 +1,13 @@
+# The warehouse is a DuckDB file under .cache, rebuilt from the derived parquet; never committed.
+turnaround:
+  target: local
+  outputs:
+    local:
+      type: duckdb
+      path: "{{ env_var('TURNAROUND_WAREHOUSE_PATH', '../.cache/warehouse.duckdb') }}"
+      threads: 1
+      settings:
+        memory_limit: "{{ env_var('TURNAROUND_DUCKDB_MEMORY', '5GB') }}"
+        threads: 2
+        preserve_insertion_order: false
+        temp_directory: "{{ env_var('TURNAROUND_DUCKDB_TMP', '../.cache/duckdb_tmp') }}"

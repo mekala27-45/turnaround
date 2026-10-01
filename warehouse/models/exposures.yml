@@ -1,0 +1,65 @@
+version: 2
+
+exposures:
+  - name: the_story
+    label: The story, why your flight is late
+    type: application
+    maturity: high
+    url: https://mekala27-45.github.io/turnaround/
+    description: The long read on the front page; every number in it comes from the manifest built over these marts.
+    depends_on:
+      - ref('fct_flights')
+      - ref('mart_carrier_month')
+      - ref('mart_route_month')
+      - ref('mart_delay_histogram')
+      - ref('int_legs')
+      - ref('mart_hour_profile')
+      - ref('mart_leg_position')
+    owner:
+      name: Ajay Mekala
+
+  - name: the_explorer
+    label: The explorer
+    type: application
+    maturity: high
+    url: https://mekala27-45.github.io/turnaround/explore/
+    description: DuckDB-WASM in the browser over the shipped copies of these marts, with the SQL behind every chart.
+    depends_on:
+      - ref('mart_route_month')
+      - ref('mart_carrier_month')
+      - ref('mart_hour_profile')
+    owner:
+      name: Ajay Mekala
+
+  - name: the_workbook
+    label: The Excel workbook
+    type: analysis
+    maturity: medium
+    description: One sheet per chapter's table and a summary sheet whose formulas read them.
+    depends_on:
+      - ref('mart_carrier_month')
+    owner:
+      name: Ajay Mekala
+
+  - name: the_bi_extracts
+    label: The Tableau extract and the Power BI model
+    type: dashboard
+    maturity: medium
+    description: The route by month and carrier by month marts with the measures defined in the metric layer.
+    depends_on:
+      - ref('mart_route_month')
+      - ref('mart_carrier_month')
+    owner:
+      name: Ajay Mekala
+
+  - name: the_disruption_page
+    label: Disruptions
+    type: application
+    maturity: high
+    url: https://mekala27-45.github.io/turnaround/events/
+    description: The detector and the event studies over the carrier and airport day marts.
+    depends_on:
+      - ref('mart_carrier_day')
+      - ref('mart_airport_day')
+    owner:
+      name: Ajay Mekala

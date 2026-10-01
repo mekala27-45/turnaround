@@ -1,0 +1,29 @@
+name: turnaround
+version: "0.1.0"
+config-version: 2
+profile: turnaround
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+seed-paths: ["seeds"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+vars:
+  # The fitting years: the unimpeded reference is fixed on them and applied to every year.
+  fit_first_year: 2015
+  fit_last_year: 2022
+  unimpeded_percentile: 0.10
+  unimpeded_min_flights: 30
+  rotation_gap_hours: 6.0
+
+models:
+  turnaround:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table

@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: int_flights_utc
+    description: Flights that pass every rule, with each airport's time zone and the scheduled times in UTC.
+    columns:
+      - name: flight_id
+        tests: [unique, not_null]
+
+  - name: int_unimpeded
+    description: >
+      The unimpeded reference: the 10th percentile of actual gate to gate time by route, three hour
+      departure block and season, over the fitting years only. Generated from
+      turnaround_chapters.padding.unimpeded_sql.
+    tests:
+      - not_empty
+      - unique_combination: {combination_of_columns: [route, hour_block, season]}
+    columns:
+      - name: unimpeded
+        tests: [not_null, {between: {min_value: 5, max_value: 900}}]
+      - name: flights
+        tests: [not_null, {between: {min_value: 30, max_value: 100000000}}]
+      - name: season
+        tests: [{accepted_values: {values: [0, 1, 2, 3]}}]
+      - name: hour_block
+        tests: [{between: {min_value: 0, max_value: 7}}]
+
+  - name: int_legs
+    description: >
+      Every flown leg with a usable tail, linked to the previous leg of its airframe under the three
+      integrity rules, with its rotation and its leg number. Generated from
+      turnaround_rotations.reconstruct.full_sql.
+    tests:
+      - not_empty
+    columns:
+      - name: flight_id
+        tests: [unique, not_null]
+      - name: rotation_id
+        tests: [not_null]
+      - name: link_status
+        tests: [not_null, {accepted_values: {values: ['first', 'linked', 'gap', 'broken_chain', 'impossible']}}]
+      - name: leg_index
+        description: Position within the rotation; a rotation can run for days when the overnight sits are short.
+        tests: [not_null, {between: {min_value: 1, max_value: 100000}}]
+      - name: day_leg_index
+        description: Position within the tail's local calendar day; one is the aircraft's first departure of the day.
+        tests: [not_null, {between: {min_value: 1, max_value: 30}}]
