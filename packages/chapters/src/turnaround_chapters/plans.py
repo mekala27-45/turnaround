@@ -26,7 +26,11 @@ def definition() -> Plan:
         split="Descriptive over every year; nothing is fit, so there is nothing to choose on the fitting years.",
         family="None; two series, one comparison.",
         interval=f"Block bootstrap over days, {POLICY.bootstrap_replicates} replicates, percentile {POLICY.interval_level:.0%}.",
-        simulator="None needed: no estimator, only definitions; the metric layer reconciles both series.",
+        simulator=(
+            "A two year simulated network whose padding steps on known dates while the flying does not change: the "
+            "panel's scheduled block change against the true padding change, and whether the actual block change's "
+            "interval covers zero, over twenty seeds."
+        ),
         policy={"on_time_minutes": POLICY.on_time_minutes},
     )
 
@@ -138,17 +142,20 @@ def causes() -> Plan:
             "the share the reported weather field assigns."
         ),
         estimator=(
-            "Arrival delay on hourly weather at the origin at departure and the destination at arrival, with origin by "
-            "hour and destination by hour fixed effects, on flights between two Core 30 airports; the attributable "
-            "share is the fitted delay above a calm weather counterfactual."
+            "Arrival delay on hourly weather at the origin at departure and the destination at arrival (precipitation, "
+            "snowfall, gusts over 40 km/h, low cloud, thunder, fog, freezing precipitation), with origin by hour, "
+            "destination by hour and month fixed effects and the inbound aircraft's carried minutes as a control, on "
+            "flights between two Core 30 airports; the attributable share is the fitted delay above calm weather."
         ),
-        test="Estimated weather share against reported weather share, with intervals.",
-        split=SPLIT
-        + "; the weather specification is chosen on the fitting years and the shares reported on 2023 onward.",
+        test="Estimated weather share against the reported weather field's share on the same flights, with an interval.",
+        split=SPLIT + "; the specification is fixed here and the shares are reported on 2023 onward.",
         family="Airports compared on their national airspace system share are described, not tested.",
-        interval=f"Block bootstrap over days, {POLICY.bootstrap_replicates} replicates.",
-        simulator="Not on the recovery list: the simulator's weather is airport day storms, a sanity check only.",
-        policy={"airports": "FAA Core 30"},
+        interval="Cluster robust by day on the weather coefficients, carried to the share.",
+        simulator=(
+            "Weather share error and interval coverage against planted storms whose minutes the reported field "
+            "under records by design (recovery study)."
+        ),
+        policy={"airports": "FAA Core 30", "calm_gust_kmh": 40.0},
     )
 
 
@@ -159,15 +166,27 @@ def meltdowns() -> Plan:
         title="A meltdown is a recovery",
         claim="Carrier meltdowns are visible as anomalies days before they end, and recovery speed differs by carrier.",
         estimator=(
-            "Daily cancellation rate and mean arrival delay per carrier and per airport against the previous 28 days; "
-            "an alert threshold chosen by cost; event studies against peer carriers at the same airports."
+            "Daily cancellation rate and mean arrival delay per carrier and at the thirty busiest airports against the "
+            "unit's previous 28 days (median and median absolute deviation, with floors); an alert episode opens above "
+            "the threshold and stays open while the score stays above half of it; the threshold is chosen by cost over "
+            "a grid; event studies of the two carrier meltdowns against other carriers at the same airports."
         ),
-        test="Recall on the known events table and detection day against onset; excess flights and recovery days.",
+        test=(
+            "Recall on the known events of the reporting years and the first alert day against onset; false alarms per "
+            "thousand unit days; whether carriers differ in alert episode length (Kruskal-Wallis H, permutation p)."
+        ),
         split=SPLIT + "; the alert threshold is chosen on the fitting years and graded on 2023 onward.",
-        family="Events are graded one by one; none is tested against another.",
+        family="One permutation test across carriers with at least five episodes; events are graded one by one.",
         interval="Recovery time is a count of days; the excess is a sum, reported without a model interval.",
         simulator="Detector precision and recall on the planted meltdown (recovery study).",
-        policy={"window_days": 28, "cost_false_alarm": 1.0, "cost_miss": 25.0},
+        policy={
+            "window_days": 28,
+            "cost_false_alarm": 1.0,
+            "cost_miss": 50.0,
+            "grid": "3 to 30 in steps of 1",
+            "airports": 30,
+            "permutations": 2000,
+        },
     )
 
 
@@ -188,7 +207,10 @@ def decision() -> Plan:
         split=SPLIT + "; the curves are computed on 2023 onward.",
         family="Hubs are described, not tested.",
         interval=f"Block bootstrap over days, {POLICY.bootstrap_replicates} replicates.",
-        simulator="The curve is a tabulation, not an estimator; the misconnect estimate is scored later against outcomes.",
+        simulator=(
+            "The day by day curve equals a brute force count of every same day pair of flights at a simulated hub "
+            "(test); the calculator's estimates are scored later against the outcome month."
+        ),
         policy={
             "misconnect_line": POLICY.misconnect_line,
             "min_connection_minutes": POLICY.min_connection_minutes,
