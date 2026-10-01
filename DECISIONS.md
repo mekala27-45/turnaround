@@ -152,4 +152,19 @@ registry join. The rule's text also said its rows were left out of the rotations
 rotation model never did: a rotation needs a value that names one aircraft, and the chain rules
 catch one that does not. The ingest now restores the N when the result is a valid registration and
 keeps the reported value beside it as `tail_reported`, the rule excludes from the registry join
-only and says so, and `tests/contracts/test_quarantine.py` pins both cases.
+only and says so, and `tests/contracts/test_quarantine.py` pins both cases. After the change
+950,473 rows carry a restored N and the rule flags 1,142,859, almost all of them American's
+fleet numbers.
+
+## 2026-10-01: correction, a time that cannot be is quarantined, scheduled times included
+
+The warehouse's range tests stopped the first full build on 31 flights. One reported 1,557
+minutes in the air between Jacksonville and Newark, 820 miles, with the elapsed time made to match;
+the other 30 had a scheduled elapsed time below one minute or over 1,500, several of them a
+schedule that lands before it leaves. The negative time rule looked only at flown times, so these
+rows reached the analysis grain, where a scheduled arrival before its departure would have entered
+the padding and the rotations. The rule is now the impossible time rule: a negative taxi time, or
+an air time or an actual or scheduled elapsed time at or below zero or over 1,500 minutes, and it
+still excludes the row from everything; it flags exactly those 31 rows. The ledger now records a
+digest of the ingest contract, so a rule change ingests every month again instead of leaving old
+flags in files whose zips did not change.

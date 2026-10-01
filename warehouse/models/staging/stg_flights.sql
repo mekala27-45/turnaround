@@ -44,7 +44,7 @@ select
     div1_airport,
     q_duplicate_key,
     q_actual_without_scheduled,
-    q_negative_time,
+    q_impossible_time,
     q_elapsed_mismatch,
     q_cause_mismatch,
     q_tail_missing,

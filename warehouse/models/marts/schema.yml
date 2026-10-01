@@ -31,7 +31,7 @@ models:
   - name: actual_elapsed
     tests:
     - between:
-        arguments: {min_value: 1, max_value: 1800}
+        arguments: {min_value: 1, max_value: 1500}
   - name: taxi_out
     tests: [non_negative]
   - name: taxi_in
@@ -209,7 +209,7 @@ models:
     tests: [not_null, non_negative]
   - name: actual_without_scheduled
     tests: [not_null, non_negative]
-  - name: negative_time
+  - name: impossible_time
     tests: [not_null, non_negative]
   - name: elapsed_mismatch
     tests: [not_null, non_negative]

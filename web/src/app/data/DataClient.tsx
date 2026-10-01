@@ -10,7 +10,7 @@ import { useMart } from "@/lib/useMart";
 const RULES = [
   ["duplicate_key", "Duplicate key"],
   ["actual_without_scheduled", "Actual without scheduled"],
-  ["negative_time", "Negative time"],
+  ["impossible_time", "Impossible time"],
   ["elapsed_mismatch", "Elapsed mismatch"],
   ["cause_mismatch", "Cause mismatch"],
   ["tail_missing", "Tail missing"],

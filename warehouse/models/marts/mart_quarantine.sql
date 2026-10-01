@@ -6,7 +6,7 @@ select
     count(*) as rows,
     count(*) filter (where q_duplicate_key) as duplicate_key,
     count(*) filter (where q_actual_without_scheduled) as actual_without_scheduled,
-    count(*) filter (where q_negative_time) as negative_time,
+    count(*) filter (where q_impossible_time) as impossible_time,
     count(*) filter (where q_elapsed_mismatch) as elapsed_mismatch,
     count(*) filter (where q_cause_mismatch) as cause_mismatch,
     count(*) filter (where q_tail_missing) as tail_missing,

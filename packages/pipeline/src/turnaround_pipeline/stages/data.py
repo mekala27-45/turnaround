@@ -18,7 +18,15 @@ from pathlib import Path
 import polars as pl
 from turnaround_contracts import airports as airport_contract
 from turnaround_contracts import faa, weather
-from turnaround_contracts.bts import FILE_PATTERN, RULES, MonthReport, ingest_month, mark_revisions, month_of
+from turnaround_contracts.bts import (
+    FILE_PATTERN,
+    RULES,
+    MonthReport,
+    contract_digest,
+    ingest_month,
+    mark_revisions,
+    month_of,
+)
 from turnaround_core.log import get_logger
 from turnaround_core.manifest import Manifest, Scribe
 from turnaround_core.paths import Paths
@@ -56,13 +64,14 @@ def _read_ledger(path: Path) -> dict[str, dict[str, str]]:
 
 def _write_ledger(path: Path, reports: list[MonthReport]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    fields = ["file", "year", "month", "rows", "bytes", "sha256", "layout_matches_readme"]
+    fields = ["file", "year", "month", "rows", "bytes", "sha256", "layout_matches_readme", "contract"]
     with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for report in sorted(reports, key=lambda r: (r.year, r.month)):
             row = asdict(report)
             row["layout_matches_readme"] = int(report.layout_matches_readme)
+            row["contract"] = contract_digest()
             writer.writerow({k: row[k] for k in fields})
 
 
@@ -75,6 +84,8 @@ def ingest_flights(p: Paths) -> list[MonthReport]:
             "can reach transtats.bts.gov and place the zips there"
         )
     ledger = _read_ledger(p.root / LEDGER)
+    # The same file ingested under different rules is ingested again from scratch, not counted as a revision.
+    contract = contract_digest()
     con = connect(p)
     reports: list[MonthReport] = []
     for zip_path in raw:
@@ -84,7 +95,8 @@ def ingest_flights(p: Paths) -> list[MonthReport]:
         from turnaround_core.hashing import file_sha256
 
         digest = file_sha256(zip_path)
-        if known and out.exists() and known["sha256"] == digest:
+        same_file = known is not None and known["sha256"] == digest
+        if same_file and out.exists() and known is not None and known.get("contract") == contract:
             reports.append(
                 MonthReport(
                     file=known["file"],
@@ -97,7 +109,7 @@ def ingest_flights(p: Paths) -> list[MonthReport]:
                 )
             )
             continue
-        if out.exists():
+        if out.exists() and not same_file:
             # A changed file for a month already ingested: ingest it beside the old one and count revisions.
             staging = p.scratch / "revision"
             report = ingest_month(zip_path, staging, con=con)

@@ -110,7 +110,7 @@ CARRIERS = (("DL", 19790), ("AA", 19805), ("WN", 19393))
 class Planted:
     duplicate_key: int = 3
     actual_without_scheduled: int = 2
-    negative_time: int = 4
+    impossible_time: int = 4
     elapsed_mismatch: int = 5
     cause_mismatch: int = 6
     tail_missing: int = 3
@@ -121,7 +121,7 @@ class Planted:
         return {
             "duplicate_key": self.duplicate_key,
             "actual_without_scheduled": self.actual_without_scheduled,
-            "negative_time": self.negative_time,
+            "impossible_time": self.impossible_time,
             "elapsed_mismatch": self.elapsed_mismatch,
             "cause_mismatch": self.cause_mismatch,
             "tail_missing": self.tail_missing,
@@ -193,11 +193,21 @@ def generate_rows(year: int, month: int, n: int, seed: int, planted: Planted) ->
 
     for i in take(planted.actual_without_scheduled):
         rows[i]["CRSDepTime"] = ""
-    for i in take(planted.negative_time):
-        # A negative taxi in, with the elapsed time kept consistent so only this rule fires.
-        rows[i]["TaxiIn"] = "-4.00"
-        consistent = float(rows[i]["TaxiOut"]) + float(rows[i]["AirTime"]) - 4
-        rows[i]["ActualElapsedTime"] = f"{consistent:.2f}"
+    for n, i in enumerate(take(planted.impossible_time)):
+        # Four ways a time cannot be, each with the elapsed time kept consistent so only this rule fires:
+        # a negative taxi in, a negative scheduled elapsed time, a day in the air, a day on the schedule.
+        kind = n % 4
+        if kind == 0:
+            rows[i]["TaxiIn"] = "-4.00"
+        elif kind == 1:
+            rows[i]["CRSElapsedTime"] = "-60.00"
+        elif kind == 2:
+            rows[i]["AirTime"] = "1557.00"
+        else:
+            rows[i]["CRSElapsedTime"] = "1510.00"
+        if kind in (0, 2):
+            consistent = float(rows[i]["TaxiOut"]) + float(rows[i]["AirTime"]) + float(rows[i]["TaxiIn"])
+            rows[i]["ActualElapsedTime"] = f"{consistent:.2f}"
     for i in take(planted.elapsed_mismatch):
         rows[i]["ActualElapsedTime"] = f"{float(rows[i]['ActualElapsedTime']) + 30:.2f}"
     for i in take(planted.cause_mismatch):

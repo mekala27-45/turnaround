@@ -89,6 +89,10 @@ FIELDS: tuple[Field, ...] = (
 )
 CAUSE_COLUMNS = ("cause_carrier", "cause_weather", "cause_nas", "cause_security", "cause_late_aircraft")
 
+# No domestic flight is scheduled for much more than twelve hours; a time beyond this many minutes,
+# scheduled or flown, is a reporting error (one flight reported 1,557 minutes in the air for 820 miles).
+LONGEST_MINUTES = 1500
+
 # An FAA registration: N, a first digit 1 to 9, then up to four more characters, with at most two
 # trailing letters, never I or O. N1 to N99999, N1A to N9999Z, N1AA to N999ZZ.
 N_NUMBER = r"^N[1-9]([0-9]{0,4}|[0-9]{0,3}[A-HJ-NP-Z]|[0-9]{0,2}[A-HJ-NP-Z]{2})$"
@@ -115,8 +119,9 @@ RULES: tuple[Rule, ...] = (
         "everything",
     ),
     Rule(
-        "negative_time",
-        "a negative taxi time, or an air time or elapsed time at or below zero",
+        "impossible_time",
+        "a negative taxi time, or an air time or an actual or scheduled elapsed time at or below zero "
+        "or longer than the longest a domestic flight can take",
         "everything",
     ),
     Rule(
@@ -217,7 +222,9 @@ def _rules_sql(tolerance_elapsed: int, tolerance_cause: int) -> str:
         coalesce((dep_local is not null and crs_dep_local is null)
             or (arr_local is not null and crs_arr_local is null)
             or (actual_elapsed is not null and crs_elapsed is null), false) as q_actual_without_scheduled,
-        coalesce(taxi_out < 0 or taxi_in < 0 or air_time <= 0 or actual_elapsed <= 0, false) as q_negative_time,
+        coalesce(taxi_out < 0 or taxi_in < 0 or air_time <= 0 or actual_elapsed <= 0 or crs_elapsed <= 0
+            or air_time > {LONGEST_MINUTES} or actual_elapsed > {LONGEST_MINUTES}
+            or crs_elapsed > {LONGEST_MINUTES}, false) as q_impossible_time,
         coalesce(not cancelled and not diverted
             and abs(actual_elapsed - (taxi_out + air_time + taxi_in)) > {tolerance_elapsed}, false)
             as q_elapsed_mismatch,
@@ -227,6 +234,15 @@ def _rules_sql(tolerance_elapsed: int, tolerance_cause: int) -> str:
             as q_tail_format,
         false as q_revision
     """
+
+
+def contract_digest() -> str:
+    """A digest of what the ingest writes: the fields, their types and every rule's SQL. A month
+    ingested under another digest is ingested again, so a rule change never leaves stale flags."""
+    import hashlib
+
+    text = repr(FIELDS) + repr(RULES) + N_NUMBER + _rules_sql(5, 1) + "".join(_typed(f) for f in FIELDS)
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
 
 @dataclass(frozen=True)
