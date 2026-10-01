@@ -6,12 +6,16 @@ requires-python = ">=3.12,<3.13"
 license = "Apache-2.0"
 dependencies = [
   "turnaround-core",
+  "turnaround-misconnect",
   "fastapi>=0.115",
-  "sqlmodel>=0.0.22",
-  "alembic>=1.14",
+  "uvicorn[standard]>=0.34",
+  "sqlmodel>=0.0.24",
+  "sqlalchemy[asyncio]>=2.0",
   "psycopg[binary]>=3.2",
-  "uvicorn>=0.32",
+  "alembic>=1.14",
   "httpx>=0.28",
+  "numpy>=1.26",
+  "polars>=1.10",
 ]
 
 [build-system]
