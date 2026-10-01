@@ -555,6 +555,19 @@ def _chapter4(
     s.put("ch4.gap_to_reported", r.share - r.reported_share, "pts1")
     s.put("ch4.halving_buffer", r.halving_buffer, "min0")
     s.put("ch4.inherited_hours", r.inherited_minutes / 60.0, "hours0")
+    crossing, crossing_minutes = ch04_inherited.across_dates(
+        con,
+        legs=legs,
+        legs_where=ch04_inherited.window(w.test_first, w.last_year, "year(flight_date)"),
+        rho=r.estimate.rho,
+        min_turn=r.estimate.min_turn,
+    )
+    s.put("ch4.across_dates", crossing, "int")
+    s.put(
+        "ch4.across_dates_share",
+        crossing_minutes / r.inherited_minutes if r.inherited_minutes else 0.0,
+        "pct1",
+    )
     s.table(
         "ch4.buffer_curve",
         ["Scheduled turn", "Legs", "Minutes passed on per late minute", "Low", "High"],

@@ -124,8 +124,8 @@ def message(r: RankingResult, names: dict[str, str] | None = None) -> str:
     def name(code: str) -> str:
         return (names or {}).get(code, code)
 
-    up = max(moved, key=lambda x: (x.change, x.carrier))
-    down = min(moved, key=lambda x: (x.change, x.carrier))
+    # The same movers the chart's callout names, with the same tie break.
+    up, down = biggest_movers(r)
     return (
         f"The ranking changes once you hold constant what each carrier flies: {name(up.carrier)} rises "
         f"{up.change} {'place' if up.change == 1 else 'places'} and {name(down.carrier)} falls {-down.change}"

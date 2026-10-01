@@ -88,6 +88,26 @@ def estimate(
     )
 
 
+def across_dates(
+    con: duckdb.DuckDBPyConnection, *, legs: str, legs_where: str, rho: float, min_turn: int
+) -> tuple[int, float]:
+    """Linked legs whose previous leg is on another local date, and the inherited minutes they carry.
+
+    A rotation keyed on the tail number and the date cuts every one of these links: the red eye that
+    lands at dawn and turns, the short island night. The first version of the reconstruction did
+    that (notebook 02 keeps the dead end); this counts what it would have dropped."""
+    con.execute(
+        f"""
+        create or replace temp view legs_across_dates as
+        with l as (select * from {legs} where link_status = 'linked' and ({legs_where}))
+        select l.* from l join (select flight_id, flight_date from {legs}) p on p.flight_id = l.prev_flight_id
+        where p.flight_date <> l.flight_date
+        """
+    )
+    links = propagation.load_links(con, "legs_across_dates")
+    return links.n, propagation.inherited_minutes(links, rho, min_turn)
+
+
 def write_legs_inherited(
     con: duckdb.DuckDBPyConnection,
     *,
