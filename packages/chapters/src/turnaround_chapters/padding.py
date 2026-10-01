@@ -102,6 +102,21 @@ class Changepoint:
         return self.after - self.before
 
 
+def deseasonalize(frame: pl.DataFrame) -> pl.DataFrame:
+    """Remove each carrier's calendar month pattern: airlines rewrite schedules every season, and a
+    step that comes back every April is a timetable, not a change in how much they pad."""
+    with_month = frame.with_columns(pl.col("period").dt.month().alias("_m"))
+    pattern = with_month.group_by(["carrier", "_m"]).agg(pl.col("padding").mean().alias("_season"))
+    overall = with_month.group_by("carrier").agg(pl.col("padding").mean().alias("_overall"))
+    return (
+        with_month.join(pattern, on=["carrier", "_m"])
+        .join(overall, on="carrier")
+        .with_columns((pl.col("padding") - pl.col("_season") + pl.col("_overall")).alias("padding"))
+        .drop("_m", "_season", "_overall")
+        .sort(["carrier", "period"])
+    )
+
+
 def changepoints(
     frame: pl.DataFrame, *, min_size: int, min_step: float, n_params: int = 2
 ) -> tuple[list[Changepoint], int]:

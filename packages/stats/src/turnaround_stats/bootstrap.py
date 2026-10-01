@@ -45,9 +45,12 @@ def day_bootstrap(
     seed: int,
     label: str,
     level: float = 0.95,
+    strata: npt.ArrayLike | None = None,
 ) -> Interval:
     """Resample days. ``sums`` holds one row of sufficient statistics per day; ``statistic`` maps the
-    column sums of a resampled set of days to the number being estimated."""
+    column sums of a resampled set of days to the number being estimated. With ``strata`` (a year,
+    say), days are drawn within each stratum, so a change between two years keeps each year's number
+    of days, which a statistic that is a signed sum over both years needs."""
     keys = np.asarray(day_keys)
     values = np.asarray(sums, dtype=np.float64)
     if values.ndim == 1:
@@ -58,14 +61,26 @@ def day_bootstrap(
         raise ValueError("the day bootstrap needs at least two days")
     if replicates < 1:
         raise ValueError("at least one replicate")
-    order = np.argsort(keys, kind="stable")
+    groups = (
+        np.zeros(keys.shape[0], dtype=np.int64)
+        if strata is None
+        else np.unique(np.asarray(strata), return_inverse=True)[1]
+    )
+    order = np.lexsort((keys, groups))
     values = values[order]
+    groups = groups[order]
     n = values.shape[0]
     estimate = statistic(values.sum(axis=0))
     rng = _rng(seed, label)
+    bounds = [
+        (int(np.searchsorted(groups, g, "left")), int(np.searchsorted(groups, g, "right")))
+        for g in np.unique(groups)
+    ]
     draws = np.empty(replicates)
     for b in range(replicates):
-        counts = np.bincount(rng.integers(0, n, n), minlength=n).astype(np.float64)
+        counts = np.zeros(n)
+        for lo, hi in bounds:
+            counts[lo:hi] = np.bincount(rng.integers(0, hi - lo, hi - lo), minlength=hi - lo)
         draws[b] = statistic(counts @ values)
     alpha = (1.0 - level) / 2.0
     low, high = np.quantile(draws[np.isfinite(draws)], [alpha, 1.0 - alpha])

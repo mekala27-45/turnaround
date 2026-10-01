@@ -76,6 +76,15 @@ def _points(decimals: int) -> FormatFn:
     return inner
 
 
+def _plain_points(decimals: int) -> FormatFn:
+    """A size in percentage points with no sign: an absolute error, a width."""
+
+    def inner(value: float | int | str | None) -> str:
+        return f"{_plain(_num(value) * 100.0, decimals)} pts"
+
+    return inner
+
+
 def _minutes(decimals: int) -> FormatFn:
     def inner(value: float | int | str | None) -> str:
         return f"{_plain(_num(value), decimals)} min"
@@ -135,6 +144,7 @@ FORMATS: dict[str, FormatFn] = {
     "spct2": _signed_pct(2),
     "pts1": _points(1),
     "pts2": _points(2),
+    "apts1": _plain_points(1),
     "min0": _minutes(0),
     "min1": _minutes(1),
     "min2": _minutes(2),
