@@ -1,0 +1,31 @@
+# turnaround {{ v('build.version') }}
+
+Why your flight is late: a data story in {{ v('story.chapters') }} chapters over {{ v('data.rows') }} scheduled US domestic flights from {{ v('data.first_month') }} to {{ v('data.last_month') }}, with the warehouse, the simulator that proves each estimator, a misconnect calculator on a live API, and the exports a BI team would open.
+
+{{ statement() }}
+
+## The findings
+
+{% for name in ['definition', 'padding', 'line', 'inherited', 'ranking', 'causes', 'meltdowns', 'decision'] %}
+{% set number = loop.index %}
+{% if has('chart.' ~ name) %}
+- **{{ v('plan.' ~ number ~ '.title') }}.** {{ message(name) }}.
+{% endif %}
+{% endfor %}
+
+## Where it runs
+
+- The story and its pages: {{ v('live.site_url') }}
+- The calculator's API: {{ v('deploy.base_url') }}{% if raw('deploy.status') != raw('deploy.base_url') %} ({{ v('deploy.status') }}){% endif %}
+- The briefing: `report/briefing.md` and `report/briefing.html`
+
+## In this release
+
+- {{ v('warehouse.models') }} dbt models and {{ v('warehouse.tests') }} tests; {{ v('metrics.count') }} metrics reconciled at {{ v('metrics.grains') }} grains with {{ v('metrics.disagreements') }} disagreements.
+- The recovery study: {{ v('recovery.runs') }} simulated runs over {{ v('recovery.conditions') }} conditions.
+- Eight registered plans, each hash in `results/plans`.
+- The workbook with live formulas, the Tableau and Power BI specifications and the CSV bundle in `exports/`.
+
+## The definition of done
+
+{{ v('checklist.done') }} of {{ v('checklist.total') }} lines done{% if raw('checklist.missing') != 'none' %}; not done: {{ v('checklist.missing') }}{% endif %}. The README prints every line with its evidence.
