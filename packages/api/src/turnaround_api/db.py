@@ -94,7 +94,18 @@ def create_all(engine: Any) -> None:
     SQLModel.metadata.create_all(engine)
 
 
-def reset_notes(engine: Any, notes: tuple[str, ...]) -> dict[str, int]:
+# The notes the demo recording, the checks and the load test write on their rows. The reset deletes
+# these and nothing else: the demo queue's "demo queue" rows stay so the log is never empty.
+RECORDING_NOTES: tuple[str, ...] = (
+    "demo recording",
+    "recorded session",
+    "persistence check",
+    "verification from a separate client",
+    "load test",
+)
+
+
+def reset_notes(engine: Any, notes: tuple[str, ...] = RECORDING_NOTES) -> dict[str, int]:
     """Delete the checks the demo recording and the persistence checks made, by their stated notes,
     with their scores; the audit log is left alone, so the deletion itself stays on the record."""
     counts = {"checks": 0, "scores": 0}

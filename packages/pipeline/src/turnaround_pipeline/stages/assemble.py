@@ -238,3 +238,7 @@ def _build(manifest: Manifest, root: Path, present: list[str]) -> None:
     w = Scribe(manifest, source="static", population="the repository", origin="stages/assemble.py")
     w.put("build.stages_present", ", ".join(present) if present else "none", "text")
     w.put("build.stages_missing", ", ".join(s for s in ORDER if s not in present) or "none", "text")
+    import tomllib
+
+    project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8")).get("project", {})
+    w.put("build.version", f"v{project.get('version', '0.0.0')}", "text")
