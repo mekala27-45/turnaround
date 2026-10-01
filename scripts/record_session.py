@@ -57,12 +57,15 @@ def record(base: str, token: str) -> dict[str, Any]:
     month = str(health["outcome_month"])
     connections: list[dict[str, Any]] = []
     for h in hubs:
-        if not h["origins"] or not h["destinations"]:
+        origin = h["origins"][0] if h["origins"] else None
+        # A connection goes somewhere else: never back to the airport it started from.
+        onward = [d for d in h["destinations"] if d != origin]
+        if origin is None or not onward:
             continue
         c = {
-            "origin": h["origins"][0],
+            "origin": origin,
             "connection": h["hub"],
-            "destination": h["destinations"][0],
+            "destination": onward[0],
             "travel_month": month,
             "inbound_hour": 12,
             "outbound_hour": 13,

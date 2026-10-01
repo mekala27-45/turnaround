@@ -138,7 +138,10 @@ export function PlannerClient({ line }: { line: number }) {
                 value={conn?.connection ?? ""}
                 onChange={(e) => {
                   const h = hubs.find((x) => x.hub === e.target.value);
-                  if (h) update({ connection: h.hub, origin: h.origins[0] ?? "", destination: h.destinations[0] ?? "" });
+                  if (!h) return;
+                  const origin = h.origins[0] ?? "";
+                  // A connection goes somewhere else: never back to the airport it started from.
+                  update({ connection: h.hub, origin, destination: h.destinations.find((d) => d !== origin) ?? h.destinations[0] ?? "" });
                 }}
               >
                 {hubs.map((h) => (

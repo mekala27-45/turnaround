@@ -64,17 +64,25 @@ async def run(base: str, token: str, requests: int, concurrency: int) -> dict[st
         hubs = (await client.get(f"{base}/v1/hubs", timeout=60.0)).json()["hubs"]
         if not hubs:
             raise SystemExit("the server covers no hubs")
+        # One connection per hub, never back to the airport it started from.
+        routed = [
+            (h, h["origins"][0], next(d for d in h["destinations"] if d != h["origins"][0]))
+            for h in hubs
+            if h["origins"] and any(d != h["origins"][0] for d in h["destinations"])
+        ]
+        if not routed:
+            raise SystemExit("the server lists no connection that goes somewhere else")
         bodies = [
             {
-                "origin": h["origins"][0],
+                "origin": origin,
                 "connection": h["hub"],
-                "destination": h["destinations"][0],
+                "destination": destination,
                 "travel_month": health["outcome_month"],
                 "inbound_hour": 12,
                 "outbound_hour": 13,
                 "buffer_minutes": 45 + 15 * (i % 4),
             }
-            for i, h in enumerate(hubs)
+            for i, (h, origin, destination) in enumerate(routed)
         ]
         # The first request may wake the machine; it is timed separately and not counted.
         wake_ms, _ = await _check(client, base, bodies[0], headers)
