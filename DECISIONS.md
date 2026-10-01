@@ -119,3 +119,23 @@ published one, and the latest month's flights at the twenty hubs are kept apart 
 scorer reads. A check for that month is scored against flights its estimate never saw, which is the
 late arriving truth Day 13 graded its forecasts on, and the demo queue is made for that month so the
 log has scored checks from the first day.
+
+## 2026-10-01: a chart's message is chosen by rule, and the rules are tested
+
+Every chart's title is one sentence picked by code from the result, never written after reading it.
+On the development fixture the meltdowns chapter's rule printed "caught on their first day" whatever
+the detector had done, and that fixture's detector had missed its planted meltdown. The rule now
+names how long each studied carrier took to get back to its peers and states the trait test's
+verdict, or that too few carriers qualified; the inherited delay, ranking and decision rules were
+tightened the same day to carry the share band, the movers by name and the buffer at the busiest
+hub. `tests/chapters/test_messages.py` pins every branch.
+
+## 2026-10-01: a scale test before the real run
+
+The real reporting years hold about twenty million linked legs on a machine with eight gigabytes.
+A simulated warehouse of 4.2 million flights found two problems no fixture could: chapter 8 hung
+for half an hour because DuckDB 1.5 stalled streaming an unordered union of day histograms (ordered,
+it returns in half a second), and chapter 4's buffer curve would have needed most of the machine.
+The curve now sweeps one column at a time in float64 and keeps the swept columns in float32, with
+every sum in float64; its slopes agree with the all float64 fit to about one part in a hundred
+million, and the link groupings arrive as integer codes ranked in DuckDB instead of strings.
