@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Raw public files are fetched on a machine that can reach the hosts, never committed.
+data/external/*
+!data/external/.gitkeep
+# Derived flight parquet, one file per month, about seventy million rows: rebuilt by `make data`.
+data/flights/
+# The warehouse file, checkpoints and spill space.
+.cache/
+
+# dbt build output
+warehouse/target/
+warehouse/dbt_packages/
+warehouse/logs/
+
+logs/*
+!logs/.gitkeep
+results/scratch/
+
+# Web
+web/node_modules/
+web/.next/
+web/out/
+web/test-results/
+web/playwright-report/
+web/tsconfig.tsbuildinfo
+web/public/duckdb/
+web/src/app/tokens.css
+
+# Local environment and what the deploy scripts write on the machine that runs them
+.env
+deploy/live-url.txt
+deploy/write-token.txt
+deploy/*-log.txt
+deploy/fly-logs.txt

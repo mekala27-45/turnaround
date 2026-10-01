@@ -1,0 +1,16 @@
+[project]
+name = "turnaround-sim"
+version = "0.1.0"
+description = "A synthetic airline network with known padding, propagation, carrier effects, bunching and a meltdown"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+dependencies = [
+  "turnaround-core",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/turnaround_sim"]

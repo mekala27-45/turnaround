@@ -1,0 +1,22 @@
+[project]
+name = "turnaround-api"
+version = "0.1.0"
+description = "The misconnect calculator: checks, scores and the audit log on Postgres"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+dependencies = [
+  "turnaround-core",
+  "fastapi>=0.115",
+  "sqlmodel>=0.0.22",
+  "alembic>=1.14",
+  "psycopg[binary]>=3.2",
+  "uvicorn>=0.32",
+  "httpx>=0.28",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/turnaround_api"]

@@ -1,0 +1,17 @@
+[project]
+name = "turnaround-stats"
+version = "0.1.0"
+description = "Block bootstrap by day, cluster robust errors, Benjamini-Hochberg, the density test, PELT, fixed effects on weighted cells"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+dependencies = [
+  "turnaround-core",
+  "scipy>=1.13",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/turnaround_stats"]

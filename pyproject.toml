@@ -1,0 +1,123 @@
+[project]
+name = "turnaround"
+version = "0.1.0"
+description = "Why your flight is late: a data story in eight chapters over every scheduled U.S. domestic flight since January 2015, with a warehouse, a simulator that proves every estimator, and a misconnect calculator"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+authors = [{ name = "Ajay Mekala" }]
+dependencies = [
+  "turnaround-core",
+  "turnaround-render",
+  "turnaround-contracts",
+  "turnaround-sim",
+  "turnaround-stats",
+  "turnaround-rotations",
+  "turnaround-chapters",
+  "turnaround-events",
+  "turnaround-misconnect",
+  "turnaround-evaluation",
+  "turnaround-exports",
+  "turnaround-api",
+  "turnaround-pipeline",
+  "typer>=0.15",
+]
+
+[project.scripts]
+turnaround = "turnaround_pipeline.cli:app"
+
+[project.optional-dependencies]
+warehouse = ["dbt-core>=1.9", "dbt-duckdb>=1.9"]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3",
+  "pytest-cov>=6.0",
+  "anyio>=4.6",
+  "hypothesis>=6.120",
+  "ruff>=0.11",
+  "mypy>=1.15",
+  "types-PyYAML",
+  "nbmake>=1.5",
+  "nbformat>=5.10",
+  "nbconvert>=7.16",
+  "ipykernel>=6.29",
+  "matplotlib>=3.9",
+  "httpx>=0.28",
+  "playwright>=1.49",
+  "pillow>=11.0",
+  "dbt-core>=1.9",
+  "dbt-duckdb>=1.9",
+]
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[tool.uv.sources]
+turnaround-core = { workspace = true }
+turnaround-render = { workspace = true }
+turnaround-contracts = { workspace = true }
+turnaround-sim = { workspace = true }
+turnaround-stats = { workspace = true }
+turnaround-rotations = { workspace = true }
+turnaround-chapters = { workspace = true }
+turnaround-events = { workspace = true }
+turnaround-misconnect = { workspace = true }
+turnaround-evaluation = { workspace = true }
+turnaround-exports = { workspace = true }
+turnaround-api = { workspace = true }
+turnaround-pipeline = { workspace = true }
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+bypass-selection = true
+
+[tool.ruff]
+target-version = "py312"
+line-length = 110
+extend-exclude = ["web", "data", "results", "notebooks", ".cache", "warehouse/target", "warehouse/dbt_packages"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B", "SIM", "RUF100"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*" = ["E402"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+mypy_path = "$MYPY_CONFIG_FILE_DIR/packages/api/src:$MYPY_CONFIG_FILE_DIR/packages/chapters/src:$MYPY_CONFIG_FILE_DIR/packages/contracts/src:$MYPY_CONFIG_FILE_DIR/packages/core/src:$MYPY_CONFIG_FILE_DIR/packages/evaluation/src:$MYPY_CONFIG_FILE_DIR/packages/events/src:$MYPY_CONFIG_FILE_DIR/packages/exports/src:$MYPY_CONFIG_FILE_DIR/packages/misconnect/src:$MYPY_CONFIG_FILE_DIR/packages/pipeline/src:$MYPY_CONFIG_FILE_DIR/packages/render/src:$MYPY_CONFIG_FILE_DIR/packages/rotations/src:$MYPY_CONFIG_FILE_DIR/packages/sim/src:$MYPY_CONFIG_FILE_DIR/packages/stats/src"
+explicit_package_bases = true
+files = ["packages/*/src"]
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra --strict-markers"
+markers = [
+  "postgres: needs a reachable Postgres (TURNAROUND_TEST_DATABASE_URL or local binaries)",
+  "external: needs the raw public files under data/external",
+  "derived: needs the derived flight parquet under data/flights",
+  "warehouse: needs the dbt warehouse built under .cache",
+  "libreoffice: needs LibreOffice to recalculate the workbook",
+  "slow: full pipeline verification",
+  "loadtest: runs the load test against a live server",
+]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+source = ["packages"]
+omit = ["*/tests/*", "*/__main__.py"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = false
+skip_empty = true

@@ -1,0 +1,17 @@
+[project]
+name = "turnaround-events"
+version = "0.1.0"
+description = "Disruption anomalies, the known events table, the event studies and the alert operating point"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+dependencies = [
+  "turnaround-core",
+  "turnaround-stats",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/turnaround_events"]
