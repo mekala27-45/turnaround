@@ -120,34 +120,53 @@ def fit_rho(links: Links, m: int, *, level_z: float = 1.959963984540054) -> tupl
     return float(beta[0]), float(np.sqrt(vcov[0, 0])), clusters, converged
 
 
-def buffer_curve(links: Links, bins: Sequence[int]) -> list[CurvePoint]:
+def buffer_curve(links: Links, bins: Sequence[int], *, chunk: int = 1_000_000) -> list[CurvePoint]:
     """Reduced form: slope of departure delay on a late inbound's minutes, by scheduled turnaround bin.
 
-    Built for the size of the real reporting years (tens of millions of links). Only the links whose
-    scheduled turn falls in the bins enter, which is the same fit as weighting the others zero, and
-    the outcome and the bins' columns are one float64 block swept in place."""
+    Built for the size of the real reporting years (about twenty million links on a machine with
+    eight gigabytes). Only the links whose scheduled turn falls in the bins enter, which is the same
+    fit as weighting the others zero. Each column is swept on its own in float64 (the sweep is
+    column by column anyway), then kept in float32; the cross products, the residual and the cluster
+    scores are accumulated in float64 a chunk at a time. Against an all float64 fit the slopes agree
+    to about one part in ten million."""
     edges = list(bins)
     keep = np.flatnonzero((links.sched_turn >= edges[0]) & (links.sched_turn < edges[-1]))
-    turn = links.sched_turn[keep]
-    which = np.searchsorted(np.asarray(edges[1:-1], dtype=np.float64), turn, side="right")
-    del turn
+    n = int(keep.shape[0])
+    which = np.searchsorted(np.asarray(edges[1:-1], dtype=np.float64), links.sched_turn[keep], side="right")
     counts = [int(np.count_nonzero(which == j)) for j in range(len(edges) - 1)]
-    present = [j for j, n in enumerate(counts) if n > 0]
-    stacked = np.zeros((keep.shape[0], 1 + len(present)))
-    stacked[:, 0] = links.dep_delay[keep]
-    late = np.maximum(links.prev_arr_delay[keep], 0.0)
-    for column, j in enumerate(present, start=1):
-        inside = which == j
-        stacked[inside, column] = late[inside]
-    del late, which
+    present = [j for j, c in enumerate(counts) if c > 0]
     groups = [g[keep] for g in _groups(links)]
-    demean(stacked, np.ones(keep.shape[0]), groups, copy=False)
-    del groups
-    y, x = stacked[:, 0], stacked[:, 1:]
-    bread_inverse = np.linalg.inv(x.T @ x)
-    beta = bread_inverse @ (x.T @ y)
-    resid = y - x @ beta
-    vcov = vcov_from_scores(bread_inverse, cluster_scores(x, resid, np.ones(x.shape[0]), links.cluster[keep]))
+    cluster = links.cluster[keep]
+    w = np.ones(n)
+    y = links.dep_delay[keep]
+    demean(y, w, groups, copy=False)
+    late = np.maximum(links.prev_arr_delay[keep], 0.0)
+    del keep
+    x = np.empty((n, len(present)), dtype=np.float32)
+    for column, j in enumerate(present):
+        values = np.where(which == j, late, 0.0)
+        demean(values, w, groups, copy=False)
+        x[:, column] = values
+        del values
+    del late, which, groups, w
+    k = len(present)
+    xtx = np.zeros((k, k))
+    xty = np.zeros(k)
+    for lo in range(0, n, chunk):
+        block = x[lo : lo + chunk].astype(np.float64)
+        xtx += block.T @ block
+        xty += block.T @ y[lo : lo + chunk]
+    bread_inverse = np.linalg.inv(xtx)
+    beta = bread_inverse @ xty
+    resid = np.empty(n)
+    for lo in range(0, n, chunk):
+        resid[lo : lo + chunk] = y[lo : lo + chunk] - x[lo : lo + chunk].astype(np.float64) @ beta
+    code = cluster.astype(np.int64, copy=False)
+    size = int(code.max()) + 1 if n else 0
+    scores = np.column_stack(
+        [np.bincount(code, weights=resid * x[:, i].astype(np.float64), minlength=size) for i in range(k)]
+    )
+    vcov = vcov_from_scores(bread_inverse, scores)
     return [
         CurvePoint(int(edges[j]), int(edges[j + 1]), float(beta[i]), float(np.sqrt(vcov[i, i])), counts[j])
         for i, j in enumerate(present)

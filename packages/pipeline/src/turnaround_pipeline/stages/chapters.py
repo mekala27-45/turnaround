@@ -12,6 +12,7 @@ from __future__ import annotations
 import csv
 import json
 import os
+import time
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -136,7 +137,7 @@ def run(
 
     # DuckDB shares the machine with the estimators' arrays (twenty million linked legs and their
     # design in chapter 4), so its buffer is held well under the memory there is; it spills past it.
-    con = connect(p, memory_limit=os.environ.get("TURNAROUND_CHAPTERS_DUCKDB_MEMORY", "2500MB"))
+    con = connect(p, memory_limit=os.environ.get("TURNAROUND_CHAPTERS_DUCKDB_MEMORY", "2GB"))
     db = warehouse_db or p.warehouse_db
     con.execute(f"attach '{db.as_posix()}' as wh")
     w = window(con, flights)
@@ -164,12 +165,27 @@ def run(
     s.put("window.latest_month", f"{w.latest[0]}-{w.latest[1]:02d}", "text")
     s.put("window.fit_years", f"{POLICY.fit_first_year} to {POLICY.fit_last_year}", "text")
 
+    clock = time.perf_counter()
+
+    def done(chapter: int) -> None:
+        # One line per chapter, so a run over every flight can be followed while it works.
+        nonlocal clock
+        now = time.perf_counter()
+        log.info("chapters.done", chapter=chapter, seconds=round(now - clock, 1))
+        clock = now
+
     _chapter1(con, flights, manifest, w, reps, seed, charts_dir, window_label)
+    done(1)
     _chapter2(con, flights, manifest, w, reps, seed, charts_dir, window_label, names)
+    done(2)
     _chapter3(con, flights, manifest, w, charts_dir, test_label, names)
+    done(3)
     inherited = _chapter4(con, flights, legs, manifest, w, charts_dir, test_label, p)
+    done(4)
     _chapter5(con, flights, manifest, w, charts_dir, test_label, names)
+    done(5)
     _chapter6(con, flights, legs, manifest, w, charts_dir, test_label, inherited.estimate.min_turn)
+    done(6)
     _chapter7(
         con,
         flights,
@@ -182,7 +198,9 @@ def run(
         events_path or p.data / "known_events.csv",
         meltdowns,
     )
+    done(7)
     _chapter8(con, flights, legs, manifest, w, reps, seed, charts_dir, test_label, inherited, p, hubs)
+    done(8)
     con.close()
     save_partial(p, "chapters", manifest)
     (chapters_dir / "hashes.json").write_text(
