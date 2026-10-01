@@ -1,0 +1,639 @@
+{
+ "as_of": "2026-09-30",
+ "figures": {},
+ "seed": 20261001,
+ "tables": {
+  "recovery.by_condition": {
+   "columns": [
+    "Condition",
+    "Padding error",
+    "Changepoint date error",
+    "Rho bias",
+    "Rho coverage",
+    "Inherited share error",
+    "Raw rank correlation",
+    "Adjusted rank correlation",
+    "Bunching false positives",
+    "Bunching power",
+    "Detector precision"
+   ],
+   "formats": [
+    "text",
+    "min2",
+    "days1",
+    "sfloat3",
+    "pct0",
+    "pts1",
+    "float2",
+    "float2",
+    "pct1",
+    "pct0",
+    "pct0"
+   ],
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "rows": [
+    [
+     "confounding moderate, propagation strong, noise high",
+     1.136995733,
+     1.725119048,
+     -0.01569508634,
+     0.0,
+     -0.01664178687,
+     0.1607142857,
+     0.9261904762,
+     0.0,
+     1.0,
+     0.4357671117
+    ],
+    [
+     "confounding moderate, propagation strong, noise low",
+     0.5052484353,
+     1.725119048,
+     -0.01114757276,
+     0.1,
+     -0.01714256228,
+     0.1035714286,
+     0.95,
+     0.0,
+     1.0,
+     0.4529956573
+    ],
+    [
+     "confounding moderate, propagation weak, noise high",
+     1.135691697,
+     1.725119048,
+     0.01350146377,
+     0.05,
+     -0.007342576388,
+     0.194047619,
+     0.9583333333,
+     0.0,
+     1.0,
+     0.4478003018
+    ],
+    [
+     "confounding moderate, propagation weak, noise low",
+     0.5057895935,
+     1.725119048,
+     0.009412944716,
+     0.3,
+     -0.009755595408,
+     0.1142857143,
+     0.9654761905,
+     0.0,
+     1.0,
+     0.4775550854
+    ],
+    [
+     "confounding none, propagation strong, noise high",
+     1.137997282,
+     1.725119048,
+     -0.01692992159,
+     0.0,
+     -0.01682399994,
+     0.7523809524,
+     0.9678571429,
+     0.0,
+     1.0,
+     0.4286180604
+    ],
+    [
+     "confounding none, propagation strong, noise low",
+     0.505641957,
+     1.725119048,
+     -0.0120996567,
+     0.05,
+     -0.01711859901,
+     0.7476190476,
+     0.9726190476,
+     0.0,
+     1.0,
+     0.4516724305
+    ],
+    [
+     "confounding none, propagation weak, noise high",
+     1.137679532,
+     1.725119048,
+     0.01259331817,
+     0.05,
+     -0.007508868382,
+     0.7523809524,
+     0.9761904762,
+     0.0,
+     1.0,
+     0.4397995726
+    ],
+    [
+     "confounding none, propagation weak, noise low",
+     0.5066355585,
+     1.725119048,
+     0.009086375876,
+     0.35,
+     -0.009502490595,
+     0.7464285714,
+     0.9761904762,
+     0.0,
+     1.0,
+     0.4676833745
+    ],
+    [
+     "confounding strong, propagation strong, noise high",
+     1.132980768,
+     1.725119048,
+     -0.01464999234,
+     0.0,
+     -0.01611913803,
+     -0.05476190476,
+     0.9071428571,
+     0.0,
+     1.0,
+     0.4315476589
+    ],
+    [
+     "confounding strong, propagation strong, noise low",
+     0.5039989031,
+     1.725119048,
+     -0.01033599334,
+     0.1,
+     -0.01680927434,
+     -0.09880952381,
+     0.9392857143,
+     0.0,
+     1.0,
+     0.4497294967
+    ],
+    [
+     "confounding strong, propagation weak, noise high",
+     1.133016872,
+     1.725119048,
+     0.01440493166,
+     0.05,
+     -0.007064465468,
+     -0.02142857143,
+     0.9404761905,
+     0.0,
+     1.0,
+     0.4434717619
+    ],
+    [
+     "confounding strong, propagation weak, noise low",
+     0.5038991926,
+     1.725119048,
+     0.01015789559,
+     0.25,
+     -0.009265980383,
+     -0.0880952381,
+     0.955952381,
+     0.0,
+     1.0,
+     0.4738459095
+    ]
+   ]
+  }
+ },
+ "values": {
+  "recovery.bunching_fpr": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.0
+  },
+  "recovery.bunching_power": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 1.0
+  },
+  "recovery.changepoint_date_error": {
+   "fmt": "days1",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 1.725119048
+  },
+  "recovery.changepoint_recall": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 1.0
+  },
+  "recovery.changepoints_false": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.0
+  },
+  "recovery.conditions": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 12
+  },
+  "recovery.detector_lag": {
+   "fmt": "days1",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.0
+  },
+  "recovery.detector_precision": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.4500405351
+  },
+  "recovery.detector_recall": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 1.0
+  },
+  "recovery.flights_per_run": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 210194
+  },
+  "recovery.inherited_error": {
+   "fmt": "pts1",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.01259127809
+  },
+  "recovery.min_turn_exact": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 1.0
+  },
+  "recovery.padding_mae": {
+   "fmt": "min2",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.8204646271
+  },
+  "recovery.rank_adjusted.moderate": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.95
+  },
+  "recovery.rank_adjusted.none": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.9732142857
+  },
+  "recovery.rank_adjusted.strong": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.9357142857
+  },
+  "recovery.rank_raw.moderate": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.1431547619
+  },
+  "recovery.rank_raw.none": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.749702381
+  },
+  "recovery.rank_raw.strong": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": -0.06577380952
+  },
+  "recovery.rho_bias.strong": {
+   "fmt": "sfloat3",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": -0.01347637051
+  },
+  "recovery.rho_bias.weak": {
+   "fmt": "sfloat3",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.01152615496
+  },
+  "recovery.rho_coverage.strong": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.04166666667
+  },
+  "recovery.rho_coverage.weak": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 0.175
+  },
+  "recovery.runs": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 240
+  },
+  "recovery.seeds": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": 20
+  },
+  "recovery.worst.bunching": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": "confounding moderate, propagation strong, noise high"
+  },
+  "recovery.worst.detector": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": "confounding none, propagation strong, noise high"
+  },
+  "recovery.worst.padding": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": "confounding none, propagation strong, noise high"
+  },
+  "recovery.worst.propagation": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": "confounding moderate, propagation strong, noise high"
+  },
+  "recovery.worst.ranking": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": "confounding strong, propagation strong, noise high"
+  },
+  "recovery.worst.raw_ranking": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/recovery.py",
+    "population": "the recovery study, every condition and seed",
+    "seed": 20261001,
+    "seeds": 20,
+    "source": "simulated"
+   },
+   "value": "confounding strong, propagation strong, noise low"
+  }
+ }
+}

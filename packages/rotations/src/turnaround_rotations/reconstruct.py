@@ -52,7 +52,7 @@ def reconstruct_sql(source: str, gap_hours: float) -> str:
             sched_arr_utc + to_minutes(cast(arr_delay as bigint)) as actual_arr_utc
         from {source}
         where not cancelled and not diverted and tail_number is not null
-          and dep_delay is not null and arr_delay is not null
+          and dep_delay is not null and arr_delay is not null and sched_dep_utc is not null
     ),
     ordered as (
         select
@@ -92,14 +92,29 @@ def reconstruct_sql(source: str, gap_hours: float) -> str:
 
 
 def leg_index_sql(source: str) -> str:
-    """Leg number within the rotation, one for the aircraft's first departure of its day."""
+    """Leg number within the rotation, and within the tail's local calendar day.
+
+    A rotation can run for days when the aircraft's overnight sits are shorter than the gap (Hawaii's
+    inter island flying, red eye operations), which is right for propagation, since a short night
+    passes a late arrival on to the morning. The traveler's question is different: the first
+    departure of the aircraft's day is its first scheduled departure on the local date, day_leg_index
+    one.
+    """
     return f"""
     select
         *,
         row_number() over (partition by rotation_id order by sched_dep_utc, flight_id) as leg_index,
-        count(*) over (partition by rotation_id) as rotation_legs
+        count(*) over (partition by rotation_id) as rotation_legs,
+        row_number() over (partition by tail_number, flight_date order by sched_dep_utc, flight_id) as day_leg_index
     from {source}
     """
+
+
+def full_sql(source: str, gap_hours: float) -> str:
+    """Links, statuses, rotation ids and leg numbers in one statement: the warehouse model int_legs is
+    generated from this function (scripts/build_warehouse_sql.py), so the simulator and the real
+    flights go through the same SQL."""
+    return leg_index_sql(f"({reconstruct_sql(source, gap_hours)})")
 
 
 def reconstruct(con: duckdb.DuckDBPyConnection, source: str, target: str, gap_hours: float) -> RotationCounts:

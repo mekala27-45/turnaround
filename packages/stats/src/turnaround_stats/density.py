@@ -8,13 +8,18 @@ side of a window around the threshold, predicts the counts inside the window, an
 excess below plus the shortfall above, both as shares of the predicted mass.
 
 A smooth distribution can still bend near any threshold, so the statistic at fifteen minutes is
-judged against the same statistic at placebo thresholds where nobody has a reason to bunch: the p
-value is the share of placebos whose statistic is at least as large. A family of carriers is
-corrected by Benjamini-Hochberg. A null is a finding and is published as one.
+judged against the same statistic at placebo thresholds where nobody has a reason to bunch: it is
+standardized by the placebos' mean and spread, and the p value is the normal tail beyond that z.
+The rank of the real statistic among the placebos is reported beside it; with fifty placebos its
+smallest possible value is one in fifty, too coarse to survive a correction across carriers, which
+is why the standardized form is the test. The recovery study checks its false positive rate on
+clean carriers. A family of carriers is corrected by Benjamini-Hochberg. A null is a finding and is
+published as one.
 """
 
 from __future__ import annotations
 
+import math
 from collections.abc import Sequence
 from dataclasses import dataclass
 
@@ -44,7 +49,9 @@ class DensityTest:
     excess_below: float
     missing_above: float
     placebo_statistics: list[float]
+    z: float
     p_value: float
+    rank_p_value: float
     placebos_evaluated: int
 
 
@@ -87,8 +94,13 @@ def density_test(
     real = bunching(minutes, counts, threshold)
     stats = [bunching(minutes, counts, t).statistic for t in placebos]
     exceed = sum(1 for s in stats if s >= real.statistic)
-    p = (1 + exceed) / (1 + len(stats))
-    return DensityTest(threshold, real.statistic, real.excess_below, real.missing_above, stats, p, len(stats))
+    rank_p = (1 + exceed) / (1 + len(stats))
+    spread = float(np.std(stats, ddof=1))
+    z = (real.statistic - float(np.mean(stats))) / spread if spread > 0 else 0.0
+    p = float(0.5 * math.erfc(z / math.sqrt(2.0)))
+    return DensityTest(
+        threshold, real.statistic, real.excess_below, real.missing_above, stats, z, p, rank_p, len(stats)
+    )
 
 
 def counts_by_minute(

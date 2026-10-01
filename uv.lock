@@ -2307,6 +2307,7 @@ name = "turnaround-evaluation"
 version = "0.1.0"
 source = { editable = "packages/evaluation" }
 dependencies = [
+    { name = "turnaround-chapters" },
     { name = "turnaround-core" },
     { name = "turnaround-events" },
     { name = "turnaround-rotations" },
@@ -2316,6 +2317,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "turnaround-chapters", editable = "packages/chapters" },
     { name = "turnaround-core", editable = "packages/core" },
     { name = "turnaround-events", editable = "packages/events" },
     { name = "turnaround-rotations", editable = "packages/rotations" },

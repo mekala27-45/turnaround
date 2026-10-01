@@ -10,6 +10,7 @@ dependencies = [
   "turnaround-stats",
   "turnaround-rotations",
   "turnaround-events",
+  "turnaround-chapters",
 ]
 
 [build-system]
