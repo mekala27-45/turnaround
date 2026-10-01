@@ -5,10 +5,14 @@ flights that flew. The baseline is the median of the previous 28 days for the sa
 spread their median absolute deviation, with a floor so that a carrier with a very steady record is
 not flagged for one bad afternoon. A day's score is the larger of its two standardized anomalies.
 
-An alert is a day whose score passes the threshold. The threshold is the operating point: chosen on
-the fitting years by the cost of a false alarm day against the cost of a missed disruption, graded
-on the test years, and held to the interior test (a threshold at the edge of the grid means the cost
-curve had no minimum inside it, and the page says so).
+An alert is a day whose score passes the threshold. The persistence rule turns alert days into
+episodes: an episode opens on an alert day and stays open while the unit's score stays above half the
+threshold, so a three day storm is one page to the duty manager, not three, and the episode's length
+is the unit's recovery time. A false alarm is an episode that touches no listed disruption.
+
+The threshold is the operating point: chosen on the fitting years by the cost of a false alarm
+against the cost of a missed disruption, graded on the test years, and held to the interior test (a
+threshold at the edge of the grid means the cost curve had no minimum inside it, and the page says so).
 """
 
 from __future__ import annotations
@@ -97,6 +101,8 @@ class Grade:
     lags: list[int]
     false_alarm_days: int
     unit_days: int
+    episodes: int = 0
+    false_alarm_episodes: int = 0
 
     @property
     def recall(self) -> float:
@@ -106,9 +112,59 @@ class Grade:
     def false_alarm_rate(self) -> float:
         return self.false_alarm_days / self.unit_days if self.unit_days else float("nan")
 
+    @property
+    def false_alarms_per_thousand_unit_days(self) -> float:
+        return 1000.0 * self.false_alarm_episodes / self.unit_days if self.unit_days else float("nan")
+
 
 def alerts(scored: pl.DataFrame, threshold: float) -> pl.DataFrame:
     return scored.filter(pl.col("score") > threshold).select("unit", "day", "score")
+
+
+def episodes(scored: pl.DataFrame, threshold: float) -> pl.DataFrame:
+    """Alert episodes under the persistence rule: open on a day above the threshold, stay open while the
+    score stays above half of it. One row per episode with its unit, first and last day, length and peak."""
+    rows: list[tuple[str, date, date, int, float]] = []
+    ordered = scored.filter(pl.col("score").is_not_null()).sort(["unit", "day"])
+    for unit, sub in ordered.group_by("unit", maintain_order=True):
+        days = sub["day"].to_list()
+        scores = sub["score"].to_numpy()
+        i = 0
+        while i < len(days):
+            if scores[i] > threshold:
+                j = i
+                while (
+                    j + 1 < len(days) and scores[j + 1] > threshold / 2 and (days[j + 1] - days[j]).days == 1
+                ):
+                    j += 1
+                rows.append(
+                    (
+                        str(unit[0]),
+                        days[i],
+                        days[j],
+                        (days[j] - days[i]).days + 1,
+                        float(scores[i : j + 1].max()),
+                    )
+                )
+                i = j + 1
+            else:
+                i += 1
+    return pl.DataFrame(
+        rows,
+        schema={"unit": pl.Utf8, "start": pl.Date, "end": pl.Date, "days": pl.Int64, "peak": pl.Float64},
+        orient="row",
+    )
+
+
+def _episode_covered(unit: str, start: date, end: date, events: Sequence[Event], slack_days: int) -> bool:
+    for event in events:
+        if (
+            (not event.units or unit in event.units)
+            and start <= event.end + timedelta(days=slack_days)
+            and (end >= event.start)
+        ):
+            return True
+    return False
 
 
 def _covered(unit: str, day: date, events: Sequence[Event], slack_days: int) -> bool:
@@ -137,7 +193,17 @@ def grade(scored: pl.DataFrame, events: Sequence[Event], threshold: float, *, sl
             lags.append((min(hits) - event.start).days)
     false_days = sum(1 for u, d in pairs if not _covered(u, d, events, slack_days))
     eligible = scored.filter(pl.col("score").is_not_null())
-    return Grade(threshold, len(events), detected, lags, false_days, eligible.height)
+    found = episodes(scored, threshold)
+    false_episodes = sum(
+        1
+        for u, a, b in zip(
+            found["unit"].to_list(), found["start"].to_list(), found["end"].to_list(), strict=True
+        )
+        if not _episode_covered(u, a, b, events, slack_days)
+    )
+    return Grade(
+        threshold, len(events), detected, lags, false_days, eligible.height, found.height, false_episodes
+    )
 
 
 @dataclass(frozen=True)
@@ -161,7 +227,7 @@ def choose_threshold(
     costs: list[float] = []
     for t in grid:
         g = grade(scored, events, t)
-        costs.append(cost_false_alarm * g.false_alarm_days + cost_miss * (g.events - g.detected))
+        costs.append(cost_false_alarm * g.false_alarm_episodes + cost_miss * (g.events - g.detected))
     best = int(np.argmin(np.asarray(costs)))
     interior = 0 < best < len(grid) - 1
     return OperatingPoint(

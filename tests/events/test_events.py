@@ -84,3 +84,16 @@ def test_event_study_excludes_the_treated_carrier_from_its_peers() -> None:
 def test_daily_sql_groups_by_the_stated_unit(unit: str) -> None:
     sql = detect.daily_sql("f", unit)
     assert f"select {unit} as unit" in sql
+
+
+def test_persistence_rule_makes_one_episode_of_a_storm_and_counts_false_episodes() -> None:
+    scored = detect.anomalies(_daily((80, 81, 82, 100)))
+    found = detect.episodes(scored, 4.0).filter(pl.col("unit") == "AA").sort("start")
+    starts = found["start"].to_list()
+    assert date(2024, 1, 1) + timedelta(days=80) in starts
+    first = found.filter(pl.col("start") == date(2024, 1, 1) + timedelta(days=80))
+    assert first["days"][0] >= 3, "three spike days in a row are one episode, not three"
+    events = [detect.Event("planted", date(2024, 3, 21), date(2024, 3, 23), ("AA",))]
+    graded = detect.grade(scored, events, 4.0)
+    assert graded.false_alarm_episodes == 1, "day 100 is one false episode"
+    assert graded.false_alarm_days >= graded.false_alarm_episodes

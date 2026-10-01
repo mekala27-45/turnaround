@@ -1,0 +1,11 @@
+event,start,end,unit_type,units,window,citation
+Boeing 737 MAX grounding,2019-03-13,2019-03-20,carrier,WN;AA;UA,fit,https://en.wikipedia.org/wiki/Boeing_737_MAX_groundings
+COVID-19 collapse in air travel,2020-03-15,2020-04-30,all,,fit,https://en.wikipedia.org/wiki/Impact_of_the_COVID-19_pandemic_on_aviation
+Winter Storm Uri in Texas,2021-02-14,2021-02-19,airport,DFW;DAL;IAH;HOU;AUS;SAT,fit,https://en.wikipedia.org/wiki/February_13%E2%80%9317,_2021_North_American_winter_storm
+Winter Storm Elliott,2022-12-21,2022-12-26,all,,fit,https://en.wikipedia.org/wiki/December_2022_North_American_winter_storm
+Southwest scheduling crisis,2022-12-21,2022-12-30,carrier,WN,fit,https://en.wikipedia.org/wiki/2022_Southwest_Airlines_scheduling_crisis
+FAA NOTAM system outage,2023-01-11,2023-01-11,all,,test,https://www.theregister.com/2023/01/11/faa_grounds_all_us_departures/
+Alaska 1282 and the 737-9 grounding,2024-01-06,2024-01-26,carrier,AS;UA,test,https://en.wikipedia.org/wiki/Alaska_Airlines_Flight_1282
+CrowdStrike outage and Delta's recovery,2024-07-19,2024-07-25,carrier,DL,test,https://en.wikipedia.org/wiki/2024_Delta_Air_Lines_disruption
+Hurricane Milton,2024-10-08,2024-10-11,airport,TPA;MCO;SRQ;RSW;PIE;SFB,test,https://en.wikipedia.org/wiki/Hurricane_Milton
+Newark radar outages and flight caps,2025-04-28,2025-05-12,airport,EWR,test,https://www.insurancejournal.com/news/east/2025/05/21/824589.htm
