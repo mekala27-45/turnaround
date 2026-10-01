@@ -61,3 +61,41 @@ def metrics(chapters: bool = typer.Option(False, help="also the metrics a chapte
 
     manifest = stage.run(paths(), stages=("warehouse", "chapters") if chapters else ("warehouse",))
     typer.echo(f"metrics: {manifest.counts()}")
+
+
+@app.command()
+def chapters(
+    replicates: int = typer.Option(0, help="bootstrap replicates; 0 means the policy's"),
+    hubs: int = typer.Option(0, help="hubs for the misconnect curves; 0 means the policy's twenty"),
+) -> None:
+    """The eight chapters: plans registered first, then every estimate, its chart and its marts."""
+    from turnaround_pipeline.stages import chapters as stage
+
+    manifest = stage.run(paths(), replicates=replicates or None, hubs=hubs or None)
+    typer.echo(f"chapters: {manifest.counts()}")
+
+
+@app.command()
+def manifest() -> None:
+    """Merge every stage's partial manifest into results/manifest.json."""
+    from turnaround_pipeline.stages import assemble
+
+    merged = assemble.run(paths())
+    typer.echo(f"manifest: {merged.counts()}")
+
+
+@app.command()
+def marts() -> None:
+    """The data the site reads, under web/public/data."""
+    from turnaround_pipeline.stages import web
+
+    typer.echo(f"marts: {web.run(paths())}")
+
+
+@app.command()
+def exports() -> None:
+    """The workbook with live formulas, the BI extracts and specifications, the CSV bundle."""
+    from turnaround_pipeline.stages import exports as stage
+
+    manifest = stage.run(paths())
+    typer.echo(f"exports: {manifest.counts()}")
