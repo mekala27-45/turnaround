@@ -188,7 +188,9 @@ so they were counted twice and the month's parts summed to more than its schedul
 neither cancelled nor diverted report no departure delay or no arrival delay (a block of Endeavor
 flights in May 2018 has arrival times with the delay left blank), so they sat in the flown count
 without being on time or late, and the metric layer's reconcile disagreed with itself in the sixth
-decimal. Both are now quarantine rules that exclude the row from everything, status conflict and
-missing delay, each planted and found in `tests/contracts/test_quarantine.py`. The delay is not
-recomputed from the clock times: the files leave it blank, and a value this build made up would be
-a value nobody reported.
+decimal. Once those were out, the reconcile found one more: a Republic flight from LaGuardia to
+Dallas in March 2018 with its delays but no elapsed time and no air time. Both rules exclude the
+row from everything, status conflict and missing actual (no departure delay, no arrival delay, no
+elapsed time or no air time on a flight that flew), each planted and found in
+`tests/contracts/test_quarantine.py`. Nothing is recomputed from the clock times: the files leave
+the field blank, and a value this build made up would be a value nobody reported.

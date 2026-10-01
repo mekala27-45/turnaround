@@ -112,10 +112,27 @@ class Planted:
     actual_without_scheduled: int = 2
     impossible_time: int = 4
     elapsed_mismatch: int = 5
+    status_conflict: int = 2
+    missing_actual: int = 3
     cause_mismatch: int = 6
     tail_missing: int = 3
     tail_format: int = 7
     counts: dict[str, int] = field(default_factory=dict)
+
+    @classmethod
+    def none(cls) -> Planted:
+        """A month with no defect planted."""
+        return cls(
+            duplicate_key=0,
+            actual_without_scheduled=0,
+            impossible_time=0,
+            elapsed_mismatch=0,
+            status_conflict=0,
+            missing_actual=0,
+            cause_mismatch=0,
+            tail_missing=0,
+            tail_format=0,
+        )
 
     def as_dict(self) -> dict[str, int]:
         return {
@@ -123,6 +140,8 @@ class Planted:
             "actual_without_scheduled": self.actual_without_scheduled,
             "impossible_time": self.impossible_time,
             "elapsed_mismatch": self.elapsed_mismatch,
+            "status_conflict": self.status_conflict,
+            "missing_actual": self.missing_actual,
             "cause_mismatch": self.cause_mismatch,
             "tail_missing": self.tail_missing,
             "tail_format": self.tail_format,
@@ -210,6 +229,17 @@ def generate_rows(year: int, month: int, n: int, seed: int, planted: Planted) ->
             rows[i]["ActualElapsedTime"] = f"{consistent:.2f}"
     for i in take(planted.elapsed_mismatch):
         rows[i]["ActualElapsedTime"] = f"{float(rows[i]['ActualElapsedTime']) + 30:.2f}"
+    for i in take(planted.status_conflict):
+        rows[i]["Cancelled"] = "1.00"
+        rows[i]["Diverted"] = "1.00"
+    for n, i in enumerate(take(planted.missing_actual)):
+        # An arrival time with no arrival delay, as some months of the real files carry, or a flight
+        # with no elapsed or air time.
+        if n % 2 == 0:
+            rows[i]["ArrDelay"] = ""
+        else:
+            rows[i]["ActualElapsedTime"] = ""
+            rows[i]["AirTime"] = ""
     for i in take(planted.cause_mismatch):
         rows[i].update({"ArrDelay": "40.00", "CarrierDelay": "5.00", "WeatherDelay": "0.00", "NASDelay": "0.00", "SecurityDelay": "0.00", "LateAircraftDelay": "0.00"})  # fmt: skip
     for i in take(planted.tail_missing):

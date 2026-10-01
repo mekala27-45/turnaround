@@ -213,6 +213,10 @@ models:
     tests: [not_null, non_negative]
   - name: elapsed_mismatch
     tests: [not_null, non_negative]
+  - name: status_conflict
+    tests: [not_null, non_negative]
+  - name: missing_actual
+    tests: [not_null, non_negative]
   - name: cause_mismatch
     tests: [not_null, non_negative]
   - name: tail_missing

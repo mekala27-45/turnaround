@@ -130,6 +130,17 @@ RULES: tuple[Rule, ...] = (
         "everything",
     ),
     Rule(
+        "status_conflict",
+        "a row flagged both cancelled and diverted, which cannot both have happened to one flight",
+        "everything",
+    ),
+    Rule(
+        "missing_actual",
+        "a flight neither cancelled nor diverted that reports no departure delay, no arrival delay, no "
+        "actual elapsed time or no air time",
+        "everything",
+    ),
+    Rule(
         "cause_mismatch",
         "reported delay causes that do not sum to the arrival delay within the tolerance",
         "the cause shares in chapter 6",
@@ -228,6 +239,10 @@ def _rules_sql(tolerance_elapsed: int, tolerance_cause: int) -> str:
         coalesce(not cancelled and not diverted
             and abs(actual_elapsed - (taxi_out + air_time + taxi_in)) > {tolerance_elapsed}, false)
             as q_elapsed_mismatch,
+        coalesce(cancelled, false) and coalesce(diverted, false) as q_status_conflict,
+        not coalesce(cancelled, false) and not coalesce(diverted, false)
+            and (dep_delay is null or arr_delay is null or actual_elapsed is null or air_time is null)
+            as q_missing_actual,
         coalesce(({any_cause}) and abs(({causes}) - arr_delay) > {tolerance_cause}, false) as q_cause_mismatch,
         tail_number is null as q_tail_missing,
         coalesce(tail_number is not null and not regexp_full_match(tail_number, '{N_NUMBER}'), false)

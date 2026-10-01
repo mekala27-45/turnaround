@@ -46,6 +46,8 @@ select
     q_actual_without_scheduled,
     q_impossible_time,
     q_elapsed_mismatch,
+    q_status_conflict,
+    q_missing_actual,
     q_cause_mismatch,
     q_tail_missing,
     q_tail_format,

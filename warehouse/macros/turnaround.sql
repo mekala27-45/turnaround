@@ -12,7 +12,8 @@
 {# The rules that remove a row from every analysis. The others exclude a row from one analysis. #}
 {% macro excluded_everywhere(alias='') -%}
     {%- set p = alias ~ '.' if alias else '' -%}
-    ({{ p }}q_duplicate_key or {{ p }}q_actual_without_scheduled or {{ p }}q_impossible_time or {{ p }}q_elapsed_mismatch)
+    ({{ p }}q_duplicate_key or {{ p }}q_actual_without_scheduled or {{ p }}q_impossible_time or {{ p }}q_elapsed_mismatch
+     or {{ p }}q_status_conflict or {{ p }}q_missing_actual)
 {%- endmacro %}
 
 {# Arrival delay under fifteen minutes on a flight that flew to its destination: the A14 convention. #}

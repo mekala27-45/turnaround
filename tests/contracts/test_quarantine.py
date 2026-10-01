@@ -31,7 +31,7 @@ def _counts(path: Path) -> dict[str, int]:
 
 
 def test_clean_month_passes_every_rule(tmp_path: Path) -> None:
-    zero = Planted(0, 0, 0, 0, 0, 0, 0)
+    zero = Planted.none()
     raw = write_month(tmp_path / "raw", 2023, 3, generate_rows(2023, 3, 400, 11, zero))
     report = ingest_month(raw, tmp_path / "flights")
     assert report.rows == 400
@@ -50,7 +50,7 @@ def test_each_rule_finds_exactly_what_was_planted(tmp_path: Path) -> None:
 
 
 def test_a_missing_leading_n_is_restored_and_a_fleet_number_is_kept(tmp_path: Path) -> None:
-    rows = generate_rows(2023, 5, 60, 3, Planted(0, 0, 0, 0, 0, 0, 0))
+    rows = generate_rows(2023, 5, 60, 3, Planted.none())
     reported = {0: "248NV", 1: "7819A", 2: "N3DAAA", 3: "248N", 4: "NV248"}
     for i, value in reported.items():
         rows[i]["Tail_Number"] = value
@@ -80,7 +80,7 @@ def test_a_missing_leading_n_is_restored_and_a_fleet_number_is_kept(tmp_path: Pa
 
 
 def test_revision_rule_counts_rows_a_later_download_changed(tmp_path: Path) -> None:
-    rows = generate_rows(2023, 4, 300, 5, Planted(0, 0, 0, 0, 0, 0, 0))
+    rows = generate_rows(2023, 4, 300, 5, Planted.none())
     first = ingest_month(write_month(tmp_path / "v1", 2023, 4, rows), tmp_path / "f1")
     second = ingest_month(write_month(tmp_path / "v2", 2023, 4, revise(rows, 9, 5)), tmp_path / "f2")
     assert first.sha256 != second.sha256
@@ -92,7 +92,7 @@ def test_revision_rule_counts_rows_a_later_download_changed(tmp_path: Path) -> N
 
 
 def test_identical_download_has_no_revisions(tmp_path: Path) -> None:
-    rows = generate_rows(2023, 4, 200, 5, Planted(0, 0, 0, 0, 0, 0, 0))
+    rows = generate_rows(2023, 4, 200, 5, Planted.none())
     ingest_month(write_month(tmp_path / "v1", 2023, 4, rows), tmp_path / "f1")
     ingest_month(write_month(tmp_path / "v2", 2023, 4, rows), tmp_path / "f2")
     assert (
@@ -120,7 +120,7 @@ def test_ingest_refuses_a_file_missing_a_field(tmp_path: Path) -> None:
 
 
 def test_ingest_refuses_rows_from_another_month(tmp_path: Path) -> None:
-    rows = generate_rows(2023, 6, 50, 2, Planted(0, 0, 0, 0, 0, 0, 0))
+    rows = generate_rows(2023, 6, 50, 2, Planted.none())
     rows[3]["Month"] = "7"
     raw = write_month(tmp_path / "raw", 2023, 6, rows)
     with pytest.raises(ContractError, match="months"):

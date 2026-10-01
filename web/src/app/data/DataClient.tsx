@@ -12,6 +12,8 @@ const RULES = [
   ["actual_without_scheduled", "Actual without scheduled"],
   ["impossible_time", "Impossible time"],
   ["elapsed_mismatch", "Elapsed mismatch"],
+  ["status_conflict", "Cancelled and diverted"],
+  ["missing_actual", "Missing actual"],
   ["cause_mismatch", "Cause mismatch"],
   ["tail_missing", "Tail missing"],
   ["tail_format", "Tail format"],
