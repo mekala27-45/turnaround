@@ -62,17 +62,29 @@ def _read_ledger(path: Path) -> dict[str, dict[str, str]]:
         return {row["file"]: row for row in csv.DictReader(handle)}
 
 
-def _write_ledger(path: Path, reports: list[MonthReport]) -> None:
+LEDGER_FIELDS = ["file", "year", "month", "rows", "bytes", "sha256", "layout_matches_readme", "contract"]
+
+
+def _ledger_row(report: MonthReport, contract: str) -> dict[str, str]:
+    row = asdict(report)
+    row["layout_matches_readme"] = int(report.layout_matches_readme)
+    row["contract"] = contract
+    return {k: str(row[k]) for k in LEDGER_FIELDS}
+
+
+def _write_rows(path: Path, rows: list[dict[str, str]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    fields = ["file", "year", "month", "rows", "bytes", "sha256", "layout_matches_readme", "contract"]
-    with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
+    tmp = path.with_suffix(".csv.tmp")
+    with tmp.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=LEDGER_FIELDS, lineterminator="\n")
         writer.writeheader()
-        for report in sorted(reports, key=lambda r: (r.year, r.month)):
-            row = asdict(report)
-            row["layout_matches_readme"] = int(report.layout_matches_readme)
-            row["contract"] = contract_digest()
-            writer.writerow({k: row[k] for k in fields})
+        for row in sorted(rows, key=lambda r: (int(r["year"]), int(r["month"]))):
+            writer.writerow({k: row.get(k, "") for k in LEDGER_FIELDS})
+    tmp.replace(path)
+
+
+def _write_ledger(path: Path, reports: list[MonthReport]) -> None:
+    _write_rows(path, [_ledger_row(r, contract_digest()) for r in reports])
 
 
 def ingest_flights(p: Paths) -> list[MonthReport]:
@@ -86,6 +98,7 @@ def ingest_flights(p: Paths) -> list[MonthReport]:
     ledger = _read_ledger(p.root / LEDGER)
     # The same file ingested under different rules is ingested again from scratch, not counted as a revision.
     contract = contract_digest()
+    progress = dict(ledger)
     con = connect(p)
     reports: list[MonthReport] = []
     for zip_path in raw:
@@ -120,6 +133,10 @@ def ingest_flights(p: Paths) -> list[MonthReport]:
             report = ingest_month(zip_path, p.flights, con=con)
         log.info("month ingested", file=zip_path.name, rows=report.rows)
         reports.append(report)
+        # The ledger is written after every month, so a run the machine stops resumes at the next
+        # month instead of ingesting the window again; months not reached keep the row they had.
+        progress[zip_path.name] = _ledger_row(report, contract)
+        _write_rows(p.root / LEDGER, list(progress.values()))
     con.close()
     _write_ledger(p.root / LEDGER, reports)
     return reports
