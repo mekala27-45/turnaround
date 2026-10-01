@@ -11,6 +11,10 @@ seed-paths: ["seeds"]
 target-path: "target"
 clean-targets: ["target", "dbt_packages"]
 
+# No usage pings: the build machine cannot reach the collector and CI has no reason to.
+flags:
+  send_anonymous_usage_stats: false
+
 vars:
   # The fitting years: the unimpeded reference is fixed on them and applied to every year.
   fit_first_year: 2015

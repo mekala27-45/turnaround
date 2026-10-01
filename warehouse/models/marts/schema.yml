@@ -2,382 +2,263 @@ version: 2
 models:
 - name: fct_flights
   description: 'The analysis grain: every scheduled flight that passed every rule that excludes a row from everything.'
-  tests:
-  - not_empty
+  tests: [not_empty]
   columns:
   - name: flight_id
-    tests:
-    - unique
-    - not_null
+    tests: [unique, not_null]
   - name: flight_date
-    tests:
-    - not_null
+    tests: [not_null]
   - name: carrier
-    tests:
-    - not_null
+    tests: [not_null]
   - name: route
-    tests:
-    - not_null
+    tests: [not_null]
   - name: origin
     tests:
     - not_null
     - relationships:
-        to: ref('stg_airports')
-        field: code
-        config:
-          severity: warn
+        arguments: {to: ref('stg_airports'), field: code}
+        config: {severity: warn}
   - name: dest
-    tests:
-    - not_null
+    tests: [not_null]
   - name: dep_hour
     tests:
     - between:
-        min_value: 0
-        max_value: 23
+        arguments: {min_value: 0, max_value: 23}
   - name: crs_elapsed
     tests:
     - between:
-        min_value: 1
-        max_value: 1500
+        arguments: {min_value: 1, max_value: 1500}
   - name: actual_elapsed
     tests:
     - between:
-        min_value: 1
-        max_value: 1800
+        arguments: {min_value: 1, max_value: 1800}
   - name: taxi_out
-    tests:
-    - non_negative
+    tests: [non_negative]
   - name: taxi_in
-    tests:
-    - non_negative
+    tests: [non_negative]
   - name: air_time
     tests:
     - between:
-        min_value: 1
-        max_value: 1500
+        arguments: {min_value: 1, max_value: 1500}
   - name: cause_late_aircraft
-    tests:
-    - non_negative
+    tests: [non_negative]
   - name: cause_carrier
-    tests:
-    - non_negative
+    tests: [non_negative]
   - name: cause_nas
-    tests:
-    - non_negative
+    tests: [non_negative]
   - name: cause_weather
-    tests:
-    - non_negative
+    tests: [non_negative]
   - name: cause_security
-    tests:
-    - non_negative
+    tests: [non_negative]
   - name: cancelled
-    tests:
-    - not_null
+    tests: [not_null]
   - name: diverted
-    tests:
-    - not_null
+    tests: [not_null]
   - name: tail_ok
-    tests:
-    - not_null
+    tests: [not_null]
   - name: cause_ok
-    tests:
-    - not_null
+    tests: [not_null]
   - name: origin_precipitation
-    tests:
-    - non_negative
+    tests: [non_negative]
   - name: dest_precipitation
-    tests:
-    - non_negative
+    tests: [non_negative]
 - name: mart_carrier_month
   description: Additive components by carrier and month; what the metric layer's mart expressions read.
   tests:
   - not_empty
   - unique_combination:
-      combination_of_columns:
-      - carrier
-      - year
-      - month
+      arguments:
+        combination_of_columns: [carrier, year, month]
   - expression_is_true:
-      expression: cancelled + diverted + flown = scheduled
+      arguments: {expression: cancelled + diverted + flown = scheduled}
   columns:
   - name: scheduled
     tests:
     - not_null
     - non_negative
     - sums_match:
-        compare_model: ref('fct_flights')
-        compare_expression: count(*)
+        arguments: {compare_model: ref('fct_flights'), compare_expression: count(*)}
   - name: cancelled
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: diverted
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: flown
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: on_time
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: late15
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: arr_delay_pos_sum
-    tests:
-    - non_negative
+    tests: [non_negative]
   - name: cause_late_aircraft_sum
-    tests:
-    - non_negative
+    tests: [non_negative]
 - name: mart_route_month
   description: 'Route, carrier and month: the explorer''s main table.'
   tests:
   - not_empty
   - unique_combination:
-      combination_of_columns:
-      - route
-      - carrier
-      - year
-      - month
+      arguments:
+        combination_of_columns: [route, carrier, year, month]
   columns:
   - name: scheduled
     tests:
     - not_null
     - sums_match:
-        compare_model: ref('fct_flights')
-        compare_expression: count(*)
+        arguments: {compare_model: ref('fct_flights'), compare_expression: count(*)}
   - name: cancelled
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: flown
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: on_time
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: padding_flights
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
 - name: mart_airport_day
   description: Departures by airport and day.
   tests:
   - not_empty
   - unique_combination:
-      combination_of_columns:
-      - airport
-      - flight_date
+      arguments:
+        combination_of_columns: [airport, flight_date]
   columns:
   - name: scheduled
     tests:
     - not_null
     - sums_match:
-        compare_model: ref('fct_flights')
-        compare_expression: count(*)
+        arguments: {compare_model: ref('fct_flights'), compare_expression: count(*)}
   - name: cancelled
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: flown
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
 - name: mart_carrier_day
   description: 'Carrier and day: the disruption detector and the event studies read this.'
   tests:
   - not_empty
   - unique_combination:
-      combination_of_columns:
-      - carrier
-      - flight_date
+      arguments:
+        combination_of_columns: [carrier, flight_date]
   columns:
   - name: scheduled
     tests:
     - not_null
     - sums_match:
-        compare_model: ref('fct_flights')
-        compare_expression: count(*)
+        arguments: {compare_model: ref('fct_flights'), compare_expression: count(*)}
   - name: cancelled
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: flown
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: on_time
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
 - name: mart_hour_profile
   description: 'The traveler''s table: scheduled hour, day of week and month, by year.'
   tests:
   - not_empty
   - unique_combination:
-      combination_of_columns:
-      - year
-      - month
-      - day_of_week
-      - dep_hour
+      arguments:
+        combination_of_columns: [year, month, day_of_week, dep_hour]
   columns:
   - name: dep_hour
     tests:
     - between:
-        min_value: 0
-        max_value: 23
+        arguments: {min_value: 0, max_value: 23}
   - name: scheduled
     tests:
     - not_null
     - sums_match:
-        compare_model: ref('fct_flights')
-        compare_expression: count(*)
+        arguments: {compare_model: ref('fct_flights'), compare_expression: count(*)}
   - name: cancelled
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: flown
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: on_time
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
 - name: mart_delay_histogram
   description: Flights by whole minute of arrival delay, carrier and month.
   tests:
   - not_empty
   - unique_combination:
-      combination_of_columns:
-      - carrier
-      - year
-      - month
-      - minute
+      arguments:
+        combination_of_columns: [carrier, year, month, minute]
   columns:
   - name: minute
     tests:
     - not_null
     - between:
-        min_value: -60
-        max_value: 300
+        arguments: {min_value: -60, max_value: 300}
   - name: flights
     tests:
     - not_null
     - non_negative
     - sums_match:
-        compare_model: ref('fct_flights')
-        compare_expression: count(*) filter (where not cancelled and not diverted and arr_delay is not null)
+        arguments: {compare_model: ref('fct_flights'), compare_expression: count(*) filter (where not cancelled
+            and not diverted and arr_delay is not null)}
 - name: mart_quarantine
   description: Every rule counted by carrier and month over every reported row.
   tests:
   - not_empty
   - unique_combination:
-      combination_of_columns:
-      - carrier
-      - year
-      - month
+      arguments:
+        combination_of_columns: [carrier, year, month]
   columns:
   - name: rows
     tests:
     - not_null
     - sums_match:
-        compare_model: ref('stg_flights')
-        compare_expression: count(*)
+        arguments: {compare_model: ref('stg_flights'), compare_expression: count(*)}
   - name: duplicate_key
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: actual_without_scheduled
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: negative_time
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: elapsed_mismatch
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: cause_mismatch
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: tail_missing
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: tail_format
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: revision
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: excluded
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
 - name: mart_rotation_day
   description: One row per reconstructed rotation.
-  tests:
-  - not_empty
+  tests: [not_empty]
   columns:
   - name: rotation_id
-    tests:
-    - unique
-    - not_null
+    tests: [unique, not_null]
   - name: legs
     tests:
     - not_null
     - between:
-        min_value: 1
-        max_value: 100000
+        arguments: {min_value: 1, max_value: 100000}
     - sums_match:
-        compare_model: ref('int_legs')
-        compare_expression: count(*)
+        arguments: {compare_model: ref('int_legs'), compare_expression: count(*)}
   - name: linked_legs
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]
   - name: opened_by
     tests:
     - accepted_values:
-        values:
-        - first
-        - gap
-        - broken_chain
-        - impossible
+        arguments:
+          values: [first, gap, broken_chain, impossible]
 - name: mart_leg_position
   description: Punctuality by the leg's position in the aircraft's day.
   tests:
   - not_empty
   - unique_combination:
-      combination_of_columns:
-      - carrier
-      - year
-      - leg_position
+      arguments:
+        combination_of_columns: [carrier, year, leg_position]
   columns:
   - name: leg_position
     tests:
     - between:
-        min_value: 1
-        max_value: 6
+        arguments: {min_value: 1, max_value: 6}
   - name: flown
     tests:
     - not_null
     - sums_match:
-        compare_model: ref('int_legs')
-        compare_expression: count(*)
+        arguments: {compare_model: ref('int_legs'), compare_expression: count(*)}
   - name: on_time
-    tests:
-    - not_null
-    - non_negative
+    tests: [not_null, non_negative]

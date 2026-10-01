@@ -1,93 +1,121 @@
 version: 2
-
 models:
-  - name: stg_flights
-    description: Every reported row of every monthly file, typed, with the quarantine flags; nothing removed.
+- name: stg_flights
+  description: Every reported row of every monthly file, typed, with the quarantine flags; nothing removed.
+  tests: [not_empty]
+  columns:
+  - name: flight_id
+    tests: [unique, not_null]
+  - name: source_file
+    tests: [not_null]
+  - name: year
     tests:
-      - not_empty
-    columns:
-      - name: flight_id
-        tests: [unique, not_null]
-      - name: source_file
-        tests: [not_null]
-      - name: year
-        tests: [not_null, {between: {min_value: 2015, max_value: 2030}}]
-      - name: month
-        tests: [not_null, {between: {min_value: 1, max_value: 12}}]
-      - name: day_of_week
-        tests: [{between: {min_value: 1, max_value: 7}}]
-      - name: flight_date
-        tests: [not_null]
-      - name: carrier
-        tests: [not_null]
-      - name: origin
-        tests: [not_null]
-      - name: dest
-        tests: [not_null]
-      - name: dep_hour
-        tests: [{between: {min_value: 0, max_value: 23}}]
-      - name: crs_dep_local
-        tests: [{between: {min_value: 0, max_value: 1440}}]
-      - name: cancellation_code
-        tests: [{accepted_values: {values: ['A', 'B', 'C', 'D']}}]
-      - name: cancelled
-        tests: [not_null]
-      - name: diverted
-        tests: [not_null]
-      - name: excluded
-        tests: [not_null]
-      - name: q_revision
-        tests: [not_null]
-
-  - name: stg_airports
-    description: Every airport code in the flights that OurAirports knows, with its time zone from its coordinates.
+    - not_null
+    - between:
+        arguments: {min_value: 2015, max_value: 2030}
+  - name: month
     tests:
-      - not_empty
-    columns:
-      - name: code
-        tests: [unique, not_null]
-      - name: tz
-        tests: [not_null]
-      - name: latitude
-        tests: [not_null, {between: {min_value: -20, max_value: 75}}]
-      - name: longitude
-        tests: [not_null, {between: {min_value: -180, max_value: 180}}]
-
-  - name: stg_aircraft
-    description: One registry row per tail number in the flights; registrant columns never read.
+    - not_null
+    - between:
+        arguments: {min_value: 1, max_value: 12}
+  - name: day_of_week
     tests:
-      - not_empty
-    columns:
-      - name: tail_number
-        tests: [unique, not_null]
-      - name: registry_file
-        tests: [not_null, {accepted_values: {values: ['master', 'dereg', 'unmatched']}}]
-      - name: year_built
-        tests: [{between: {min_value: 1950, max_value: 2027}}]
-
-  - name: stg_tz_offsets
+    - between:
+        arguments: {min_value: 1, max_value: 7}
+  - name: flight_date
+    tests: [not_null]
+  - name: carrier
+    tests: [not_null]
+  - name: origin
+    tests: [not_null]
+  - name: dest
+    tests: [not_null]
+  - name: dep_hour
     tests:
-      - not_empty
-      - unique_combination: {combination_of_columns: [tz, local_date, local_hour]}
-    columns:
-      - name: offset_minutes
-        tests: [not_null, {between: {min_value: -720, max_value: 840}}]
-
-  - name: stg_weather
-    description: Hourly weather at the FAA Core 30, UTC.
+    - between:
+        arguments: {min_value: 0, max_value: 23}
+  - name: crs_dep_local
     tests:
-      - not_empty
-      - unique_combination: {combination_of_columns: [airport, hour_utc]}
-    columns:
-      - name: airport
-        tests: [not_null]
-      - name: hour_utc
-        tests: [not_null]
-      - name: precipitation
-        tests: [non_negative]
-      - name: snowfall
-        tests: [non_negative]
-      - name: wind_gusts_10m
-        tests: [non_negative]
-      - name: cloud_cover_low
-        tests: [{between: {min_value: 0, max_value: 100}}]
+    - between:
+        arguments: {min_value: 0, max_value: 1440}
+  - name: cancellation_code
+    tests:
+    - accepted_values:
+        arguments:
+          values: [A, B, C, D]
+  - name: cancelled
+    tests: [not_null]
+  - name: diverted
+    tests: [not_null]
+  - name: excluded
+    tests: [not_null]
+  - name: q_revision
+    tests: [not_null]
+- name: stg_airports
+  description: Every airport code in the flights that OurAirports knows, with its time zone from its coordinates.
+  tests: [not_empty]
+  columns:
+  - name: code
+    tests: [unique, not_null]
+  - name: tz
+    tests: [not_null]
+  - name: latitude
+    tests:
+    - not_null
+    - between:
+        arguments: {min_value: -20, max_value: 75}
+  - name: longitude
+    tests:
+    - not_null
+    - between:
+        arguments: {min_value: -180, max_value: 180}
+- name: stg_aircraft
+  description: One registry row per tail number in the flights; registrant columns never read.
+  tests: [not_empty]
+  columns:
+  - name: tail_number
+    tests: [unique, not_null]
+  - name: registry_file
+    tests:
+    - not_null
+    - accepted_values:
+        arguments:
+          values: [master, dereg, unmatched]
+  - name: year_built
+    tests:
+    - between:
+        arguments: {min_value: 1950, max_value: 2027}
+- name: stg_tz_offsets
+  tests:
+  - not_empty
+  - unique_combination:
+      arguments:
+        combination_of_columns: [tz, local_date, local_hour]
+  columns:
+  - name: offset_minutes
+    tests:
+    - not_null
+    - between:
+        arguments: {min_value: -720, max_value: 840}
+- name: stg_weather
+  description: Hourly weather at the FAA Core 30, UTC.
+  tests:
+  - not_empty
+  - unique_combination:
+      arguments:
+        combination_of_columns: [airport, hour_utc]
+  columns:
+  - name: airport
+    tests: [not_null]
+  - name: hour_utc
+    tests: [not_null]
+  - name: precipitation
+    tests: [non_negative]
+  - name: snowfall
+    tests: [non_negative]
+  - name: wind_gusts_10m
+    tests: [non_negative]
+  - name: cloud_cover_low
+    tests:
+    - between:
+        arguments: {min_value: 0, max_value: 100}
