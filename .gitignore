@@ -45,3 +45,4 @@ deploy/live-url.txt
 deploy/write-token.txt
 deploy/*-log.txt
 deploy/fly-logs.txt
+warehouse/.user.yml
