@@ -12,3 +12,6 @@ Core 30
 # Percentile names in the latency figures.
 p50
 p99
+# HTTP status codes the serving notes name.
+HTTP 401
+HTTP 503

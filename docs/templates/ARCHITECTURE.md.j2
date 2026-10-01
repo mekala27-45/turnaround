@@ -1,0 +1,64 @@
+# Architecture
+
+{{ statement() }}
+
+```
+  SOURCES        BTS on time monthly files ({{ v('policy.window_start') }} to {{ v('window.latest_month') }}), FAA aircraft
+                 registry, OurAirports, Open-Meteo hourly at the Core 30 airports,
+                 and the simulator
+        ↓ contracts        typed frames, quarantine rules, provenance, definitions
+        ↓ warehouse        dbt staging → intermediate → marts; the metric layer
+                           with its reconcile
+        ↓ rotations        the aircraft's day from the tail number; inherited delay
+        ↓ chapters         eight claims, each: plan hash → estimator proven on the
+                           simulator → result with interval → chart → method note
+                           → pushback
+        ↓ events           anomalies, known events, event studies
+        ↓ misconnect       the buffer curve per connection; the calculator cells
+   ┌──────────────────────────────────────────────────────────────────┐
+   │  EVALUATION (never grades itself)                                │
+   │    the recovery study on the simulator per estimator and         │
+   │    condition; claims tested on the registered split; intervals   │
+   │    by block bootstrap over days; Benjamini-Hochberg per family;  │
+   │    detector recall on known events; the check log scored later   │
+   └───────────────────────────┬──────────────────────────────────────┘
+                               ↓
+  results/manifest.json    every number, interval, curve point and hash
+        ↓ render           story, memo, method notes, corrections, README,
+                           RESULTS, these documents, the exports
+   ┌──────────────────────────────────────────────────────────────────┐
+   │  FLY API       /v1/checks (misconnect), /v1/score, /v1/audit      │
+   │  GITHUB PAGES  the story, explore, rank, rotations, events,       │
+   │                planner, data, report                              │
+   └──────────────────────────────────────────────────────────────────┘
+```
+
+## The packages
+
+| Package | What it owns |
+|---|---|
+| `core` | the policy constants, the manifest and its formats, the statement, seeds and hashing |
+| `contracts` | the typed frame of a monthly file, the quarantine rules, the registry and weather readers |
+| `sim` | the synthetic network with known padding, propagation, carrier effects, bunching, a meltdown and weather |
+| `rotations` | the aircraft's day rebuilt from tail numbers, with the integrity rules |
+| `stats` | the day block bootstrap, cluster robust errors, fixed effects, Benjamini-Hochberg, PELT, the density test |
+| `chapters` | the eight plans and estimators |
+| `events` | the disruption detector, the operating point and the event studies |
+| `misconnect` | the per hub curves and the calculator cells the API reads |
+| `evaluation` | the recovery study across conditions and seeds |
+| `exports` | the workbook, the Tableau and Power BI specifications, the CSV bundle |
+| `render` | the claim gate: every published document rendered from the manifest |
+| `api` | the calculator and its check log |
+| `pipeline` | the stages, in the order the Makefile runs them |
+
+## Why every estimator is proven on a simulator first
+
+The padding estimator, the propagation coefficient and the fair ranking each have a dozen ways to be subtly wrong: a reference percentile that drifts with congestion, a turn rule that splits every overnight, a fixed effect that absorbs the very thing being ranked. None of them can be checked on real flights, because the truth is not observed there; a wrong estimator produces a plausible number and nobody finds out. On the simulator the truth is written down before the data is generated, so an estimator that cannot recover it is known to be broken before it says anything about an airline. Here that study ran {{ v('recovery.runs') }} times across {{ v('recovery.conditions') }} conditions.{% if raw('recovery.rho_coverage.weak') < 0.9 %} It caught a real weakness: the propagation coefficient's interval covers the truth in {{ v('recovery.rho_coverage.weak') }} of runs when propagation is weak and {{ v('recovery.rho_coverage.strong') }} when it is strong, so the inherited delay chapter says its interval carries sampling error only and reads narrower than the uncertainty.{% endif %}
+
+## Why the story renders from the manifest
+
+A story that can be edited by hand drifts from its evidence within a week: a number is rounded for a headline, a chart is regenerated, and the paragraph above it still quotes the old figure. Here every number in every published document is a template field filled from `results/manifest.json`, which only the pipeline writes. `make gates` renders every document again and diffs the whole file against what is committed, and a second check rejects any digit typed into a template outside a field. A number cannot reach a reader unless a query produced it, and when a query changes, every document that quotes it changes with it.
+
+## What runs where
+
+The pipeline runs on one machine: DuckDB for the warehouse and the chapters, a disk cache keyed by input digest for the expensive steps, and every seeded step sorting before it samples so two runs agree to the byte. The site is static on GitHub Pages and queries the committed marts in the browser with DuckDB-WASM. The API is one Fly machine that sleeps when idle, with its check log in Neon Postgres; the site probes it twice and falls back to a recorded session, labeled as recorded, when it does not answer.

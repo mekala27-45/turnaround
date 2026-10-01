@@ -1,0 +1,46 @@
+# Methods
+
+How each chapter was estimated, in the order the story tells it. Every chapter's plan was written, hashed and registered in `results/plans` before its estimator touched the flights; the hash printed under each chapter is the one the gate recomputes from the committed plan, so a plan edited after the fact fails the build rather than quietly changing the question.
+
+{{ statement() }}
+
+## Shared rules
+
+**The split.** Anything a chapter chooses (a threshold, a minimum turn, a padding reference) is chosen on {{ v('policy.fit_years') }} and reported on {{ v('policy.test_first_year') }} onward. `report_years` in `packages/chapters/src/turnaround_chapters/plan.py` raises `SplitViolation` on a report that reaches into a fitting year, and `tests/chapters/test_plans.py` proves the refusal.
+
+**Intervals.** A block bootstrap over days with {{ v('policy.bootstrap_replicates') }} replicates and {{ v('policy.interval_level') }} percentile intervals, seeded with {{ v('policy.seed') }} (`packages/stats/src/turnaround_stats/bootstrap.py`). Days, not flights, are resampled because a bad day hits every flight on it: a flight level bootstrap would treat one thunderstorm as a thousand independent pieces of evidence. Regression coefficients use cluster robust errors by day, or by tail number and day where the chapter's errors travel with the aircraft.
+
+**Multiple comparisons.** Benjamini-Hochberg at q = {{ v('policy.bh_q') }} inside every family a plan names (the carriers in the density test, the carriers searched for changepoints). A finding reported without its family's adjustment is a bug.
+
+**Fixed effects.** Two solvers sit in `packages/stats/src/turnaround_stats/fe.py`: alternating projections for the large cell fits of the inherited delay and ranking chapters, and a direct least squares solve over the stacked indicators for the weather model, which has few enough levels to solve exactly and was too slow to converge by projection. The ranking chapter fits weighted least squares on route by carrier by month by hour cells; that fit is exact for the linear model, and `tests/stats/test_fe.py` checks it against a row level fit to floating tolerance.
+
+**The interior test.** Every chosen operating point (an alert threshold, a buffer where a curve crosses a line) must sit strictly inside the grid it was chosen from. A point on the edge means the grid was too narrow and the choice is not a choice; the chapter reports that instead of a number.
+
+**Proven on the simulator first.** Each estimator ran on `packages/sim` across {{ v('recovery.conditions') }} conditions and {{ v('recovery.seeds') }} seeds per condition before it saw a real flight. The recovery results are in `results/recovery` and on the data page.
+
+{% for n in range(1, 9) %}
+{% set key = 'plan.' ~ n %}
+{% if has(key ~ '.hash') %}
+## {{ v(key ~ '.title') }}
+
+**Claim.** {{ v(key ~ '.claim') }}
+
+**Estimator.** {{ v(key ~ '.estimator') }}
+
+**Split.** {{ v(key ~ '.split') }}
+
+**Family.** {{ v(key ~ '.family') }}
+
+**Interval.** {{ v(key ~ '.interval') }}
+
+**What is reported.** {{ v(key ~ '.test') }}
+
+**Proven on the simulator.** {{ v(key ~ '.simulator') }}
+
+Plan hash `{{ v(key ~ '.hash') }}`, registered in `results/plans`.
+
+{% endif %}
+{% endfor %}
+## What none of this does
+
+No chapter claims that a carrier caused anything. The ranking holds constant what each carrier flies; it does not hold constant how it staffs, maintains or schedules, and those are the differences a ranking is supposed to surface. The weather estimate is airport weather at the scheduled hours, not weather en route. The inherited share depends on tail numbers, and an aircraft swap the data does not record shows up as a broken chain rather than as inheritance; the count of those is published beside the share.

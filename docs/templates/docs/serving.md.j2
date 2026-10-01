@@ -1,0 +1,56 @@
+# Serving
+
+Two things are served: the static site on GitHub Pages, and the misconnect calculator's API on Fly.io with its check log in Neon Postgres. The site never needs the API to tell the story; only the planner page writes.
+
+{{ statement() }}
+
+## The API
+
+FastAPI in `packages/api`, one shared CPU machine on Fly that stops when idle and starts on the first request, with its tables in the `turnaround` schema of a Neon database. Live at {{ v('deploy.base_url') }} ({{ v('deploy.status') }}).
+
+| Route | What it does |
+|---|---|
+| `GET /v1/health` | the database round trip and the marts the calculator reads |
+| `GET /v1/hubs` | the hubs the calculator answers for |
+| `GET /v1/curve` | one connection's misconnect probability at every buffer, read only |
+| `POST /v1/checks` | computes a check, writes the check row, then the audit row, then commits, then returns the id |
+| `GET /v1/checks`, `GET /v1/checks/{id}` | the log, and one check with its score if it has one |
+| `POST /v1/score` | scores every stored check whose travel month is the outcome month the marts hold |
+| `GET /v1/scorecard`, `GET /v1/audit` | how the scored checks did; the audit trail |
+
+Writes need the token as a bearer token in the `Authorization` header; without it a write is refused with HTTP 401 and nothing is stored. This is a demonstration, not a product: the token keeps the log clean, it does not protect anything valuable. Every response body carries the statement, errors included, and `tests/api/test_statement_on_every_endpoint.py` checks every route.
+
+A check stores an origin, a connecting airport, a destination, a travel month, two scheduled hours, a buffer and the answer. It never stores a person. A note on a check is limited to lowercase words so it cannot carry a name, an email or a booking reference.
+
+## How a check is answered
+
+From the calculator marts the chapters stage writes (`results/marts/misconnect_*.parquet`, copied into the image at build time). For the connecting hub, the travel month and the two scheduled hours: the joint distribution of inbound arrival delay and outbound departure delay, in five minute cells; shifted by the route's own monthly delay where the route has enough flights; the probability that the inbound lands too late for the buffer less a minimum connection of {{ v('policy.min_connection') }}, or never lands. The interval is a Wilson interval widened by the design effect, because flights on the same day at the same hub are not independent. Every answer says how many flights it rests on, and a connection with too few is refused rather than guessed.
+
+The latest month in the marts is held out of the cells and kept as the outcome month, so `POST /v1/score` grades the calculator on flights it never saw.
+
+## Persistence, tested three ways
+
+- `tests/api/test_check_log.py::test_check_is_committed` and `test_score_is_committed` read the rows back through a second connection opened independently of the app's pool.
+- `test_audit_precedes_response` asserts the audit row is in the database before the response leaves.
+- `scripts/check_persistence.py` starts the API in a separate process, posts a check, scores it against a fixture, and reads the rows back through a fresh connection; CI runs it on every push.
+
+## Deploying
+
+From a Windows machine with the repository and a `.env` beside it, through Git GUI's tools menu or PowerShell:
+
+    deploy\deploy.ps1      # flyctl, the app, the secrets, the image, the migrations
+    deploy\verify.ps1      # a check from a separate client, read back; writes results\deploy\verification.json
+    deploy\replay.ps1      # the demo queue: checks at the busiest hubs so the log is never empty
+    deploy\load-test.ps1   # writes results\latency\live.json
+    deploy\logs.ps1        # the machine's recent logs
+    deploy\reset.ps1       # deletes the rows the recordings and checks created
+
+Secrets live in `.env` and in Fly's secret store, nowhere else. `deploy/write-token.txt` is written by the deploy and ignored by git.
+
+## Latency
+
+{% if raw('latency.live.status') == 'measured' %}Against the live API from a separate client: POST /v1/checks p50 {{ v('latency.live.check.p50_ms') }}, p99 {{ v('latency.live.check.p99_ms') }}, after one warming request that took {{ v('latency.live.first_request_ms') }} while the machine woke.{% else %}The live load test has not run yet; `deploy\load-test.ps1` writes it.{% endif %}
+
+## The site when the API is asleep
+
+The planner page probes the API twice, because the first request after an idle period wakes the machine and can fail while it does. If both probes fail, the page reads `web/public/data/recorded_session.json`, a session recorded against the API, and labels every answer as recorded. The test server in `web/scripts/serve.mjs` refuses HEAD requests and answers the first API call with HTTP 503 so the Playwright suite exercises both paths on every run.

@@ -1,0 +1,46 @@
+# Events and the alert operating point
+
+The disruption detector in `packages/events`, which the meltdowns chapter of the story reads. It answers one operational question: on which carrier days and airport days did the operation break, and how fast did it come back.
+
+{{ statement() }}
+
+## The units and the baseline
+
+Two kinds of unit are scored every day: each carrier, and each of the {{ v('ch7.airports') }} busiest airports. A unit's baseline is its own previous four weeks: the median of its daily cancellation rate and of its mean arrival delay, with the median absolute deviation as the spread and a floor under the spread so a quiet month does not turn a normal Tuesday into an alarm. The day's score is the larger of the two standardized anomalies. Medians, not means, because one meltdown inside the baseline window would otherwise lift the baseline and hide the next one.
+
+## The persistence rule
+
+An alert episode opens on a day whose score passes the threshold and stays open while the score stays above half of it. One storm is one episode however many days it lasts, so a false alarm is counted once rather than once per day, and the length of the episode is the unit's recovery time.
+
+## The operating point
+
+The threshold is a cost decision, not a statistic. A missed disruption is costed at {{ v('ch7.cost_miss') }} false alarm episodes and each false alarm episode at {{ v('ch7.cost_false_alarm') }}: an operations desk will put up with a page every few weeks to avoid missing the one that strands a fleet. The threshold minimizing that cost on {{ v('policy.fit_years') }}, over a grid from {{ v('ch7.grid_low') }} to {{ v('ch7.grid_high') }}, is {{ v('ch7.threshold') }}, {{ v('ch7.interior') }}.
+
+{{ table('ch7.operating') }}
+
+## Graded on the reporting years
+
+On {{ v('policy.test_first_year') }} onward the detector flagged {{ v('ch7.test.detected') }} of the {{ v('ch7.test.events') }} known events in the window ({{ v('ch7.test.recall') }}){% if raw('ch7.test.median_lag') is not none %}, with a median first alert {{ v('ch7.test.median_lag') }} after onset{% endif %}, and opened {{ v('ch7.test.false_alarms') }} false alarm episodes, {{ v('ch7.test.false_per_thousand') }} per thousand unit days over {{ v('ch7.test.unit_days') }} unit days. On the fitting years it had flagged {{ v('ch7.fit.detected') }} of {{ v('ch7.fit.events') }}.
+
+{{ table('ch7.events') }}
+
+The known events, with a citation for every row, are committed in `data/known_events.csv`. A row is added only with a public source naming the dates, and an event the detector misses stays in the table.
+
+## The event studies
+
+For each carrier meltdown: the carrier's daily cancellation rate and mean delay against the other carriers at the same airports on the same days, the gap shaded over the disruption window, the excess in flights and minutes summed over the window, and the recovery time as the days from onset until the gap is back inside the carrier's own pre-event band for three days running. The peer control never includes the treated carrier; `tests/events/test_events.py` checks it.
+
+{% for key in manifest.values if key.startswith('ch7.study.') and key.endswith('.carrier') %}
+{% set prefix = key[:-8] %}
+- **{{ v(key) }}**, onset {{ v(prefix ~ '.onset') }} to {{ v(prefix ~ '.end') }}, at {{ v(prefix ~ '.airports') }}: {{ v(prefix ~ '.excess_cancelled') }} excess cancellations, {{ v(prefix ~ '.excess_delay_hours') }} excess delay, peak gap {{ v(prefix ~ '.peak_gap') }}, recovery {% if raw(prefix ~ '.recovery_days') is not none %}{{ v(prefix ~ '.recovery_days') }} days{% else %}not reached inside the study window{% endif %}.
+{% endfor %}
+
+## Is recovery speed a carrier trait
+
+Over every alert episode in the window, for carriers with enough episodes to compare: {% if raw('ch7.trait.p') is none %}too few carriers qualified, so the question stays open.{% else %}Kruskal-Wallis H {{ v('ch7.trait.statistic') }} across {{ v('ch7.trait.carriers') }} carriers, permutation p {{ v('ch7.trait.p') }}.{% endif %}
+
+{{ table('ch7.recovery_by_carrier') }}
+
+## Proven on the simulator
+
+The planted meltdown was caught in {{ v('recovery.detector_recall') }} of runs, {{ v('recovery.detector_lag') }} after onset on average, and {{ v('recovery.detector_precision') }} of the detector's alerts landed on a planted meltdown or storm day. The weakest condition was {{ v('recovery.worst.detector') }}.

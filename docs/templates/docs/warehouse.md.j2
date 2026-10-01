@@ -1,0 +1,47 @@
+# The warehouse
+
+dbt over DuckDB, in `warehouse/`. Staging types the raw files and applies the quarantine rules; intermediate joins the aircraft, airports and weather and builds the rotation keys; marts are what every reader of the data reads. {{ v('warehouse.models') }} models, {{ v('warehouse.tests') }} tests, {{ v('warehouse.tests_failed') }} failed on the last build.
+
+{{ statement() }}
+
+## Layers
+
+| Layer | Model | Grain |
+|---|---|---|
+| staging | `stg_flights` | one row per flight in the monthly files, typed, with a flag per quarantine rule |
+| staging | `stg_aircraft` | one row per tail number and validity window from the FAA registry |
+| staging | `stg_airports`, `stg_tz_offsets` | one row per airport; one row per zone and hour for local to UTC |
+| staging | `stg_weather` | one row per airport and UTC hour |
+| intermediate | `int_flights_utc` | one row per flight, times in UTC, weather joined at the scheduled hours at both ends |
+| intermediate | `int_unimpeded` | one row per route, three hour block and season, fixed on the fitting years |
+| intermediate | `int_legs` | one row per flown leg with its tail number, its previous leg and the link status |
+| marts | `fct_flights` | one row per flight, with padding and the aircraft |
+| marts | `mart_route_month`, `mart_carrier_month` | route by carrier by month; carrier by month |
+| marts | `mart_carrier_day`, `mart_airport_day` | the detector's daily units |
+| marts | `mart_hour_profile`, `mart_delay_histogram`, `mart_leg_position` | the traveler's tables and the line |
+| marts | `mart_rotation_day`, `mart_quarantine` | rotations by tail and day; the quarantine report |
+
+`warehouse/models/exposures.yml` names who reads each mart: the story, the explorer, the workbook, the Tableau and Power BI extracts and the API. A mart nobody reads is deleted rather than kept for later.
+
+## Quarantine
+
+Nothing is deleted. Each rule flags rows and names what they are excluded from; a row that fails the cause breakdown check still counts in the on time rate, it just stays out of the cause shares.
+
+{{ table('quarantine.by_rule') }}
+
+The report by carrier and month is `mart_quarantine`, on the data page and in the CSV bundle.
+
+## Tests
+
+Every model is tested on its grain (`unique_combination` from `warehouse/tests/generic`), on its keys (`not_null`), on its codes (`accepted_values`) and on its arithmetic (`non_negative`, `between`, `sums_match`, `not_empty`). The singular tests in `warehouse/tests` check what a column test cannot: every flown leg belongs to exactly one rotation; every linked leg obeys the rotation rules; on time never exceeds flown in any mart; the padding reference reads the fitting years only; every row of the files lands in the quarantine report, flagged or clean; and a UTC arrival equals the UTC departure plus the elapsed time.
+
+## The metric layer
+
+`metrics/metrics.yml` defines each metric the story uses once, with two expressions: one over the flight grain and one over the shipped mart. The reconcile step evaluates both at every grain and fails the build on any difference beyond tolerance, so the explorer, the workbook and the story cannot disagree about the on time rate. On the last build: {{ v('metrics.count') }} metrics at {{ v('metrics.grains') }} grains over {{ v('metrics.cells') }} cells, {{ v('metrics.disagreements') }} disagreements.
+
+{{ table('metrics.definitions') }}
+
+## Running it
+
+    make warehouse    # dbt build, then the reconcile
+    make metrics      # the reconcile alone, against the marts in results/marts
