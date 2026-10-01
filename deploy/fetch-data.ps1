@@ -7,6 +7,7 @@
 #
 #   powershell -ExecutionPolicy Bypass -File fetch-data.ps1 flights   (BTS months and the FAA registry)
 #   powershell -ExecutionPolicy Bypass -File fetch-data.ps1 weather   (Open-Meteo, the FAA Core 30)
+#   powershell -ExecutionPolicy Bypass -File fetch-data.ps1 faaref    (the registry's aircraft reference file)
 #
 # Sources and terms:
 #   BTS, Reporting Carrier On-Time Performance (1987 to present), the monthly PREZIP files.
@@ -165,7 +166,45 @@ elseif ($Mode -eq "weather") {
         weather_failed = $failed
     }
 }
-else { throw "unknown mode $Mode (use flights or weather)" }
+elseif ($Mode -eq "faaref") {
+    # The daily ReleasableAircraft.zip of 2026-09-29 shipped without ACFTREF.txt, the file that names the
+    # make and model behind each MFR MDL CODE. Try the yearly archives and the next daily build.
+    $tried = @()
+    $candidates = @(
+        @{ name = "ReleasableAircraft.2025.zip"; url = "https://registry.faa.gov/database/yearly/ReleasableAircraft.2025.zip" },
+        @{ name = "ReleasableAircraft.2024.zip"; url = "https://registry.faa.gov/database/yearly/ReleasableAircraft.2024.zip" },
+        @{ name = "ReleasableAircraft.daily.zip"; url = "https://registry.faa.gov/database/ReleasableAircraft.zip" }
+    )
+    foreach ($c in $candidates) {
+        $dest = Join-Path $faaDir $c.name
+        if (Test-Zip $dest) { $tried += "$($c.name) kept"; continue }
+        Write-Host "faa: $($c.url)"
+        $code = Get-File $c.url $dest $browserAgent
+        if ($code -eq 0 -and (Test-Zip $dest)) {
+            Write-Host "  ok $((Get-Item $dest).Length) bytes"
+            $tried += "$($c.name) ok"
+        } else {
+            Write-Host "  not available (curl $code)"
+            if (Test-Path $dest) { Remove-Item $dest -Force }
+            $tried += "$($c.name) missing"
+        }
+    }
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $members = @{}
+    foreach ($zip in Get-ChildItem $faaDir -Filter "*.zip") {
+        $archive = [IO.Compression.ZipFile]::OpenRead($zip.FullName)
+        try { $members[$zip.Name] = @($archive.Entries | ForEach-Object { $_.FullName }) } finally { $archive.Dispose() }
+    }
+    $status = [ordered]@{
+        mode = $Mode
+        fetched_at = (Get-Date).ToUniversalTime().ToString("o")
+        machine = $env:COMPUTERNAME
+        minutes = [math]::Round(((Get-Date) - $started).TotalMinutes, 1)
+        tried = $tried
+        members = $members
+    }
+}
+else { throw "unknown mode $Mode (use flights, weather or faaref)" }
 
 $status | ConvertTo-Json -Depth 4 | Set-Content -Path (Join-Path $root "fetch-status-$Mode.json") -Encoding UTF8
 Write-Host "fetch $Mode finished in $($status.minutes) minutes"
