@@ -13,6 +13,8 @@ import pytest
 from turnaround_core.manifest import Manifest
 from turnaround_exports import bi, workbook
 
+from tests._deps import need
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -116,8 +118,11 @@ def test_workbook_has_live_formulas_and_named_ranges(tmp_path: Path) -> None:
 
 @pytest.mark.libreoffice
 def test_recalculated_summary_equals_the_metric_values(tmp_path: Path) -> None:
-    if shutil.which("soffice") is None and shutil.which("libreoffice") is None:
-        pytest.skip("LibreOffice is not installed: the recalculation test is skipped, not passed")
+    need(
+        "libreoffice",
+        shutil.which("soffice") is not None or shutil.which("libreoffice") is not None,
+        "LibreOffice is not installed, so the workbook cannot be recalculated",
+    )
     cm = _carrier_month()
     im = _inherited(cm)
     workbook.build(tmp_path / "w.xlsx", _manifest(), cm, im, default_year=2025, chapter_tables=[])

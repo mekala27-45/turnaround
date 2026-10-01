@@ -109,6 +109,7 @@ markers = [
   "warehouse: needs the dbt warehouse built under .cache",
   "libreoffice: needs LibreOffice to recalculate the workbook",
   "slow: full pipeline verification",
+  "weather: needs the hourly weather under data/weather",
   "loadtest: runs the load test against a live server",
 ]
 filterwarnings = ["ignore::DeprecationWarning"]

@@ -23,6 +23,8 @@ from turnaround_misconnect import marts
 from turnaround_misconnect.curve import curves
 from turnaround_sim.network import SimSpec, simulate
 
+from tests._deps import need
+
 TOKEN = "test-token-not-a-secret"
 DEFAULT_URL = "postgresql+psycopg://postgres:postgres@127.0.0.1:5432/turnaround_test"
 HUBS = ("H0", "H1", "H2", "H3")
@@ -66,9 +68,7 @@ def database_url() -> str:
         with psycopg.connect(plain_url(url), connect_timeout=3):
             pass
     except psycopg.OperationalError:
-        if os.environ.get("TURNAROUND_REQUIRE_POSTGRES"):
-            pytest.fail(f"TURNAROUND_REQUIRE_POSTGRES is set but no Postgres answers at {url}")
-        pytest.skip(f"no Postgres reachable at {url}")
+        need("postgres", False, f"no Postgres answers at {url}")
     return url
 
 
