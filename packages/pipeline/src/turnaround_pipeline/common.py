@@ -33,7 +33,7 @@ def save_partial(p: Paths, stage: str, manifest: Manifest) -> Path:
 
 
 def connect(
-    p: Paths, *, memory_limit: str = "5GB", threads: int = 2, read_only: bool = False
+    p: Paths, *, memory_limit: str = "4GB", threads: int = 2, read_only: bool = False
 ) -> duckdb.DuckDBPyConnection:
     """A connection with the memory limit below physical memory, so DuckDB spills instead of dying."""
     p.scratch.mkdir(parents=True, exist_ok=True)

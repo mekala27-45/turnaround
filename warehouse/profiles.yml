@@ -7,7 +7,12 @@ turnaround:
       path: "{{ env_var('TURNAROUND_WAREHOUSE_PATH', '../.cache/warehouse.duckdb') }}"
       threads: 1
       settings:
-        memory_limit: "{{ env_var('TURNAROUND_DUCKDB_MEMORY', '5GB') }}"
+        # DuckDB can run past its limit by a gigabyte on a large distinct or window; the build machine
+        # kills a process past six, so the limit leaves that room.
+        memory_limit: "{{ env_var('TURNAROUND_DUCKDB_MEMORY', '4GB') }}"
         threads: 2
         preserve_insertion_order: false
+      # The spill directory is fixed when the database opens: dbt applies `settings` to every cursor,
+      # and DuckDB refuses to set the temporary directory again once a query has spilled into it.
+      config_options:
         temp_directory: "{{ env_var('TURNAROUND_DUCKDB_TMP', '../.cache/duckdb_tmp') }}"

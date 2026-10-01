@@ -168,3 +168,27 @@ an air time or an actual or scheduled elapsed time at or below zero or over 1,50
 still excludes the row from everything; it flags exactly those 31 rows. The ledger now records a
 digest of the ingest contract, so a rule change ingests every month again instead of leaving old
 flags in files whose zips did not change.
+
+## 2026-10-01: the full window is built to fit a machine with eight gigabytes
+
+The first build over every month failed three ways the two year build never showed. The rotation
+model sorted every flown leg once per window and spilled more than the disk held, so it is now
+built in sixteen buckets of tail numbers, which gives the same table row for row because every
+window in it stays inside one tail. A test counting distinct flight ids held all seventy million in
+one hash table and the process was killed at six gigabytes, so it counts rows and leaves
+uniqueness to the unique test that already ran. And dbt set DuckDB's spill directory again on every
+cursor, which DuckDB refuses once a query has spilled, so the directory is now fixed when the
+database opens. DuckDB's limit came down from five gigabytes to four to leave room for the overshoot.
+
+## 2026-10-01: correction, two more rules from the first full build
+
+The carrier month mart's own tests failed on the full window in two ways no fixture had shown.
+Thirteen flights in 2017, all Frontier and Virgin America, are flagged both cancelled and diverted,
+so they were counted twice and the month's parts summed to more than its schedule. And 973 flights
+neither cancelled nor diverted report no departure delay or no arrival delay (a block of Endeavor
+flights in May 2018 has arrival times with the delay left blank), so they sat in the flown count
+without being on time or late, and the metric layer's reconcile disagreed with itself in the sixth
+decimal. Both are now quarantine rules that exclude the row from everything, status conflict and
+missing delay, each planted and found in `tests/contracts/test_quarantine.py`. The delay is not
+recomputed from the clock times: the files leave it blank, and a value this build made up would be
+a value nobody reported.
