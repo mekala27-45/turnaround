@@ -136,30 +136,53 @@ def estimate(
         seed=seed,
     )
 
-    turns = con.execute(trade_sql(legs, legs_where, rho, min_turn)).pl()
-    q_all = float(turns["binding"].mean())  # type: ignore[arg-type]
-    after = turns.filter(pl.col("binding") & pl.col("next_binding").is_not_null())
-    q_next = float(after["next_binding"].mean()) if after.height else q_all  # type: ignore[arg-type]
+    # The trade is priced in DuckDB: per linked leg it is twenty million rows in the reporting years,
+    # which as a frame would sit beside chapter 4's arrays for nothing but four means.
+    trade = trade_sql(legs, legs_where, rho, min_turn)
+    shares = con.execute(
+        f"""
+        select avg(binding::double),
+               avg(next_binding::double) filter (where binding and next_binding is not null),
+               count(*) filter (where binding and next_binding is not null)
+        from ({trade})
+        """
+    ).fetchone()
+    assert shares is not None
+    q_all = float(shares[0])
+    q_next = float(shares[1]) if shares[2] else q_all
     carry = rho * q_next
-    remaining = (turns["rotation_legs"] - turns["leg_index"]).to_numpy().astype(np.float64)
-    downstream = np.where(np.abs(1 - carry) > 1e-12, carry * (1 - carry**remaining) / (1 - carry), remaining)
-    saved = rho * turns["binding"].cast(pl.Float64).to_numpy() * (1.0 + downstream)
-    turns = turns.with_columns(pl.Series("saved", saved))
-    by_airport = (
-        turns.group_by("origin")
-        .agg(pl.len().alias("turns"), pl.col("binding").mean().alias("binding_share"), pl.col("saved").mean())
-        .filter(pl.col("origin").is_in(chosen))
-        .with_columns((pl.col("saved") >= 1.0).alias("pays"))
-        .sort(["saved", "origin"], descending=[True, False])
-        .rename({"origin": "airport", "saved": "saved_per_minute"})
+    remaining = "(rotation_legs - leg_index)"
+    downstream = (
+        f"{carry!r} * (1 - pow({carry!r}, {remaining})) / (1 - {carry!r})"
+        if abs(1 - carry) > 1e-12
+        else remaining
     )
-    by_route = (
-        turns.group_by("route")
-        .agg(pl.len().alias("turns"), pl.col("binding").mean().alias("binding_share"), pl.col("saved").mean())
-        .filter(pl.col("turns") >= min_route_turns)
-        .with_columns((pl.col("saved") >= 1.0).alias("pays"))
-        .sort(["saved", "route"], descending=[True, False])
-        .rename({"saved": "saved_per_minute"})
+    saved = f"{rho!r} * binding::double * (1.0 + {downstream})"
+    overall = con.execute(f"select avg({saved}) from ({trade})").fetchone()
+    assert overall is not None
+    chosen_list = ", ".join(f"'{a}'" for a in chosen) or "''"
+    by_airport = con.execute(
+        f"""
+        select origin as airport, count(*) as turns, avg(binding::double) as binding_share,
+               avg({saved}) as saved_per_minute
+        from ({trade})
+        where origin in ({chosen_list})
+        group by origin
+        """
+    ).pl()
+    by_airport = by_airport.with_columns((pl.col("saved_per_minute") >= 1.0).alias("pays")).sort(
+        ["saved_per_minute", "airport"], descending=[True, False]
+    )
+    by_route = con.execute(
+        f"""
+        select route, count(*) as turns, avg(binding::double) as binding_share, avg({saved}) as saved_per_minute
+        from ({trade})
+        group by route
+        having count(*) >= {min_route_turns}
+        """
+    ).pl()
+    by_route = by_route.with_columns((pl.col("saved_per_minute") >= 1.0).alias("pays")).sort(
+        ["saved_per_minute", "route"], descending=[True, False]
     )
     return DecisionResult(
         by_hour=by_hour,
@@ -172,7 +195,7 @@ def estimate(
         hubs=hub_curves,
         binding_share=q_all,
         binding_after_binding=q_next,
-        trade_overall=float(saved.mean()),
+        trade_overall=float(overall[0]),
         trade_airports=by_airport,
         trade_routes=by_route,
         sql_hour=sql_hour.strip(),

@@ -73,7 +73,7 @@ def reported_sql(source: str) -> str:
 def model_sql(source: str, where: str, legs: str, min_turn: int) -> str:
     features = ",\n           ".join(f"{expr} as {name}" for name, expr in FEATURES)
     return f"""
-    select f.flight_date, f.origin || ':' || cast(f.dep_hour as varchar) as origin_hour,
+    select f.flight_id, f.flight_date, f.origin || ':' || cast(f.dep_hour as varchar) as origin_hour,
            f.dest || ':' || cast(cast(f.crs_arr_local // 60 as integer) % 24 as varchar) as dest_hour,
            f.year * 100 + f.month as period, f.arr_delay,
            {features},
@@ -118,34 +118,71 @@ def estimate(
         """
     ).pl()
     sql_model = model_sql(source, where, legs, min_turn)
-    frame = con.execute(sql_model).pl()
     names = [n for n, _ in FEATURES]
-    x = frame.select([*names, "carried"]).to_numpy().astype(np.float64)
-    y = frame["arr_delay"].to_numpy().astype(np.float64)
-    groups = [_codes(frame[g].to_numpy()) for g in ("origin_hour", "dest_hour", "period")]
-    w = np.ones(y.shape[0])
-    stacked = demean_exact(np.column_stack([y, x]), w, groups)
-    yt, xt = stacked[:, 0], stacked[:, 1:]
-    keep = xt.std(axis=0) > 0
+    columns = [*names, "carried"]
+    # Eight million flights in the reporting years: the design arrives as numbers, the groupings as
+    # integer codes ranked in DuckDB, and it is swept in place, so it is held once.
+    arrays = con.execute(
+        f"""
+        select arr_delay::double as arr_delay,
+               {", ".join(f"{c}::double as {c}" for c in columns)},
+               (dense_rank() over (order by origin_hour) - 1)::bigint as g_origin_hour,
+               (dense_rank() over (order by dest_hour) - 1)::bigint as g_dest_hour,
+               (dense_rank() over (order by period) - 1)::bigint as g_period,
+               (dense_rank() over (order by flight_date) - 1)::bigint as g_day,
+               coalesce(cause_weather, 0)::double as reported_weather,
+               coalesce(cause_nas, 0)::double as reported_nas
+        from ({sql_model})
+        order by flight_id
+        """
+    ).fetchnumpy()
+    y = np.asarray(arrays.pop("arr_delay"), dtype=np.float64)
+    n = int(y.shape[0])
+    stacked = np.empty((n, 1 + len(columns)))
+    stacked[:, 0] = y
+    raw_sums = np.empty(len(columns))
+    for j, column in enumerate(columns):
+        values = np.asarray(arrays.pop(column), dtype=np.float64)
+        stacked[:, j + 1] = values
+        raw_sums[j] = values.sum()
+        del values
+    arrival = float(np.maximum(y, 0).sum())
+    del y
+    groups = [np.asarray(arrays.pop(g), dtype=np.int64) for g in ("g_origin_hour", "g_dest_hour", "g_period")]
+    days = np.asarray(arrays.pop("g_day"), dtype=np.int64)
+    reported_weather = float(np.asarray(arrays.pop("reported_weather")).sum())
+    reported_nas = float(np.asarray(arrays.pop("reported_nas")).sum())
+    w = np.ones(n)
+    demean_exact(stacked, w, groups, copy=False)
+    del groups
+    keep = np.array([stacked[:, j + 1].std() > 0 for j in range(len(columns))])
     if not keep[-1]:
         raise ValueError("the inbound aircraft control has no variation; were the legs built?")
-    xt = xt[:, keep]
-    kept_names = [n for n, k in zip([*names, "carried"], keep, strict=True) if k]
-    bread_inverse = np.linalg.inv(xt.T @ xt)
-    beta = bread_inverse @ (xt.T @ yt)
-    resid = yt - xt @ beta
-    days = _codes(frame["flight_date"].to_numpy())
+    kept = [j + 1 for j in range(len(columns)) if keep[j]]
+    kept_names = [c for c, k in zip(columns, keep, strict=True) if k]
+    k = len(kept)
+    # Cross products a block of rows at a time, so the strided columns are never copied whole.
+    xtx = np.zeros((k, k))
+    xty = np.zeros(k)
+    chunk = 1_000_000
+    for lo in range(0, n, chunk):
+        block = stacked[lo : lo + chunk][:, kept]
+        xtx += block.T @ block
+        xty += block.T @ stacked[lo : lo + chunk, 0]
+    bread_inverse = np.linalg.inv(xtx)
+    beta = bread_inverse @ xty
+    resid = np.empty(n)
+    for lo in range(0, n, chunk):
+        resid[lo : lo + chunk] = stacked[lo : lo + chunk, 0] - stacked[lo : lo + chunk][:, kept] @ beta
+    xt = stacked[:, kept] if k < len(columns) else stacked[:, 1:]
     vcov = vcov_from_scores(bread_inverse, cluster_scores(xt, resid, w, days))
     se = np.sqrt(np.clip(np.diag(vcov), 0, None))
     # The weather terms only: the carried control's minutes are chapter 4's, not weather's.
-    weather_kept = np.array([n != "carried" for n in kept_names])
-    contribution = np.where(weather_kept, x[:, keep].sum(axis=0), 0.0)
-    arrival = float(np.maximum(y, 0).sum())
+    weather_kept = np.array([name != "carried" for name in kept_names])
+    contribution = np.where(weather_kept, raw_sums[keep], 0.0)
     attributable = float(contribution @ beta)
     share_se = float(np.sqrt(contribution @ vcov @ contribution)) / arrival
     share = attributable / arrival
-    reported_weather = float(frame["cause_weather"].fill_null(0).sum())
-    reported_nas = float(frame["cause_nas"].fill_null(0).sum())
     causes_total = con.execute(
         f"""
         select sum(cause_late_aircraft + cause_carrier + cause_nas + cause_weather + cause_security) filter (where cause_ok),
@@ -157,7 +194,7 @@ def estimate(
     return CausesResult(
         by_year=by_year,
         nas_by_airport=nas,
-        flights_modelled=int(y.shape[0]),
+        flights_modelled=n,
         coefficients=[
             (n, float(b), float(s)) for n, b, s in zip(kept_names, beta, se, strict=True) if n != "carried"
         ],

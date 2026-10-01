@@ -73,14 +73,21 @@ def demean(
 
 
 def demean_exact(
-    values: Array, weights: Array, groups: Sequence[npt.ArrayLike], *, max_levels: int = 6000
+    values: Array,
+    weights: Array,
+    groups: Sequence[npt.ArrayLike],
+    *,
+    max_levels: int = 6000,
+    copy: bool = True,
 ) -> Array:
     """The same residuals as ``demean``, solved directly: one weighted least squares on the stacked
     indicators. For groupings with a few thousand levels in all (airport by hour, month), where
     alternating projections crawl because the groupings are nearly nested, this is one dense solve of
     the levels' cross products. The minimum norm solution is used, so the redundant level in each
-    extra grouping costs nothing, and the fitted part is unique whichever solution is taken."""
-    out = np.array(values, dtype=np.float64, copy=True)
+    extra grouping costs nothing, and the fitted part is unique whichever solution is taken. With
+    ``copy=False`` a float64 array is swept in place, one column at a time, so a design of eight
+    million flights is never held twice."""
+    out = np.array(values, dtype=np.float64, copy=True) if copy else np.asarray(values, dtype=np.float64)
     if out.ndim == 1:
         out = out[:, None]
     w = np.asarray(weights, dtype=np.float64)
@@ -105,7 +112,9 @@ def demean_exact(
             rhs[offsets[a] : offsets[a + 1], j] = np.bincount(ca, weights=w * out[:, j], minlength=sa)
     solution = np.linalg.lstsq(cross, rhs, rcond=None)[0]
     for a, ca in enumerate(codes):
-        out -= solution[offsets[a] : offsets[a + 1]][ca]
+        block = solution[offsets[a] : offsets[a + 1]]
+        for j in range(out.shape[1]):
+            out[:, j] -= block[ca, j]
     return out
 
 
