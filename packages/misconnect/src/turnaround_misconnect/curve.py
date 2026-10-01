@@ -53,6 +53,9 @@ class HubCurve:
 
 
 def day_histograms_sql(source: str, hubs: Sequence[str], where: str) -> str:
+    """Delay histograms by hub, day and direction. Ordered: the frame is the same on every run, and
+    DuckDB 1.5 stalled streaming this union unordered at a few hundred thousand rows (a scale test
+    on the simulator found it; materialized or ordered it returns in under a second)."""
     listed = ", ".join(f"'{h}'" for h in hubs)
     return f"""
     select dest as hub, flight_date as day, 'in' as kind,
@@ -71,6 +74,7 @@ def day_histograms_sql(source: str, hubs: Sequence[str], where: str) -> str:
     from {source}
     where dest in ({listed}) and (cancelled or diverted) and ({where})
     group by all
+    order by hub, day, kind, delay
     """
 
 
