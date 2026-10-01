@@ -102,9 +102,10 @@ def text_of(path: Path) -> str:
         for column, dtype in zip(frame.columns, frame.dtypes, strict=True):
             if dtype == pl.Utf8:
                 parts.extend(str(v) for v in frame[column].drop_nulls().unique().to_list())
-            elif dtype.is_integer():
+            elif dtype in (pl.Int64, pl.UInt64):
+                # Only a 64 bit column can hold a 13 digit number; a narrower one cannot carry a card.
                 values = frame[column].drop_nulls()
-                big = values.filter(values.abs() >= 10**12)
+                big = values.filter(values.cast(pl.Float64).abs() >= 1e12)
                 parts.extend(str(v) for v in big.to_list())
         return "\n".join(parts)
     if path.suffix == ".json":
