@@ -1,5 +1,5 @@
 <!-- chapter: causes | {{ number }} | causes -->
-## {{ number }}. {{ v('plan.6.title') }}
+## {{ number }}. {{ v('chapter.6.heading') }}
 
 <!-- claim -->
 **{{ message('causes') }}.**
@@ -14,7 +14,7 @@ The national airspace system's share is highest at {{ v('ch6.nas_top3') }}, airp
 Measured from the weather itself (precipitation, snow, gusts, low cloud, thunder, fog and freezing precipitation at the origin when the flight leaves and at the destination when it lands, on {{ v('ch6.flights_modelled') }} flights between two of the FAA's Core 30 airports, with the inbound aircraft's lateness held constant), weather explains {{ v('ch6.weather_share') }} of arrival delay minutes (interval {{ v('ch6.weather_share.low') }} to {{ v('ch6.weather_share.high') }}). The weather field on the same flights records {{ v('ch6.reported_weather_share') }}, and the national airspace system field {{ v('ch6.reported_nas_share') }}.
 
 <!-- method -->
-*Method.* Plan `{{ v('plan.6.hash') }}`. {{ v('plan.6.estimator') }} {{ v('plan.6.split') }} {{ v('plan.6.interval') }} On the simulator, where storms add a known number of minutes and the reported weather field records only a planted share of them, the estimate came within {{ v('recovery.weather_error') }} of the true share on average and its interval covered the truth in {{ v('recovery.weather_coverage') }} of runs, while the reported field showed {{ v('recovery.weather_reported') }} against a true {{ v('recovery.weather_true') }}. {{ weather_attribution }}
+*Method.* Plan `{{ v('plan.6.hash') }}`, registered as *{{ v('plan.6.title') }}* before the estimate ran, claimed: {{ v('plan.6.claim') }} {{ v('plan.6.estimator') }} {{ v('plan.6.split') }} {{ v('plan.6.interval') }} On the simulator, where storms add a known number of minutes and the reported weather field records only a planted share of them, the estimate came within {{ v('recovery.weather_error') }} of the true share on average and its interval covered the truth in {{ v('recovery.weather_coverage') }} of runs, while the reported field showed {{ v('recovery.weather_reported') }} against a true {{ v('recovery.weather_true') }}. {{ weather_attribution }}
 
 <!-- pushback -->
 **What the ops director would push back on.** Airport weather is not en route weather: a line of storms between two cities delays a flight that leaves and lands under clear skies. That is right, and it makes this estimate a floor on weather's share rather than a ceiling; that weather lands in the national airspace system field and in the model's hour and month effects. The other objection is that the model adds weather terms together, when a thunderstorm at a hub at five in the afternoon does more than the sum of its parts. The hour effects absorb when storms usually hit, not how hard, so the worst afternoons are the ones this estimate understates most.

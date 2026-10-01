@@ -1,5 +1,5 @@
 <!-- chapter: line | {{ number }} | line -->
-## {{ number }}. {{ v('plan.3.title') }}
+## {{ number }}. {{ v('chapter.3.heading') }}
 
 <!-- claim -->
 **{{ message('line') }}.**
@@ -14,7 +14,7 @@ At the line, the pooled distribution holds {{ v('ch3.pooled.excess') }} more fli
 So the same statistic was computed at {{ v('ch3.placebos') }} placebo thresholds between ten and sixty five minutes, where nobody has a reason to manage, to give its natural spread. The line's statistic sits {{ v('ch3.pooled.z') }} placebo standard deviations from their mean. Carrier by carrier, corrected together by Benjamini-Hochberg at q = {{ v('ch3.q') }}, {{ v('ch3.flagged') }} of {{ v('ch3.carriers') }} carriers show bunching{% if raw('ch3.flagged') > 0 %}: {{ v('ch3.flagged_names') }}{% endif %}. {% if raw('ch3.flagged') == 0 %}That is a finding, not a failed test: in the reported arrivals, the line is not visibly gamed.{% else %}The rest show nothing beyond what the placebos show, which is a finding too.{% endif %}
 
 <!-- method -->
-*Method.* Plan `{{ v('plan.3.hash') }}`. {{ v('plan.3.estimator') }} {{ v('plan.3.test') }} {{ v('plan.3.split') }} {{ v('plan.3.family') }} On the simulator, carriers with bunching planted at {{ v('sim.bunching_share') }} of the flights just over the line were flagged at a rate of {{ v('recovery.bunching_power') }}, and clean carriers at {{ v('recovery.bunching_fpr') }}, across every condition.
+*Method.* Plan `{{ v('plan.3.hash') }}`, registered as *{{ v('plan.3.title') }}* before the estimate ran, claimed: {{ v('plan.3.claim') }} {{ v('plan.3.estimator') }} {{ v('plan.3.test') }} {{ v('plan.3.split') }} {{ v('plan.3.family') }} On the simulator, carriers with bunching planted at {{ v('sim.bunching_share') }} of the flights just over the line were flagged at a rate of {{ v('recovery.bunching_power') }}, and clean carriers at {{ v('recovery.bunching_fpr') }}, across every condition.
 
 <!-- pushback -->
 **What the ops director would push back on.** Nobody games the line on purpose; the gate agent closes the door when the aircraft is ready. The test does not need intent, it looks for the shape intent would leave, and its verdict is the same either way. What it cannot see is gaming that moves the schedule rather than the arrival, which is the previous chapter's subject, or an arrival time recorded a few minutes early across the board, which would shift the whole distribution rather than the stretch next to the line.

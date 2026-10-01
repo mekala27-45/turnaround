@@ -5,7 +5,14 @@ from __future__ import annotations
 
 from types import SimpleNamespace as NS
 
-from turnaround_chapters import ch04_inherited, ch05_ranking, ch07_meltdowns, ch08_decision
+from turnaround_chapters import (
+    ch01_definition,
+    ch02_padding,
+    ch04_inherited,
+    ch05_ranking,
+    ch07_meltdowns,
+    ch08_decision,
+)
 
 NAMES = {"WN": "Southwest Airlines", "DL": "Delta Air Lines", "AA": "American Airlines"}
 
@@ -63,3 +70,58 @@ def test_the_decision_message_gives_the_buffer_and_only_backs_the_first_flight_w
     assert unsure.startswith("Leave 45 minutes to connect at ATL; the first flight")
     never = ch08_decision.message(NS(hubs=[NS(hub="ATL", crossing=None)], first_advantage=NS(low=0.02)))  # type: ignore[arg-type]
     assert never.startswith("No buffer on the grid")
+
+
+def _iv(estimate: float, low: float, high: float) -> NS:
+    return NS(estimate=estimate, low=low, high=high)
+
+
+def test_the_definition_message_compares_the_schedule_and_the_flying_on_their_difference() -> None:
+    def r(
+        rate: tuple[float, float, float],
+        sched: tuple[float, float, float],
+        actual: tuple[float, float, float],
+        gap: tuple[float, float, float],
+    ) -> NS:
+        return NS(
+            on_time_change=_iv(*rate),
+            sched_block_change=_iv(*sched),
+            actual_block_change=_iv(*actual),
+            gap_change=_iv(*gap),
+        )
+
+    fell = (-0.037, -0.049, -0.026)
+    up = (4.6, 4.3, 5.0)
+    # Two changes whose intervals overlap and whose difference's interval holds zero grew as much.
+    assert ch01_definition.message(r(fell, up, (4.4, 4.0, 4.8), (0.2, -0.1, 0.5))) == (
+        "The on time rate fell, and flights took longer gate to gate and the schedule grew as much"
+    )
+    assert "grew faster still" in ch01_definition.message(r(fell, up, (4.4, 4.0, 4.8), (0.2, 0.1, 0.3)))
+    assert "than the schedule grew to allow" in ch01_definition.message(
+        r(fell, up, (4.9, 4.5, 5.3), (-0.3, -0.5, -0.1))
+    )
+    assert ch01_definition.message(
+        r((0.004, -0.01, 0.02), (0.1, -0.2, 0.4), (0.1, -0.3, 0.5), (0.0, -0.2, 0.2))
+    ) == (
+        "The on time rate did not move beyond its interval, and neither the schedule nor the flying moved beyond its interval"
+    )
+    assert ch01_definition.message(r((0.02, 0.01, 0.03), up, (0.1, -0.3, 0.5), (4.5, 4.1, 4.9))).startswith(
+        "The on time rate rose, and the schedule grew while the flying did not"
+    )
+
+
+def test_the_padding_message_never_says_padding_stood_still_when_its_interval_excludes_zero() -> None:
+    def r(pad: tuple[float, float, float], gap: tuple[float, float, float]) -> NS:
+        return NS(padding_change=_iv(*pad), gap_change=_iv(*gap))
+
+    grew = (3.98, 3.84, 4.13)
+    assert ch02_padding.message(r(grew, (-0.18, -0.5, 0.2))) == (
+        "The schedule grew as fast as the flying slowed, so it absorbed the delay"
+    )
+    assert ch02_padding.message(r(grew, (1.0, 0.6, 1.4))).endswith("absorbed the delay and more")
+    assert (
+        ch02_padding.message(r(grew, (-1.0, -1.4, -0.6)))
+        == "The schedule grew, but more slowly than the flying slowed"
+    )
+    assert ch02_padding.message(r((-2.0, -2.5, -1.5), (0.0, -0.3, 0.3))).startswith("Schedules lost padding")
+    assert ch02_padding.message(r((0.1, -0.2, 0.4), (0.0, -0.3, 0.3))).startswith("Padding did not move")

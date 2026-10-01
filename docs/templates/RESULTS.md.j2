@@ -18,14 +18,14 @@ Stretch items, not counted toward the checklist: the long history before the win
 
 | Chapter | Plan hash | The finding | Headline with interval |
 |---|---|---|---|
-| {{ v('plan.1.title') }} | `{{ v('plan.1.hash') }}` | {{ message('definition') }} | on time {{ v('ch1.on_time.change') }} ({{ v('ch1.on_time.change.low') }} to {{ v('ch1.on_time.change.high') }}), scheduled block {{ v('ch1.sched.change') }} ({{ v('ch1.sched.change.low') }} to {{ v('ch1.sched.change.high') }}), actual block {{ v('ch1.actual.change') }} ({{ v('ch1.actual.change.low') }} to {{ v('ch1.actual.change.high') }}) |
-| {{ v('plan.2.title') }} | `{{ v('plan.2.hash') }}` | {{ message('padding') }} | padding {{ v('ch2.padding.change') }} ({{ v('ch2.padding.change.low') }} to {{ v('ch2.padding.change.high') }}); {{ v('ch2.changepoints') }} steps |
-| {{ v('plan.3.title') }} | `{{ v('plan.3.hash') }}` | {{ message('line') }} | {{ v('ch3.flagged') }} of {{ v('ch3.carriers') }} carriers; pooled z {{ v('ch3.pooled.z') }}, p {{ v('ch3.pooled.p') }} |
-| {{ v('plan.4.title') }} | `{{ v('plan.4.hash') }}` | {{ message('inherited') }} | {{ v('ch4.share') }} ({{ v('ch4.share.low') }} to {{ v('ch4.share.high') }}); rho {{ v('ch4.rho') }} ({{ v('ch4.rho.low') }} to {{ v('ch4.rho.high') }}) |
-| {{ v('plan.5.title') }} | `{{ v('plan.5.hash') }}` | {{ message('ranking') }} | {{ v('ch5.moved') }} of {{ v('ch5.carriers') }} carriers change places |
-| {{ v('plan.6.title') }} | `{{ v('plan.6.hash') }}` | {{ message('causes') }} | {{ v('ch6.weather_share') }} ({{ v('ch6.weather_share.low') }} to {{ v('ch6.weather_share.high') }}) against {{ v('ch6.reported_weather_share') }} reported |
-| {{ v('plan.7.title') }} | `{{ v('plan.7.hash') }}` | {{ message('meltdowns') }} | recall {{ v('ch7.test.recall') }} on the reporting years; trait p {{ v('ch7.trait.p') }} |
-| {{ v('plan.8.title') }} | `{{ v('plan.8.hash') }}` | {{ message('decision') }} | first leg {{ v('ch8.first_advantage') }} ({{ v('ch8.first_advantage.low') }} to {{ v('ch8.first_advantage.high') }}) more often on time |
+| {{ v('chapter.1.heading') }} | `{{ v('plan.1.hash') }}` | {{ message('definition') }} | on time {{ v('ch1.on_time.change') }} ({{ v('ch1.on_time.change.low') }} to {{ v('ch1.on_time.change.high') }}), scheduled block {{ v('ch1.sched.change') }} ({{ v('ch1.sched.change.low') }} to {{ v('ch1.sched.change.high') }}), actual block {{ v('ch1.actual.change') }} ({{ v('ch1.actual.change.low') }} to {{ v('ch1.actual.change.high') }}) |
+| {{ v('chapter.2.heading') }} | `{{ v('plan.2.hash') }}` | {{ message('padding') }} | padding {{ v('ch2.padding.change') }} ({{ v('ch2.padding.change.low') }} to {{ v('ch2.padding.change.high') }}); {{ v('ch2.changepoints') }} steps |
+| {{ v('chapter.3.heading') }} | `{{ v('plan.3.hash') }}` | {{ message('line') }} | {{ v('ch3.flagged') }} of {{ v('ch3.carriers') }} carriers; pooled z {{ v('ch3.pooled.z') }}, p {{ v('ch3.pooled.p') }} |
+| {{ v('chapter.4.heading') }} | `{{ v('plan.4.hash') }}` | {{ message('inherited') }} | {{ v('ch4.share') }} ({{ v('ch4.share.low') }} to {{ v('ch4.share.high') }}); rho {{ v('ch4.rho') }} ({{ v('ch4.rho.low') }} to {{ v('ch4.rho.high') }}) |
+| {{ v('chapter.5.heading') }} | `{{ v('plan.5.hash') }}` | {{ message('ranking') }} | {{ v('ch5.moved') }} of {{ v('ch5.carriers') }} carriers change places |
+| {{ v('chapter.6.heading') }} | `{{ v('plan.6.hash') }}` | {{ message('causes') }} | {{ v('ch6.weather_share') }} ({{ v('ch6.weather_share.low') }} to {{ v('ch6.weather_share.high') }}) against {{ v('ch6.reported_weather_share') }} reported |
+| {{ v('chapter.7.heading') }} | `{{ v('plan.7.hash') }}` | {{ message('meltdowns') }} | recall {{ v('ch7.test.recall') }} on the reporting years; trait p {{ v('ch7.trait.p') }} |
+| {{ v('chapter.8.heading') }} | `{{ v('plan.8.hash') }}` | {{ message('decision') }} | first leg {{ v('ch8.first_advantage') }} ({{ v('ch8.first_advantage.low') }} to {{ v('ch8.first_advantage.high') }}) more often on time |
 
 ## The recovery study
 
@@ -55,33 +55,33 @@ The registry join matched {{ v('registry.tail_join_rate') }} of tail numbers and
 
 ## Chapter tables
 
-### {{ v('plan.1.title') }}
+### {{ v('chapter.1.heading') }}
 
 {{ table('ch1.by_year') }}
 
-### {{ v('plan.2.title') }}
+### {{ v('chapter.2.heading') }}
 
 {{ table('ch2.changepoints') }}
 
 {{ table('ch2.by_carrier') }}
 
-### {{ v('plan.3.title') }}
+### {{ v('chapter.3.heading') }}
 
 {{ table('ch3.by_carrier') }}
 
-### {{ v('plan.4.title') }}
+### {{ v('chapter.4.heading') }}
 
 {{ v('ch4.legs') }} legs, {{ v('ch4.linked') }} linked ({{ v('ch4.linked_share') }}), {{ v('ch4.first') }} first legs, {{ v('ch4.gap') }} gaps, {{ v('ch4.broken_chain') }} broken chains, {{ v('ch4.impossible') }} impossible sequences; {{ v('ch4.rotations') }} rotations on {{ v('ch4.tails') }} tails. Minimum turn {{ v('ch4.min_turn') }}, profiled on {{ v('ch4.fit_year') }}; halving buffer {{ v('ch4.halving_buffer') }}.
 
 {{ table('ch4.buffer_curve') }}
 
-### {{ v('plan.5.title') }}
+### {{ v('chapter.5.heading') }}
 
 {{ table('ch5.ranking') }}
 
 Raw top three: {{ v('ch5.raw.top3') }}; raw bottom three: {{ v('ch5.raw.bottom3') }}. Adjusted top three: {{ v('ch5.adjusted.top3') }}; adjusted bottom three: {{ v('ch5.adjusted.bottom3') }}.
 
-### {{ v('plan.6.title') }}
+### {{ v('chapter.6.heading') }}
 
 {{ table('ch6.reported_by_year') }}
 
@@ -89,7 +89,7 @@ Raw top three: {{ v('ch5.raw.top3') }}; raw bottom three: {{ v('ch5.raw.bottom3'
 
 {{ table('ch6.coefficients') }}
 
-### {{ v('plan.7.title') }}
+### {{ v('chapter.7.heading') }}
 
 {{ table('ch7.events') }}
 
@@ -97,7 +97,7 @@ Threshold {{ v('ch7.threshold') }}, chosen from {{ v('ch7.grid_low') }} to {{ v(
 
 {{ table('ch7.recovery_by_carrier') }}
 
-### {{ v('plan.8.title') }}
+### {{ v('chapter.8.heading') }}
 
 {{ table('ch8.by_position') }}
 

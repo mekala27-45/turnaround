@@ -14,14 +14,14 @@ The window starts in {{ v('data.first_month') }}, the year American Airlines and
 
 | Chapter | The finding | The number |
 |---|---|---|
-| {{ v('plan.1.title') }} | {{ message('definition') }} | on time rate {{ v('ch1.on_time.change') }} ({{ v('ch1.on_time.change.low') }} to {{ v('ch1.on_time.change.high') }}); actual gate to gate {{ v('ch1.actual.change') }} on the same routes |
-| {{ v('plan.2.title') }} | {{ message('padding') }} | padding {{ v('ch2.padding.change') }} ({{ v('ch2.padding.change.low') }} to {{ v('ch2.padding.change.high') }}) on matched cells, {{ v('ch2.first_year') }} to {{ v('ch2.last_year') }} |
-| {{ v('plan.3.title') }} | {{ message('line') }} | {{ v('ch3.flagged') }} of {{ v('ch3.carriers') }} carriers after Benjamini-Hochberg; pooled z {{ v('ch3.pooled.z') }} against {{ v('ch3.placebos') }} placebos |
-| {{ v('plan.4.title') }} | {{ message('inherited') }} | {{ v('ch4.share') }} inherited ({{ v('ch4.share.low') }} to {{ v('ch4.share.high') }}) against {{ v('ch4.reported_share') }} reported |
-| {{ v('plan.5.title') }} | {{ message('ranking') }} | {{ v('ch5.moved') }} of {{ v('ch5.carriers') }} carriers move; {{ v('ch5.up.carrier') }} {{ v('ch5.up.raw_rank') }} to {{ v('ch5.up.adjusted_rank') }}, {{ v('ch5.down.carrier') }} {{ v('ch5.down.raw_rank') }} to {{ v('ch5.down.adjusted_rank') }} |
-| {{ v('plan.6.title') }} | {{ message('causes') }} | weather explains {{ v('ch6.weather_share') }} ({{ v('ch6.weather_share.low') }} to {{ v('ch6.weather_share.high') }}); the weather field records {{ v('ch6.reported_weather_share') }} |
-| {{ v('plan.7.title') }} | {{ message('meltdowns') }} | {{ v('ch7.test.detected') }} of {{ v('ch7.test.events') }} reporting year disruptions flagged at threshold {{ v('ch7.threshold') }}, {{ v('ch7.interior') }} |
-| {{ v('plan.8.title') }} | {{ message('decision') }} | first leg on time {{ v('ch8.first_on_time') }} against {{ v('ch8.later_on_time') }}; {{ v('ch8.hub1.code') }} needs {{ v('ch8.hub1.buffer') }} to stay under {{ v('ch8.line') }} |
+| {{ v('chapter.1.heading') }} | {{ message('definition') }} | on time rate {{ v('ch1.on_time.change') }} ({{ v('ch1.on_time.change.low') }} to {{ v('ch1.on_time.change.high') }}); actual gate to gate {{ v('ch1.actual.change') }} on the same routes |
+| {{ v('chapter.2.heading') }} | {{ message('padding') }} | padding {{ v('ch2.padding.change') }} ({{ v('ch2.padding.change.low') }} to {{ v('ch2.padding.change.high') }}) on matched cells, {{ v('ch2.first_year') }} to {{ v('ch2.last_year') }} |
+| {{ v('chapter.3.heading') }} | {{ message('line') }} | {{ v('ch3.flagged') }} of {{ v('ch3.carriers') }} carriers after Benjamini-Hochberg; pooled z {{ v('ch3.pooled.z') }} against {{ v('ch3.placebos') }} placebos |
+| {{ v('chapter.4.heading') }} | {{ message('inherited') }} | {{ v('ch4.share') }} inherited ({{ v('ch4.share.low') }} to {{ v('ch4.share.high') }}) against {{ v('ch4.reported_share') }} reported |
+| {{ v('chapter.5.heading') }} | {{ message('ranking') }} | {{ v('ch5.moved') }} of {{ v('ch5.carriers') }} carriers move; {{ v('ch5.up.carrier') }} {{ v('ch5.up.raw_rank') }} to {{ v('ch5.up.adjusted_rank') }}, {{ v('ch5.down.carrier') }} {{ v('ch5.down.raw_rank') }} to {{ v('ch5.down.adjusted_rank') }} |
+| {{ v('chapter.6.heading') }} | {{ message('causes') }} | weather explains {{ v('ch6.weather_share') }} ({{ v('ch6.weather_share.low') }} to {{ v('ch6.weather_share.high') }}); the weather field records {{ v('ch6.reported_weather_share') }} |
+| {{ v('chapter.7.heading') }} | {{ message('meltdowns') }} | {{ v('ch7.test.detected') }} of {{ v('ch7.test.events') }} reporting year disruptions flagged at threshold {{ v('ch7.threshold') }}, {{ v('ch7.interior') }} |
+| {{ v('chapter.8.heading') }} | {{ message('decision') }} | first leg on time {{ v('ch8.first_on_time') }} against {{ v('ch8.later_on_time') }}; {{ v('ch8.hub1.code') }} needs {{ v('ch8.hub1.buffer') }} to stay under {{ v('ch8.line') }} |
 
 Every chapter is a claim that could have come out the other way: a plan hashed before the estimate touched a real flight, an estimator first proven on a simulated airline where the answer is known, a result with an interval, one chart with one message and the SQL behind it, a method note, and a paragraph on what an operations director would push back on.
 
@@ -41,14 +41,14 @@ Every chapter is a claim that could have come out the other way: a plan hashed b
 | Data quality | the quarantine rules (`packages/contracts`) and the quarantine report on the data page |
 | Metric definitions and governance | `metrics/metrics.yml`, `docs/definitions.md` |
 | Statistics: inference | `packages/stats` (block bootstrap by day, cluster robust errors) |
-| Statistics: multiple comparisons | Benjamini-Hochberg across carriers in {{ v('plan.3.title') }} |
-| Regression with fixed effects | {{ v('plan.4.title') }}, {{ v('plan.5.title') }}, {{ v('plan.6.title') }} (`packages/stats/fe.py`, weighted cells and the direct solve) |
-| Changepoint detection | {{ v('plan.2.title') }} (PELT) |
-| Density and bunching tests | {{ v('plan.3.title') }} |
-| Event studies, quasi experiments | {{ v('plan.7.title') }} (`packages/events/study.py`) |
+| Statistics: multiple comparisons | Benjamini-Hochberg across carriers in {{ v('chapter.3.heading') }} |
+| Regression with fixed effects | {{ v('chapter.4.heading') }}, {{ v('chapter.5.heading') }}, {{ v('chapter.6.heading') }} (`packages/stats/fe.py`, weighted cells and the direct solve) |
+| Changepoint detection | {{ v('chapter.2.heading') }} (PELT) |
+| Density and bunching tests | {{ v('chapter.3.heading') }} |
+| Event studies, quasi experiments | {{ v('chapter.7.heading') }} (`packages/events/study.py`) |
 | Simulation and estimator validation | `packages/sim`, the recovery study (`packages/evaluation`) |
 | Anomaly detection | `packages/events` |
-| Probability for decisions | {{ v('plan.8.title') }}, the misconnect curves (`packages/misconnect`) |
+| Probability for decisions | {{ v('chapter.8.heading') }}, the misconnect curves (`packages/misconnect`) |
 | Data storytelling | `story/`, the sticky chart layout, the method notes |
 | Dashboards and BI | `exports/tableau`, `exports/powerbi`, `/explore` |
 | Spreadsheet modeling | `exports/workbook.xlsx` with live formulas |

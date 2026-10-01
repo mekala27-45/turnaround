@@ -204,3 +204,16 @@ FAA's order to cut flights at forty airports during the federal shutdown (7 to 1
 and the January 2026 winter storm (24 to 26 January). The detector is graded on every event in
 the reporting years, so a later event it misses counts against it. Spirit's shutdown on 2 May
 2026 is not an event here: its flights end, which a cancellation rate cannot score.
+
+## 2026-10-01: correction, two messages compared estimates, and a heading was a registered claim
+
+On the full window the padding chapter's rule printed "Padding barely moved" over a padding change
+of four minutes whose interval runs well clear of zero, because the rule only knew how to say the
+schedule grew faster or slower than the flying, and on the real flights it grew by the same amount;
+chapter 1's text said the schedule grew faster than the flying on point estimates two tenths of a
+minute apart, with overlapping intervals. Both now decide from the interval of the difference,
+computed in the same day bootstrap as the two changes, and the tests pin every branch. Separately,
+the story's chapter headings were the plans' registered titles, and chapter 4's title, Most delay
+is inherited, is a claim the estimate did not bear out. The plans stay as registered; the headings
+now name each chapter's subject, and every method note quotes the registered title and claim, so a
+claim that failed is printed where it failed.

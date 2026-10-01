@@ -9,7 +9,7 @@ Why your flight is late: a data story in {{ v('story.chapters') }} chapters over
 {% for name in ['definition', 'padding', 'line', 'inherited', 'ranking', 'causes', 'meltdowns', 'decision'] %}
 {% set number = loop.index %}
 {% if has('chart.' ~ name) %}
-- **{{ v('plan.' ~ number ~ '.title') }}.** {{ message(name) }}.
+- **{{ v('chapter.' ~ number ~ '.heading') }}.** {{ message(name) }}.
 {% endif %}
 {% endfor %}
 

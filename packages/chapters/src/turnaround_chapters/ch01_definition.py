@@ -35,6 +35,7 @@ class DefinitionResult:
     on_time_change: Interval
     sched_block_change: Interval
     actual_block_change: Interval
+    gap_change: Interval
     panel_routes: int
     panel_share: float
     sql_on_time: str
@@ -156,6 +157,14 @@ def estimate(con: duckdb.DuckDBPyConnection, source: str, *, replicates: int, se
         on_time_change=change(days, "on_time", "flown", "ch1.on_time.change"),
         sched_block_change=change(panel, "sched_weighted", "weight", "ch1.sched.change"),
         actual_block_change=change(panel, "actual_weighted", "weight", "ch1.actual.change"),
+        # The schedule's change less the flying's, resampled together: whether the two moved by
+        # different amounts is a question about their difference, not about two separate intervals.
+        gap_change=change(
+            panel.with_columns((pl.col("sched_weighted") - pl.col("actual_weighted")).alias("gap_weighted")),
+            "gap_weighted",
+            "weight",
+            "ch1.gap.change",
+        ),
         panel_routes=int(counts[0] or 0),
         panel_share=float(counts[1] or 0.0),
         sql_on_time=sql_on_time.strip(),
@@ -164,17 +173,29 @@ def estimate(con: duckdb.DuckDBPyConnection, source: str, *, replicates: int, se
 
 
 def message(r: DefinitionResult) -> str:
-    """The chart's one message, chosen by rule from the signs and sizes of the three changes."""
-    pts = r.on_time_change.estimate * 100
-    sched = r.sched_block_change.estimate
-    actual = r.actual_block_change.estimate
-    rate = "rose" if pts >= 1 else "fell" if pts <= -1 else "barely moved"
-    if sched > 0.5 and actual > 0.5:
-        flying = "flights took longer gate to gate and the schedule grew to cover it"
-    elif sched > 0.5:
+    """The chart's one message, chosen by rule: the on time rate's direction from its interval, then
+    whether the flying and the schedule moved, and whether the schedule moved by more or less than
+    the flying, from the interval of their difference."""
+    rate = (
+        "rose"
+        if r.on_time_change.low > 0
+        else "fell"
+        if r.on_time_change.high < 0
+        else "did not move beyond its interval"
+    )
+    flying_up = r.actual_block_change.low > 0
+    schedule_up = r.sched_block_change.low > 0
+    if flying_up and schedule_up:
+        if r.gap_change.low > 0:
+            flying = "flights took longer gate to gate and the schedule grew faster still"
+        elif r.gap_change.high < 0:
+            flying = "flights took longer gate to gate than the schedule grew to allow"
+        else:
+            flying = "flights took longer gate to gate and the schedule grew as much"
+    elif schedule_up:
         flying = "the schedule grew while the flying did not"
-    elif actual > 0.5:
+    elif flying_up:
         flying = "flights took longer while the schedule did not"
     else:
-        flying = "neither the schedule nor the flying changed much"
+        flying = "neither the schedule nor the flying moved beyond its interval"
     return f"The on time rate {rate}, and {flying}"

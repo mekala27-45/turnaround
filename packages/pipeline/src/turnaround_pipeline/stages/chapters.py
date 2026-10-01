@@ -45,6 +45,18 @@ from turnaround_pipeline.common import connect, new_partial, save_partial
 
 log = get_logger(__name__)
 
+# What each chapter is about, as a heading. The registered title states the plan's claim, which the
+# estimate can contradict; the heading names the subject, and the method note quotes the claim.
+HEADINGS: dict[int, str] = {
+    1: "What on time measures",
+    2: "Padding in the schedule",
+    3: "The fifteen minute line",
+    4: "Inherited delay",
+    5: "The fair ranking",
+    6: "Causes, reported and estimated",
+    7: "Meltdowns and recovery",
+    8: "The reader's decision",
+}
 MELTDOWNS: tuple[tuple[str, str, str], ...] = (
     ("WN", "2022-12-21", "2022-12-30"),
     ("DL", "2024-07-19", "2024-07-25"),
@@ -150,6 +162,7 @@ def run(
         s = Scribe(manifest, source="static", population="the registered plan", origin="results/plans")
         s.put(f"plan.{plan.chapter}.hash", hashes[plan.chapter], "text")
         s.put(f"plan.{plan.chapter}.title", plan.title, "text")
+        s.put(f"chapter.{plan.chapter}.heading", HEADINGS[plan.chapter], "text")
         s.put(f"plan.{plan.chapter}.claim", plan.claim, "text")
         s.put(f"plan.{plan.chapter}.estimator", plan.estimator, "text")
         s.put(f"plan.{plan.chapter}.test", plan.test, "text")
@@ -231,6 +244,7 @@ def _chapter1(
     _interval(s, "ch1.on_time.change", r.on_time_change, "pts1")
     _interval(s, "ch1.sched.change", r.sched_block_change, "smin1")
     _interval(s, "ch1.actual.change", r.actual_block_change, "smin1")
+    _interval(s, "ch1.gap.change", r.gap_change, "smin1")
     s.put("ch1.panel_routes", r.panel_routes, "int")
     s.put("ch1.panel_share", r.panel_share, "pct1")
     s.put("ch1.flights_total", int(num(r.by_year["flown"].sum())), "int")
@@ -351,6 +365,7 @@ def _chapter2(
     _interval(s, "ch2.padding.change", r.padding_change, "smin2")
     _interval(s, "ch2.actual.change", r.actual_change, "smin2")
     _interval(s, "ch2.scheduled.change", r.scheduled_change, "smin2")
+    _interval(s, "ch2.gap.change", r.gap_change, "smin2")
     s.put("ch2.padding.first", r.padding_first, "min1")
     s.put("ch2.padding.last", r.padding_last, "min1")
     s.put("ch2.share_last", r.share_last, "pct1")

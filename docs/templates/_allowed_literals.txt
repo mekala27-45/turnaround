@@ -15,3 +15,12 @@ p99
 # HTTP status codes the serving notes name.
 HTTP 401
 HTTP 503
+# The chapter modules' file names, as the definitions name the code.
+ch01_definition
+ch02_padding
+ch03_line
+ch04_inherited
+ch05_ranking
+ch06_causes
+ch07_meltdowns
+ch08_decision

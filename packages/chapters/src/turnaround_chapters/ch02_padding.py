@@ -30,6 +30,7 @@ class PaddingResult:
     padding_change: Interval
     actual_change: Interval
     scheduled_change: Interval
+    gap_change: Interval
     padding_first: float
     padding_last: float
     share_last: float
@@ -94,6 +95,8 @@ def estimate(
 ) -> PaddingResult:
     sql_matched = matched_sql(source, first, last)
     days = con.execute(sql_matched).pl()
+    # Padding's change less the flying's, resampled together, for whether one outgrew the other.
+    days = days.with_columns((pl.col("padding") - pl.col("actual")).alias("gap"))
 
     last_mask = (days["year"] == last).to_numpy()
 
@@ -155,6 +158,7 @@ def estimate(
         padding_change=change("padding", "ch2.padding.change"),
         actual_change=change("actual", "ch2.actual.change"),
         scheduled_change=change("scheduled", "ch2.scheduled.change"),
+        gap_change=change("gap", "ch2.gap.change"),
         padding_first=level(~last_mask),
         padding_last=level(last_mask),
         share_last=float(totals[1] or 0.0),
@@ -170,12 +174,15 @@ def estimate(
 
 
 def message(r: PaddingResult) -> str:
-    pad = r.padding_change.estimate
-    act = r.actual_change.estimate
-    if pad > 0.5 and pad > act:
-        return "The schedule grew faster than the flying, so it absorbed the delay"
-    if pad < -0.5:
+    """The chart's one message, chosen by rule from the padding change's interval and the interval of
+    padding's change less the flying's on the same cells."""
+    pad, gap = r.padding_change, r.gap_change
+    if pad.low > 0:
+        if gap.low > 0:
+            return "The schedule grew faster than the flying slowed, so it absorbed the delay and more"
+        if gap.high < 0:
+            return "The schedule grew, but more slowly than the flying slowed"
+        return "The schedule grew as fast as the flying slowed, so it absorbed the delay"
+    if pad.high < 0:
         return "Schedules lost padding, so delay reached the arrival board"
-    if act > pad + 0.5:
-        return "The flying slowed faster than the schedule grew"
-    return "Padding barely moved on the same routes, hours and months"
+    return "Padding did not move beyond its interval on the same routes, hours and months"
