@@ -15,7 +15,7 @@ export default function DataPage() {
   const recovery = m.has("recovery.by_condition") ? m.table("recovery.by_condition") : null;
   const exports: [string, string, string][] = [
     ["The workbook with live formulas", "exports/workbook.xlsx", "Change the year on the summary sheet and every figure moves; LibreOffice recalculates it in the tests against the metric layer."],
-    ["The Tableau extracts and view specification", "exports/tableau/workbook_spec.md", "The route by month and carrier by month marts as CSV, with the views the companion workbook shows."],
+    ["The Tableau extracts and view specification", "exports/tableau/workbook_spec.md", "The route by month mart as one CSV per year and the carrier by month mart as one CSV, with the views the companion workbook shows."],
     ["The Power BI model specification", "exports/powerbi/model.md", "Tables, relationships and DAX measures generated from the metric layer."],
     ["The CSV bundle and its dictionary", "exports/csv/dictionary.csv", "Every chapter's table as CSV, with every column named."],
   ];

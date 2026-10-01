@@ -148,6 +148,9 @@ def test_extracts_carry_exactly_the_marts_rows(tmp_path: Path) -> None:
     counts = bi.tableau(marts, tmp_path / "tableau")
     assert counts == {"mart_route_month": rm.height, "mart_carrier_month": cm.height}
     assert pl.read_csv(tmp_path / "tableau" / "mart_carrier_month.csv").height == cm.height
+    years = sorted((tmp_path / "tableau" / "mart_route_month").glob("mart_route_month_*.csv"))
+    assert len(years) == rm["year"].n_unique()
+    assert sum(pl.read_csv(f).height for f in years) == rm.height
     assert (tmp_path / "tableau" / "workbook_spec.md").read_text().count("|") > 20
 
 

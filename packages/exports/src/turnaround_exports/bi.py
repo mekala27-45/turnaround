@@ -22,6 +22,10 @@ from turnaround_core.manifest import Manifest
 from turnaround_core.statements import STATEMENT
 
 TABLEAU_EXTRACTS = ("mart_route_month", "mart_carrier_month")
+# GitHub refuses a file over 100 MB and warns past 50; the route by month extract is about 110 MB as
+# one CSV over the whole window, so it is written one CSV per year in a folder of its own, which
+# Tableau reads as one table through a wildcard union and Power BI through its folder connector.
+BY_YEAR = ("mart_route_month",)
 TABLEAU_VIEWS: tuple[dict[str, str], ...] = (
     {
         "view": "On time rate by month",
@@ -77,13 +81,26 @@ def tableau(marts: Path, out: Path) -> dict[str, int]:
     for name in TABLEAU_EXTRACTS:
         frame = pl.read_parquet(marts / f"{name}.parquet")
         sort_keys = [c for c in ("route", "carrier", "year", "month") if c in frame.columns]
-        counts[name] = _csv(frame.sort(sort_keys), out / f"{name}.csv")
+        frame = frame.sort(sort_keys)
+        if name in BY_YEAR:
+            folder = out / name
+            if folder.exists():
+                for stale in folder.glob("*.csv"):
+                    stale.unlink()
+            (out / f"{name}.csv").unlink(missing_ok=True)
+            for year in sorted(frame["year"].unique().to_list()):
+                _csv(frame.filter(pl.col("year") == year), folder / f"{name}_{year}.csv")
+            counts[name] = frame.height
+        else:
+            counts[name] = _csv(frame, out / f"{name}.csv")
     lines = [
         "# The Tableau companion workbook",
         "",
         STATEMENT,
         "",
         "The extracts are CSV files of the shipped marts, with exactly the marts' rows (a test holds them to it).",
+        "The route by month extract is one CSV per year under `mart_route_month/`; open it with a wildcard union",
+        "of `mart_route_month_*.csv` so the years read as one table.",
         "Open them in Tableau Public, relate them on carrier, year and month, and build the views below.",
         "The companion reads the same numbers as the site; the site is the reference.",
         "",
@@ -130,7 +147,10 @@ def powerbi(metrics: Sequence[Any], out: Path, ranking_rows: int) -> int:
         "statement": STATEMENT,
         "tables": [
             {"name": "carrier_month", "source": "exports/tableau/mart_carrier_month.csv"},
-            {"name": "route_month", "source": "exports/tableau/mart_route_month.csv"},
+            {
+                "name": "route_month",
+                "source": "exports/tableau/mart_route_month/ (a folder, one CSV per year)",
+            },
             {"name": "inherited_month", "source": "exports/csv/mart_inherited_month.csv"},
             {"name": "ranking", "source": "exports/csv/ch5_ranking.csv", "rows": ranking_rows},
             {"name": "carrier", "source": "data/carriers.csv"},
