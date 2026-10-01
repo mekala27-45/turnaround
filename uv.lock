@@ -2374,12 +2374,14 @@ version = "0.1.0"
 source = { editable = "packages/exports" }
 dependencies = [
     { name = "openpyxl" },
+    { name = "polars" },
     { name = "turnaround-core" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "openpyxl", specifier = ">=3.1" },
+    { name = "polars", specifier = ">=1.10" },
     { name = "turnaround-core", editable = "packages/core" },
 ]
 

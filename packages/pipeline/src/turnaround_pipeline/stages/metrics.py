@@ -48,6 +48,18 @@ def run(p: Paths, *, stages: tuple[str, ...] = ("warehouse", "chapters")) -> Man
         sql = f"select {metric.flight} from {metric.flight_source}"
         row = con.execute(sql).fetchone()
         values[metric.name] = None if not row or row[0] is None else float(row[0])
+    # The workbook's summary opens on the latest full year; these are the values it must compute.
+    full = con.execute(
+        "select max(year) from (select year from mart_carrier_month group by year having count(distinct month) = 12)"
+    ).fetchone()
+    summary_year = int(full[0]) if full and full[0] is not None else None
+    year_values: dict[str, float | None] = {}
+    if summary_year is not None:
+        for metric in metrics:
+            row = con.execute(
+                f"select {metric.flight} from {metric.flight_source} where year = {summary_year}"
+            ).fetchone()
+            year_values[metric.name] = None if not row or row[0] is None else float(row[0])
     con.close()
     out = p.results / "metrics"
     out.mkdir(parents=True, exist_ok=True)
@@ -79,6 +91,10 @@ def run(p: Paths, *, stages: tuple[str, ...] = ("warehouse", "chapters")) -> Man
     s.put("metrics.disagreements", len(report.disagreements), "int")
     for metric in metrics:
         s.put(f"metric.{metric.name}", values[metric.name], metric.fmt)
+    s.put("metrics.summary_year", str(summary_year) if summary_year is not None else "none", "text")
+    for metric in metrics:
+        if metric.name in year_values:
+            s.put(f"metric.{metric.name}.summary_year", year_values[metric.name], metric.fmt)
     s.table(
         "metrics.definitions",
         ["Metric", "Over the flights", "Over the mart"],

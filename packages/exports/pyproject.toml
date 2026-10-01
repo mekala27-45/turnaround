@@ -7,6 +7,7 @@ license = "Apache-2.0"
 dependencies = [
   "turnaround-core",
   "openpyxl>=3.1",
+  "polars>=1.10",
 ]
 
 [build-system]
