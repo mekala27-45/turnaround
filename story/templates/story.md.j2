@@ -1,0 +1,26 @@
+# Why your flight is late
+
+*A data story in eight chapters, about a {{ reading_minutes }} minute read. Every number below is rendered from the analysis manifest; none was typed.*
+
+**{{ v('story.standfirst') }}**
+
+{{ statement() }}
+
+{% for chapter in story_chapters %}
+{% include 'chapters/_' ~ chapter ~ '.md.j2' %}
+
+{% endfor %}
+## Corrections
+
+{% for c in corrections() %}
+**{{ c.date }}, {{ c.title }}.** {{ c.body }}
+
+{% else %}
+No published number has been corrected since the first release. Corrections will appear here, dated, with what the earlier version said, what it says now, and why.
+
+{% endfor %}
+## How this was built
+
+{{ v('story.built_1') }} {{ v('story.built_2') }} {{ v('story.built_3') }}
+
+The method appendix, the definitions, the warehouse and the simulator's recovery study are on the [data page](data/), and every chart's SQL is one click from the chart.

@@ -18,7 +18,9 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from turnaround_core.manifest import Manifest
-from turnaround_core.statements import STATEMENT, statement_markdown
+from turnaround_core.statements import STATEMENT, WEATHER_ATTRIBUTION, statement_markdown
+
+from turnaround_render.story import READING_PLACEHOLDER, corrections, reading_minutes
 
 
 @dataclass(frozen=True)
@@ -61,8 +63,12 @@ def _environment(template_roots: Sequence[Path], manifest: Manifest) -> Environm
         has=lambda key: key in manifest.values or key in manifest.tables or key in manifest.figures,
         statement=statement_markdown,
         statement_text=STATEMENT,
+        weather_attribution=WEATHER_ATTRIBUTION,
+        message=lambda chart_id: manifest.figures[f"chart.{chart_id}"].title,
         manifest=manifest,
         missing=_missing,
+        reading_minutes=READING_PLACEHOLDER,
+        story_chapters=_story_chapters(manifest),
     )
     return env
 
@@ -98,6 +104,12 @@ def table_html(manifest: Manifest, key: str) -> str:
     return f"<table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>"
 
 
+def _story_chapters(manifest: Manifest) -> list[str]:
+    """The chapters the story includes, in order: the ones whose plan is registered in the manifest."""
+    names = [str(manifest.values[k].value) for k in sorted(manifest.values) if k.startswith("story.chapter.")]
+    return names
+
+
 def _missing(section: str) -> str:
     raise ClaimGateError(f"a required section was not written: {section}")
 
@@ -117,9 +129,15 @@ class Renderer:
         self.env = _environment(self.template_roots, manifest)
         # Stylesheets and other static text are inlined from files, so their numbers never sit in a template.
         self.env.globals["inline"] = lambda rel: (self.root / rel).read_text(encoding="utf-8").rstrip("\n")
+        self.env.globals["corrections"] = lambda: corrections(self.root / "DECISIONS.md")
 
     def render(self, target: Target) -> str:
-        return self.env.get_template(target.template).render()
+        text = self.env.get_template(target.template).render()
+        if READING_PLACEHOLDER in text:
+            # Two passes: the reading time is counted on the document without it, then written in.
+            minutes = reading_minutes(text.replace(READING_PLACEHOLDER, ""))
+            text = text.replace(READING_PLACEHOLDER, str(minutes))
+        return text
 
     def write_all(self) -> list[Path]:
         written: list[Path] = []
