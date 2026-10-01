@@ -194,3 +194,13 @@ row from everything, status conflict and missing actual (no departure delay, no 
 elapsed time or no air time on a flight that flew), each planted and found in
 `tests/contracts/test_quarantine.py`. Nothing is recomputed from the clock times: the files leave
 the field blank, and a value this build made up would be a value nobody reported.
+
+## 2026-10-01: the known events table runs to the end of the window
+
+The events table was written when the window was expected to end in the spring of 2025, and the
+files run to July 2026. Before chapter 7 ran on the flights, three events from the rest of the
+window were added with citations: the Alaska Airlines IT outage of 23 and 24 October 2025, the
+FAA's order to cut flights at forty airports during the federal shutdown (7 to 16 November 2025),
+and the January 2026 winter storm (24 to 26 January). The detector is graded on every event in
+the reporting years, so a later event it misses counts against it. Spirit's shutdown on 2 May
+2026 is not an event here: its flights end, which a cancellation rate cannot score.
