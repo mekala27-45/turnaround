@@ -96,3 +96,27 @@ def test_demean_reports_convergence_and_iterations() -> None:
     for code in (data["route"], data["month"]):
         means = np.bincount(code, weights=out[:, 0]) / np.bincount(code)
         np.testing.assert_allclose(means, 0.0, atol=1e-8)
+
+
+def test_direct_solve_matches_alternating_projections() -> None:
+    """demean_exact is the same projection as demean, for nearly nested groupings where the sweep crawls."""
+    from turnaround_stats.fe import demean_exact
+
+    rng = np.random.default_rng(12)
+    n = 5000
+    origin_hour = rng.integers(0, 60, n)
+    dest_hour = (origin_hour + rng.integers(0, 3, n)) % 60
+    period = rng.integers(0, 12, n)
+    values = np.column_stack([rng.normal(0, 1, n) + origin_hour * 0.1, rng.normal(0, 1, n), rng.random(n)])
+    w = rng.uniform(0.5, 2.0, n)
+    slow, _, converged = demean(values, w, [origin_hour, dest_hour, period], tol=1e-12, max_iter=20000)
+    fast = demean_exact(values, w, [origin_hour, dest_hour, period])
+    assert converged
+    assert np.allclose(slow, fast, atol=1e-7)
+
+
+def test_direct_solve_refuses_too_many_levels() -> None:
+    from turnaround_stats.fe import demean_exact
+
+    with pytest.raises(FixedEffectsError):
+        demean_exact(np.ones((10, 1)), np.ones(10), [np.arange(10)], max_levels=5)

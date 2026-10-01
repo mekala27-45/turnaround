@@ -17,16 +17,30 @@ from turnaround_sim.network import SimSpec, Simulation, simulate
 
 @pytest.fixture(scope="module")
 def quiet() -> Simulation:
+    """No noise beyond the ordinary, no confounding, nothing planted: the estimators' home ground."""
     return simulate(
         SimSpec(
             seed=11,
             confounding=0.0,
             propagation=1.0,
             noise=2.0,
-            congestion_zero_share=0.5,
-            congestion_scale=4.0,
             weather_storm_rate=0.0,
             swap_rate=0.0,
+            tail_share=0.0,
+            bunching_carriers=0,
+            meltdown_day=1000,
+        )
+    )
+
+
+@pytest.fixture(scope="module")
+def planted() -> Simulation:
+    """No confounding, with the planted bunching and the planted meltdown, at the default noise: the
+    bunching moves flights from just over the line to just under it, so the line needs flights near
+    it, which a network with almost no noise does not have."""
+    return simulate(
+        SimSpec(
+            seed=11, confounding=0.0, propagation=1.0, weather_storm_rate=0.0, swap_rate=0.0, tail_share=0.0
         )
     )
 
@@ -36,6 +50,14 @@ def con(quiet: Simulation) -> duckdb.DuckDBPyConnection:
     connection = duckdb.connect()
     connection.execute("set enable_progress_bar = false")
     connection.register("sim_flights", quiet.flights.to_arrow())
+    return connection
+
+
+@pytest.fixture(scope="module")
+def planted_con(planted: Simulation) -> duckdb.DuckDBPyConnection:
+    connection = duckdb.connect()
+    connection.execute("set enable_progress_bar = false")
+    connection.register("sim_flights", planted.flights.to_arrow())
     return connection
 
 
@@ -83,25 +105,25 @@ def test_adjusted_ranking_equals_the_true_ranking(quiet: Simulation, con: duckdb
 
 
 def test_density_test_fires_on_planted_carriers_only(
-    quiet: Simulation, con: duckdb.DuckDBPyConnection
+    planted: Simulation, planted_con: duckdb.DuckDBPyConnection
 ) -> None:
-    lines = line.by_carrier(con, "sim_flights", q=POLICY.bh_q)
+    lines = line.by_carrier(planted_con, "sim_flights", q=POLICY.bh_q)
     flagged = {r.carrier for r in lines if r.flagged}
-    assert flagged == set(quiet.truth.bunching_carriers)
+    assert flagged == set(planted.truth.bunching_carriers)
     assert all(r.test.placebos_evaluated == len(lines[0].test.placebo_statistics) for r in lines)
 
 
 def test_detector_finds_the_meltdown_on_its_first_day(
-    quiet: Simulation, con: duckdb.DuckDBPyConnection
+    planted: Simulation, planted_con: duckdb.DuckDBPyConnection
 ) -> None:
-    scored = detect.anomalies(detect.run_daily(con, "sim_flights", "carrier"))
-    days = [date.fromisoformat(d) for d in quiet.truth.meltdown_dates]
-    fired = detect.alerts(scored, 4.0).filter(pl.col("unit") == quiet.truth.meltdown_carrier)
+    scored = detect.anomalies(detect.run_daily(planted_con, "sim_flights", "carrier"))
+    days = [date.fromisoformat(d) for d in planted.truth.meltdown_dates]
+    fired = detect.alerts(scored, 4.0).filter(pl.col("unit") == planted.truth.meltdown_carrier)
     assert days[0] in set(fired["day"].to_list())
 
 
 def test_simulation_is_deterministic_for_a_seed() -> None:
-    a = simulate(SimSpec(seed=3, days=40))
-    b = simulate(SimSpec(seed=3, days=40))
+    a = simulate(SimSpec(seed=3, days=130, meltdown_day=100))
+    b = simulate(SimSpec(seed=3, days=130, meltdown_day=100))
     assert a.flights.equals(b.flights)
     assert a.truth.carrier_effect == b.truth.carrier_effect

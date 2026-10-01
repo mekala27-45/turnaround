@@ -26,6 +26,16 @@ the mean difference in arrival delay over its own flights, propagation included.
 Confounding is planted by letting better carriers serve harder spokes: at strength k the chance a
 carrier serves a spoke rises with k times the product of the carrier's quality and the spoke's
 difficulty, so the raw ranking is wrong by design and the adjusted one has to earn its keep.
+
+Weather is a storm day at an airport: it adds a known number of minutes to every departure from the
+airport and a stated fraction of that to every arrival into it, and it shows in the observed weather
+columns as thunder with heavy rain, gusts and low cloud (calm days get light rain now and then, which
+does nothing). The reported cause fields are filled the way a carrier fills them, with a planted
+convention: late aircraft first, up to the inherited minutes; then the storm's minutes, of which only
+a stated share is coded weather and the rest national airspace system; the remainder carrier. So the
+reported weather field understates weather by design, and the weather estimator has to find the
+minutes the field does not record. These draws come from their own random stream, so adding them
+changed none of the draws above.
 """
 
 from __future__ import annotations
@@ -64,6 +74,8 @@ class SimSpec(StrictModel):
     meltdown_days: int = 4
     weather_storm_rate: float = 0.03
     weather_storm_minutes: float = 30.0
+    weather_dest_fraction: float = 0.4
+    weather_reported_share: float = 0.3
     swap_rate: float = 0.002
     tail_share: float = 0.10
     tail_minutes: float = 40.0
@@ -89,6 +101,9 @@ class Truth:
     meltdown_carrier: str
     meltdown_dates: list[str]
     storm_days: int
+    weather_minutes: float
+    weather_share: float
+    reported_weather_share: float
 
 
 @dataclass(frozen=True)
@@ -165,13 +180,16 @@ def simulate(spec: SimSpec) -> Simulation:
     origin_airport = np.where(outbound, hub, HUBS + spoke)
     dest_airport = np.where(outbound, HUBS + spoke, hub)
     weather = np.where(storms[origin_airport, day], spec.weather_storm_minutes, 0.0)
-    weather_dest = np.where(storms[dest_airport, day], spec.weather_storm_minutes * 0.4, 0.0)
+    weather_dest = np.where(
+        storms[dest_airport, day], spec.weather_storm_minutes * spec.weather_dest_fraction, 0.0
+    )
     noise = rng.gamma(2.0, spec.noise / 2.0, n) - spec.noise + rng.normal(0, spec.noise * 0.5, n)
     # A heavy tail: a stated share of legs carry a long own delay (a mechanical, a crew, a missed slot).
     noise = noise + np.where(rng.random(n) < spec.tail_share, rng.exponential(spec.tail_minutes, n), 0.0)
     congestion = np.where(
         rng.random(n) < spec.congestion_zero_share, 0.0, rng.exponential(spec.congestion_scale, n)
     )
+    congestion_clear = congestion
     congestion = congestion + weather_dest
     melt = np.isin(day, list(meltdown_days)) & (carrier == spec.meltdown_carrier)
     melt_after = (
@@ -292,7 +310,16 @@ def simulate(spec: SimSpec) -> Simulation:
         ((pl.col("crs_dep_local") + pl.col("crs_elapsed")) % 1440).alias("crs_arr_local"),
     )
 
+    flights = flights.with_columns(_observed_weather(spec, storms, origin_airport, dest_airport, day, n))
+    causes, weather_direct = _reported_causes(
+        spec, arr_r, cancelled, inherited, weather, weather_dest, congestion_clear
+    )
+    flights = flights.with_columns(*causes, pl.Series("true_weather", weather_direct))
+
     flown = ~cancelled
+    observed_late = float(np.sum(np.maximum(arr_r, 0.0)[flown]))
+    weather_minutes = float(np.sum(weather_direct[flown]))
+    reported_weather = float(flights.filter(~pl.col("cancelled"))["cause_weather"].fill_null(0).sum())
     effects = {}
     for c, code in enumerate(carriers):
         mask = (carrier == c) & flown
@@ -332,8 +359,77 @@ def simulate(spec: SimSpec) -> Simulation:
         meltdown_carrier=carriers[spec.meltdown_carrier],
         meltdown_dates=[(start + timedelta(days=d)).isoformat() for d in sorted(meltdown_days)],
         storm_days=int(storms.sum()),
+        weather_minutes=weather_minutes,
+        weather_share=weather_minutes / observed_late if observed_late else 0.0,
+        reported_weather_share=reported_weather / observed_late if observed_late else 0.0,
     )
     return Simulation(spec=spec, flights=flights, truth=truth)
+
+
+def _observed_weather(
+    spec: SimSpec,
+    storms: npt.NDArray[np.bool_],
+    origin_airport: npt.NDArray[np.int64],
+    dest_airport: npt.NDArray[np.int64],
+    day: npt.NDArray[np.int64],
+    n: int,
+) -> list[pl.Series]:
+    """The weather columns the warehouse joins at both ends, drawn on their own stream."""
+    wx = np.random.default_rng(np.random.SeedSequence([spec.seed, 1407, 6]))
+    out: list[pl.Series] = []
+    for end, airport in (("origin", origin_airport), ("dest", dest_airport)):
+        storm = storms[airport, day]
+        drizzle = (wx.random(n) < 0.12) & ~storm
+        precip = np.where(storm, wx.gamma(2.0, 2.0, n), np.where(drizzle, wx.exponential(0.4, n), 0.0))
+        gusts = np.clip(np.where(storm, wx.normal(55.0, 10.0, n), wx.normal(25.0, 8.0, n)), 0.0, None)
+        low_cloud = np.where(storm, wx.uniform(60.0, 100.0, n), wx.uniform(0.0, 60.0, n))
+        out += [
+            pl.Series(f"{end}_precipitation", np.round(precip, 1)),
+            pl.Series(f"{end}_snowfall", np.zeros(n)),
+            pl.Series(f"{end}_wind_gusts", np.round(gusts, 1)),
+            pl.Series(f"{end}_low_cloud", np.round(low_cloud)),
+            pl.Series(f"{end}_thunder", storm),
+            pl.Series(f"{end}_fog", np.zeros(n, dtype=bool)),
+            pl.Series(f"{end}_freezing", np.zeros(n, dtype=bool)),
+        ]
+    out.append(pl.Series("weather_both_ends", np.ones(n, dtype=bool)))
+    return out
+
+
+def _reported_causes(
+    spec: SimSpec,
+    arr_r: npt.NDArray[np.float64],
+    cancelled: npt.NDArray[np.bool_],
+    inherited: npt.NDArray[np.float64],
+    weather: npt.NDArray[np.float64],
+    weather_dest: npt.NDArray[np.float64],
+    congestion_clear: npt.NDArray[np.float64],
+) -> tuple[list[pl.Series], npt.NDArray[np.float64]]:
+    """The five cause fields for flights fifteen or more minutes late, filled by the planted convention."""
+    late = (arr_r >= 15) & ~cancelled
+    total = np.where(late, arr_r, 0.0)
+    late_aircraft = np.minimum(np.round(np.maximum(inherited, 0.0)), total)
+    rest = total - late_aircraft
+    direct = weather + weather_dest
+    storm_minutes = np.minimum(direct, rest)
+    coded_weather = np.round(storm_minutes * spec.weather_reported_share)
+    rest = rest - storm_minutes
+    nas_clear = np.minimum(np.round(np.maximum(congestion_clear, 0.0)), rest)
+    nas = storm_minutes - coded_weather + nas_clear
+    carrier = rest - nas_clear
+
+    def field(name: str, values: npt.NDArray[np.float64]) -> pl.Series:
+        return pl.Series(name, np.where(late, values, np.nan)).cast(pl.Int32, strict=False)
+
+    causes = [
+        field("cause_carrier", carrier),
+        field("cause_weather", coded_weather),
+        field("cause_nas", nas),
+        field("cause_security", np.zeros_like(total)),
+        field("cause_late_aircraft", late_aircraft),
+        pl.Series("cause_ok", np.ones(arr_r.shape[0], dtype=bool)),
+    ]
+    return causes, np.where(cancelled, 0.0, direct)
 
 
 def _schedule(

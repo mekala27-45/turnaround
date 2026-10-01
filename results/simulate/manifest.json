@@ -1,0 +1,363 @@
+{
+ "as_of": "2026-09-30",
+ "figures": {},
+ "seed": 20261001,
+ "tables": {
+  "sim.truth_carriers": {
+   "columns": [
+    "Carrier",
+    "True effect on arrival delay",
+    "Padding step",
+    "Step date"
+   ],
+   "formats": [
+    "text",
+    "smin2",
+    "smin1",
+    "text"
+   ],
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "rows": [
+    [
+     "C0",
+     8.654336031,
+     -3.0,
+     "2023-04-08"
+    ],
+    [
+     "C1",
+     -6.444615613,
+     8.0,
+     "2023-06-22"
+    ],
+    [
+     "C2",
+     5.469104494,
+     -3.0,
+     "2023-07-18"
+    ],
+    [
+     "C3",
+     2.743481257,
+     -3.0,
+     "2023-05-02"
+    ],
+    [
+     "C4",
+     1.93649056,
+     4.0,
+     "2023-10-23"
+    ],
+    [
+     "C5",
+     -6.29331755,
+     8.0,
+     "2023-08-20"
+    ],
+    [
+     "C6",
+     -0.2437447747,
+     8.0,
+     "2023-10-29"
+    ],
+    [
+     "C7",
+     -5.821734405,
+     4.0,
+     "2023-09-08"
+    ]
+   ]
+  }
+ },
+ "values": {
+  "sim.airports": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 40
+  },
+  "sim.bunching_carriers": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": "C3, C6"
+  },
+  "sim.bunching_share": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 0.35
+  },
+  "sim.carriers": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 8
+  },
+  "sim.days": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 365
+  },
+  "sim.flights": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 210448
+  },
+  "sim.inherited_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 0.31699308
+  },
+  "sim.meltdown_carrier": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": "C5"
+  },
+  "sim.meltdown_days": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 4
+  },
+  "sim.meltdown_start": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": "2023-10-28"
+  },
+  "sim.min_turn": {
+   "fmt": "min0",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 35
+  },
+  "sim.propagation": {
+   "fmt": "float2",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 0.8
+  },
+  "sim.reported_weather_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 0.02186726974
+  },
+  "sim.routes": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 258
+  },
+  "sim.storm_airport_days": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 421
+  },
+  "sim.swap_rate": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 0.002
+  },
+  "sim.tails": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 136
+  },
+  "sim.weather_reported_fraction": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 0.3
+  },
+  "sim.weather_share": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 0.09964064889
+  },
+  "sim.weather_storm_minutes": {
+   "fmt": "min0",
+   "provenance": {
+    "as_of": "2026-09-30",
+    "condition": null,
+    "model": "none",
+    "origin": "stages/simulate.py",
+    "population": "the demonstration network, one simulated year",
+    "seed": 20261001,
+    "seeds": null,
+    "source": "simulated"
+   },
+   "value": 30.0
+  }
+ }
+}

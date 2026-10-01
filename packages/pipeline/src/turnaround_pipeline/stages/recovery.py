@@ -6,7 +6,7 @@ import polars as pl
 from turnaround_core.frames import num
 from turnaround_core.manifest import Manifest, Scribe
 from turnaround_core.paths import Paths
-from turnaround_evaluation.recovery import conditions, run_study
+from turnaround_evaluation.recovery import conditions, run_definition_study, run_study
 
 from turnaround_pipeline.common import new_partial, save_partial
 
@@ -32,6 +32,10 @@ def summarise(records: pl.DataFrame) -> pl.DataFrame:
             pl.col("rank_raw").mean(),
             pl.col("rank_adjusted").mean(),
             pl.col("ranking_mae").mean(),
+            (pl.col("weather_share_hat") - pl.col("weather_share_true")).mean().alias("weather_error"),
+            pl.col("weather_covered").mean().alias("weather_coverage"),
+            pl.col("weather_reported_share").mean().alias("weather_reported"),
+            pl.col("weather_share_true").mean().alias("weather_true"),
             (pl.col("bunching_false_positive").sum() / pl.col("bunching_clean").sum()).alias("bunching_fpr"),
             (pl.col("bunching_detected").sum() / pl.col("bunching_planted").sum()).alias("bunching_power"),
             pl.col("detector_recall").mean(),
@@ -84,12 +88,25 @@ def run(p: Paths, *, seeds: int = SEEDS, workers: int = 2, use_cache: bool = Tru
     s.put(
         "recovery.inherited_error",
         num((records["inherited_share_hat"] - records["inherited_share_true"]).abs().mean()),
-        "pts1",
+        "apts1",
     )
     for strength in ("none", "moderate", "strong"):
         sub = records.filter(pl.col("condition").str.starts_with(f"confounding {strength}"))
         s.put(f"recovery.rank_raw.{strength}", num(sub["rank_raw"].mean()), "float2")
         s.put(f"recovery.rank_adjusted.{strength}", num(sub["rank_adjusted"].mean()), "float2")
+    s.put(
+        "recovery.weather_error",
+        num((records["weather_share_hat"] - records["weather_share_true"]).abs().mean()),
+        "apts1",
+    )
+    s.put(
+        "recovery.weather_bias",
+        num((records["weather_share_hat"] - records["weather_share_true"]).mean()),
+        "pts1",
+    )
+    s.put("recovery.weather_coverage", num(records["weather_covered"].mean()), "pct0")
+    s.put("recovery.weather_true", num(records["weather_share_true"].mean()), "pct1")
+    s.put("recovery.weather_reported", num(records["weather_reported_share"].mean()), "pct1")
     s.put(
         "recovery.bunching_fpr",
         num(records["bunching_false_positive"].sum()) / num(records["bunching_clean"].sum()),
@@ -104,6 +121,16 @@ def run(p: Paths, *, seeds: int = SEEDS, workers: int = 2, use_cache: bool = Tru
     s.put("recovery.detector_precision", num(records["detector_precision"].mean()), "pct0")
     s.put("recovery.detector_lag", num(records["detector_lag_days"].mean()), "days1")
 
+    definition = pl.DataFrame(run_definition_study(seeds, workers=workers, cache_dir=cache))
+    definition.write_parquet(out / "definition.parquet", compression="zstd")
+    s.put(
+        "recovery.definition.sched_error",
+        num((definition["sched_change_hat"] - definition["sched_change_true"]).abs().mean()),
+        "min2",
+    )
+    s.put("recovery.definition.actual_coverage", num(definition["actual_covers_zero"].mean()), "pct0")
+    s.put("recovery.definition.seeds", definition.height, "int")
+
     worst = {
         "padding": summary.sort("padding_mae", descending=True)["condition"][0],
         "propagation": summary.sort("rho_coverage")["condition"][0],
@@ -111,6 +138,7 @@ def run(p: Paths, *, seeds: int = SEEDS, workers: int = 2, use_cache: bool = Tru
         "raw_ranking": summary.sort("rank_raw")["condition"][0],
         "bunching": summary.sort("bunching_power")["condition"][0],
         "detector": summary.sort("detector_precision")["condition"][0],
+        "weather": summary.sort("weather_coverage")["condition"][0],
     }
     for name, condition in worst.items():
         s.put(f"recovery.worst.{name}", condition, "text")
@@ -127,9 +155,25 @@ def run(p: Paths, *, seeds: int = SEEDS, workers: int = 2, use_cache: bool = Tru
             "Adjusted rank correlation",
             "Bunching false positives",
             "Bunching power",
+            "Weather share error",
+            "Weather coverage",
             "Detector precision",
         ],
-        ["text", "min2", "days1", "sfloat3", "pct0", "pts1", "float2", "float2", "pct1", "pct0", "pct0"],
+        [
+            "text",
+            "min2",
+            "days1",
+            "sfloat3",
+            "pct0",
+            "pts1",
+            "float2",
+            "float2",
+            "pct1",
+            "pct0",
+            "pts1",
+            "pct0",
+            "pct0",
+        ],
         [
             [
                 r["condition"],
@@ -142,6 +186,8 @@ def run(p: Paths, *, seeds: int = SEEDS, workers: int = 2, use_cache: bool = Tru
                 r["rank_adjusted"],
                 r["bunching_fpr"],
                 r["bunching_power"],
+                r["weather_error"],
+                r["weather_coverage"],
                 r["detector_precision"],
             ]
             for r in summary.iter_rows(named=True)

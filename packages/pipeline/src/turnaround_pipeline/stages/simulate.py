@@ -31,6 +31,9 @@ def run(p: Paths) -> Manifest:
         "meltdown_carrier": truth.meltdown_carrier,
         "meltdown_dates": truth.meltdown_dates,
         "storm_airport_days": truth.storm_days,
+        "weather_minutes": round(truth.weather_minutes, 1),
+        "weather_share": round(truth.weather_share, 6),
+        "reported_weather_share": round(truth.reported_weather_share, 6),
     }
     (p.sim / "truth.json").write_text(json.dumps(truth_payload, indent=1, sort_keys=True) + "\n")
     truth.padding_by_carrier_route_month.write_parquet(p.sim / "truth_padding.parquet", compression="zstd")
@@ -60,6 +63,10 @@ def run(p: Paths) -> Manifest:
     s.put("sim.bunching_share", spec.bunching_share, "pct0")
     s.put("sim.storm_airport_days", truth.storm_days, "int")
     s.put("sim.swap_rate", spec.swap_rate, "pct1")
+    s.put("sim.weather_storm_minutes", spec.weather_storm_minutes, "min0")
+    s.put("sim.weather_share", truth.weather_share, "pct1")
+    s.put("sim.reported_weather_share", truth.reported_weather_share, "pct1")
+    s.put("sim.weather_reported_fraction", spec.weather_reported_share, "pct0")
     s.table(
         "sim.truth_carriers",
         ["Carrier", "True effect on arrival delay", "Padding step", "Step date"],

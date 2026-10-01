@@ -53,5 +53,8 @@
   "C7": "2023-09-08"
  },
  "propagation": 0.8,
- "storm_airport_days": 421
+ "reported_weather_share": 0.021867,
+ "storm_airport_days": 421,
+ "weather_minutes": 273342.0,
+ "weather_share": 0.099641
 }

@@ -20,6 +20,8 @@
  "tail_minutes": 40.0,
  "tail_share": 0.1,
  "turn_scale": 12.0,
+ "weather_dest_fraction": 0.4,
+ "weather_reported_share": 0.3,
  "weather_storm_minutes": 30.0,
  "weather_storm_rate": 0.03
 }

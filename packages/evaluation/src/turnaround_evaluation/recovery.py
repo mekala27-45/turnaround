@@ -12,6 +12,8 @@ real flights, then compares with the truth:
 - propagation: the coefficient's bias and whether its interval covers the truth, the minimum turn
   found, and the inherited share against the true share;
 - the fair ranking: rank correlation with the true carrier effects, adjusted against raw;
+- the weather estimator: the share of arrival delay minutes the weather explains against the planted
+  share, whether its interval covers it, and the reported weather field's share beside it;
 - the density test: false positive rate on clean carriers, power on carriers with planted bunching;
 - the detector: whether it caught the planted meltdown, how late, and its precision.
 
@@ -32,7 +34,7 @@ from pathlib import Path
 from turnaround_core.hashing import design_hash
 from turnaround_sim.network import SimSpec
 
-CODE_VERSION = "recovery-v2"
+CODE_VERSION = "recovery-v3"
 SPLIT = date(2023, 7, 1)
 DETECTOR_THRESHOLD = 4.0
 CHANGE_TOLERANCE_DAYS = 14
@@ -79,7 +81,7 @@ def run_one(condition: Condition, seed: int) -> dict[str, object]:
     import duckdb
     import numpy as np
     import polars as pl
-    from turnaround_chapters import line, padding, ranking
+    from turnaround_chapters import ch06_causes, line, padding, ranking
     from turnaround_core.config import POLICY
     from turnaround_events import detect
     from turnaround_rotations import propagation, reconstruct
@@ -158,6 +160,25 @@ def run_one(condition: Condition, seed: int) -> dict[str, object]:
         propagation.inherited_minutes(test_links, est.rho, est.min_turn) / arrival_minutes
     )
 
+    # The weather estimator on the second half, with the inbound aircraft control at the chosen turn.
+    causes = ch06_causes.estimate(
+        con,
+        "sim_flights",
+        where=f"flight_date >= date '{SPLIT}'",
+        legs="legs",
+        min_turn=est.min_turn,
+        top_airports=10,
+    )
+    second_weather = float(second["true_weather"].sum())
+    record["weather_share_true"] = second_weather / arrival_minutes
+    record["weather_share_hat"] = causes.weather_share
+    record["weather_share_low"] = causes.weather_share_low
+    record["weather_share_high"] = causes.weather_share_high
+    record["weather_covered"] = int(
+        causes.weather_share_low <= record["weather_share_true"] <= causes.weather_share_high  # type: ignore[operator]
+    )
+    record["weather_reported_share"] = causes.reported_weather_share
+
     # The fair ranking.
     result = ranking.estimate(con, "sim_flights")
     record["rank_raw"] = ranking.spearman(result.order("raw"), truth.carrier_effect_ranking)
@@ -202,6 +223,84 @@ def run_one(condition: Condition, seed: int) -> dict[str, object]:
     record["detector_precision"] = min(true_alerts / fired.height, 1.0) if fired.height else None
     con.close()
     return record
+
+
+DEFINITION_CODE_VERSION = "definition-v1"
+DEFINITION_REPLICATES = 200
+
+
+def definition_spec(seed: int) -> SimSpec:
+    """Two simulated years under the moderate condition, so chapter 1 has a first and a last full year."""
+    return SimSpec(seed=seed, days=730, start="2022-01-01")
+
+
+def run_definition(seed: int) -> dict[str, object]:
+    """Chapter 1's panel on two simulated years: the scheduled block change against the true padding
+    change on the same panel, and whether the actual block change's interval covers zero (the flying
+    does not change between the years by construction)."""
+    import duckdb
+    import polars as pl
+    from turnaround_chapters import ch01_definition
+    from turnaround_core.frames import num
+    from turnaround_sim.network import simulate
+
+    sim = simulate(definition_spec(seed))
+    con = duckdb.connect()
+    con.execute("set enable_progress_bar = false")
+    con.execute("set threads = 1")
+    con.register("sim_flights", sim.flights.to_arrow())
+    r = ch01_definition.estimate(con, "sim_flights", replicates=DEFINITION_REPLICATES, seed=seed)
+    flown = sim.flights.filter(~pl.col("cancelled") & pl.col("year").is_in([r.first_year, r.last_year]))
+    per_route = flown.group_by(["route", "year"]).agg(
+        pl.len().alias("n"), pl.col("true_padding").mean().alias("pad")
+    )
+    both = per_route.group_by("route").agg(
+        pl.col("year").n_unique().alias("years"), pl.col("n").sum().alias("w")
+    )
+    panel = both.filter(pl.col("years") == 2).select("route", "w")
+    joined = per_route.join(panel, on="route").pivot(on="year", index=["route", "w"], values="pad")
+    first, last = str(r.first_year), str(r.last_year)
+    truth = num((joined["w"] * (joined[last] - joined[first])).sum()) / num(joined["w"].sum())
+    con.close()
+    return {
+        "seed": seed,
+        "sched_change_hat": r.sched_block_change.estimate,
+        "sched_change_true": truth,
+        "actual_change_hat": r.actual_block_change.estimate,
+        "actual_low": r.actual_block_change.low,
+        "actual_high": r.actual_block_change.high,
+        "actual_covers_zero": int(r.actual_block_change.low <= 0.0 <= r.actual_block_change.high),
+        "on_time_change": r.on_time_change.estimate,
+    }
+
+
+def _definition_worker(args: tuple[int, str | None]) -> dict[str, object]:
+    seed, cache_dir = args
+    key = design_hash({"code": DEFINITION_CODE_VERSION, "spec": definition_spec(seed).model_dump()})
+    if cache_dir is not None:
+        path = Path(cache_dir) / f"definition-{key}.json"
+        if path.exists():
+            cached: dict[str, object] = json.loads(path.read_text())
+            return cached
+    record = run_definition(seed)
+    if cache_dir is not None:
+        Path(cache_dir).mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(record, sort_keys=True))
+    return record
+
+
+def run_definition_study(seeds: int, *, workers: int, cache_dir: Path | None) -> list[dict[str, object]]:
+    jobs = [(s, str(cache_dir) if cache_dir else None) for s in range(1, seeds + 1)]
+    if workers <= 1:
+        _init_worker()
+        records = [_definition_worker(job) for job in jobs]
+    else:
+        import multiprocessing
+
+        context = multiprocessing.get_context("spawn")
+        with ProcessPoolExecutor(max_workers=workers, mp_context=context, initializer=_init_worker) as pool:
+            records = list(pool.map(_definition_worker, jobs, chunksize=1))
+    return sorted(records, key=lambda r: int(str(r["seed"])))
 
 
 def _key(condition: Condition, seed: int) -> str:

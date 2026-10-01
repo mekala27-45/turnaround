@@ -70,6 +70,43 @@ def demean(
     return out, max_iter, False
 
 
+def demean_exact(
+    values: Array, weights: Array, groups: Sequence[npt.ArrayLike], *, max_levels: int = 6000
+) -> Array:
+    """The same residuals as ``demean``, solved directly: one weighted least squares on the stacked
+    indicators. For groupings with a few thousand levels in all (airport by hour, month), where
+    alternating projections crawl because the groupings are nearly nested, this is one dense solve of
+    the levels' cross products. The minimum norm solution is used, so the redundant level in each
+    extra grouping costs nothing, and the fitted part is unique whichever solution is taken."""
+    out = np.array(values, dtype=np.float64, copy=True)
+    if out.ndim == 1:
+        out = out[:, None]
+    w = np.asarray(weights, dtype=np.float64)
+    codes = [_codes(g) for g in groups]
+    sizes = [int(c.max()) + 1 if c.size else 0 for c in codes]
+    offsets = np.concatenate([[0], np.cumsum(sizes)]).astype(np.int64)
+    levels = int(offsets[-1])
+    if levels > max_levels:
+        raise FixedEffectsError(f"{levels} levels is too many for the direct solve; use demean")
+    cross = np.zeros((levels, levels))
+    for a, (ca, sa) in enumerate(zip(codes, sizes, strict=True)):
+        for b, (cb, sb) in enumerate(zip(codes, sizes, strict=True)):
+            if b < a:
+                continue
+            block = np.bincount(ca * sb + cb, weights=w, minlength=sa * sb).reshape(sa, sb)
+            cross[offsets[a] : offsets[a + 1], offsets[b] : offsets[b + 1]] = block
+            if b != a:
+                cross[offsets[b] : offsets[b + 1], offsets[a] : offsets[a + 1]] = block.T
+    rhs = np.zeros((levels, out.shape[1]))
+    for a, (ca, sa) in enumerate(zip(codes, sizes, strict=True)):
+        for j in range(out.shape[1]):
+            rhs[offsets[a] : offsets[a + 1], j] = np.bincount(ca, weights=w * out[:, j], minlength=sa)
+    solution = np.linalg.lstsq(cross, rhs, rcond=None)[0]
+    for a, ca in enumerate(codes):
+        out -= solution[offsets[a] : offsets[a + 1]][ca]
+    return out
+
+
 @dataclass(frozen=True)
 class FitResult:
     names: list[str]
