@@ -1,0 +1,18 @@
+{
+ "hash": "74cda4464e3380a2",
+ "plan": {
+  "chapter": 1,
+  "claim": "The on time rate moved over the window by a different amount than the time flights actually spend gate to gate on the same routes, so the metric and the flying can tell different stories.",
+  "estimator": "Per year: the share of flown flights arriving less than fifteen minutes late, and the mean actual and scheduled gate to gate time on a fixed panel of routes flown in every year of the window.",
+  "family": "None; two series, one comparison.",
+  "interval": "Block bootstrap over days, 400 replicates, 95% percentile intervals.",
+  "policy": {
+   "on_time_minutes": 15
+  },
+  "simulator": "A two year simulated network whose padding steps on known dates while the flying does not change: the panel's scheduled block change against the true padding change, and whether the actual block change's interval covers zero, over twenty seeds.",
+  "slug": "definition",
+  "split": "Descriptive over every year; nothing is fit, so there is nothing to choose on the fitting years.",
+  "test": "The change from the first full year to the latest full year in each series, with day bootstrap intervals.",
+  "title": "On time is a decision"
+ }
+}

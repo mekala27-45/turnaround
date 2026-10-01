@@ -1,0 +1,19 @@
+{
+ "hash": "a869209fb6ee8f35",
+ "plan": {
+  "chapter": 6,
+  "claim": "The share of delay minutes that weather explains, estimated from the weather at both ends, differs from the share the reported weather field assigns.",
+  "estimator": "Arrival delay on hourly weather at the origin at departure and the destination at arrival (precipitation, snowfall, gusts over 40 km/h, low cloud, thunder, fog, freezing precipitation), with origin by hour, destination by hour and month fixed effects and the inbound aircraft's carried minutes as a control, on flights between two Core 30 airports; the attributable share is the fitted delay above calm weather.",
+  "family": "Airports compared on their national airspace system share are described, not tested.",
+  "interval": "Cluster robust by day on the weather coefficients, carried to the share.",
+  "policy": {
+   "airports": "FAA Core 30",
+   "calm_gust_kmh": 40.0
+  },
+  "simulator": "Weather share error and interval coverage against planted storms whose minutes the reported field under records by design (recovery study).",
+  "slug": "causes",
+  "split": "choose on 2015 to 2022, report on 2023 to the latest month; the specification is fixed here and the shares are reported on 2023 onward.",
+  "test": "Estimated weather share against the reported weather field's share on the same flights, with an interval.",
+  "title": "Causes, reported and estimated"
+ }
+}

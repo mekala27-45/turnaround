@@ -1,0 +1,20 @@
+{
+ "hash": "13d98f2ebd738a81",
+ "plan": {
+  "chapter": 2,
+  "claim": "Scheduled block time grew faster than unimpeded flying time on the same routes, hours and seasons, and the growth arrived in steps on dates that can be named for each carrier.",
+  "estimator": "Unimpeded block time is the 10th percentile of actual gate to gate time by route, three hour departure block and season over the fitting years; padding is scheduled block minus unimpeded; each carrier's monthly series is adjusted for route mix; PELT with a BIC penalty of two parameters finds the steps, and steps under one minute are not reported.",
+  "family": "One changepoint search per carrier; dates are reported, not tested.",
+  "interval": "Block bootstrap over days, 400 replicates.",
+  "policy": {
+   "min_segment_months": 3,
+   "min_step_minutes": 1.0,
+   "unimpeded_percentile": 0.1
+  },
+  "simulator": "Padding error and changepoint date error by condition (recovery study).",
+  "slug": "padding",
+  "split": "choose on 2015 to 2022, report on 2023 to the latest month; the unimpeded reference is fixed on the fitting years and applied to every year.",
+  "test": "Padding change from the first to the latest full year on cells present in both, with intervals.",
+  "title": "The schedule absorbed the delay"
+ }
+}

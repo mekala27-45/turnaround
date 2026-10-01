@@ -1,0 +1,23 @@
+{
+ "hash": "c0e2ac3316344144",
+ "plan": {
+  "chapter": 7,
+  "claim": "Carrier meltdowns are visible as anomalies days before they end, and recovery speed differs by carrier.",
+  "estimator": "Daily cancellation rate and mean arrival delay per carrier and at the thirty busiest airports against the unit's previous 28 days (median and median absolute deviation, with floors); an alert episode opens above the threshold and stays open while the score stays above half of it; the threshold is chosen by cost over a grid; event studies of the two carrier meltdowns against other carriers at the same airports.",
+  "family": "One permutation test across carriers with at least five episodes; events are graded one by one.",
+  "interval": "Recovery time is a count of days; the excess is a sum, reported without a model interval.",
+  "policy": {
+   "airports": 30,
+   "cost_false_alarm": 1.0,
+   "cost_miss": 50.0,
+   "grid": "3 to 30 in steps of 1",
+   "permutations": 2000,
+   "window_days": 28
+  },
+  "simulator": "Detector precision and recall on the planted meltdown (recovery study).",
+  "slug": "meltdowns",
+  "split": "choose on 2015 to 2022, report on 2023 to the latest month; the alert threshold is chosen on the fitting years and graded on 2023 onward.",
+  "test": "Recall on the known events of the reporting years and the first alert day against onset; false alarms per thousand unit days; whether carriers differ in alert episode length (Kruskal-Wallis H, permutation p).",
+  "title": "A meltdown is a recovery"
+ }
+}

@@ -1,0 +1,23 @@
+{
+ "hash": "859c5a40bab6906c",
+ "plan": {
+  "chapter": 5,
+  "claim": "Holding constant the routes, months, departure hours and aircraft types each carrier flies changes the carrier ranking on arrival delay.",
+  "estimator": "Arrival delay on carrier with route, month, departure hour and aircraft type fixed effects, weighted least squares on cells; effects relative to the flight weighted average carrier.",
+  "family": "Pairwise rank changes are described, not tested.",
+  "interval": "Cluster robust by day, scores summed over flights.",
+  "policy": {
+   "fixed_effects": [
+    "route",
+    "month",
+    "dep_hour",
+    "type_code"
+   ]
+  },
+  "simulator": "Rank correlation with the true ranking, adjusted against raw (recovery study).",
+  "slug": "ranking",
+  "split": "choose on 2015 to 2022, report on 2023 to the latest month; the specification was settled on the fitting years and the ranking is fit on 2023 onward.",
+  "test": "Rank changes between the raw and the adjusted ranking; effects with intervals.",
+  "title": "The fair ranking"
+ }
+}

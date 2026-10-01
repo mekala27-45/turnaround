@@ -1,0 +1,19 @@
+{
+ "hash": "3e13c6a0a08d3a8f",
+ "plan": {
+  "chapter": 8,
+  "claim": "The first departure of the aircraft's day is the most punctual, and the connection buffer needed to keep the misconnect probability under the stated line differs across the largest hubs.",
+  "estimator": "On time rate and mean delay by scheduled hour, day of week and month; misconnect probability by buffer from the joint same day distribution of inbound arrival and outbound departure delays at each hub.",
+  "family": "Hubs are described, not tested.",
+  "interval": "Block bootstrap over days, 400 replicates.",
+  "policy": {
+   "min_connection_minutes": 25,
+   "misconnect_line": 0.1
+  },
+  "simulator": "The day by day curve equals a brute force count of every same day pair of flights at a simulated hub (test); the calculator's estimates are scored later against the outcome month.",
+  "slug": "decision",
+  "split": "choose on 2015 to 2022, report on 2023 to the latest month; the curves are computed on 2023 onward.",
+  "test": "The buffer at which the probability crosses 10%, with the interior test.",
+  "title": "The reader's decision"
+ }
+}

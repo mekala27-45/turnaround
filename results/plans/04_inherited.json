@@ -1,0 +1,30 @@
+{
+ "hash": "ee4a7aff3c3655b6",
+ "plan": {
+  "chapter": 4,
+  "claim": "A large share of arrival delay minutes was inherited from the aircraft's previous leg rather than born on the leg, larger than the reported late aircraft field says.",
+  "estimator": "Rotations from tail numbers with the integrity rules; departure delay on the previous arrival's excess over the scheduled turn less a minimum turn, with carrier by date, origin by date and departure hour fixed effects; the buffer curve by scheduled turnaround bin.",
+  "family": "None; one coefficient, one share.",
+  "interval": "Cluster robust by tail number and day for the coefficient.",
+  "policy": {
+   "rotation_gap_hours": 6.0,
+   "turn_bins": [
+    0,
+    30,
+    40,
+    50,
+    60,
+    75,
+    90,
+    120,
+    180,
+    300
+   ]
+  },
+  "simulator": "Coefficient bias and coverage, inherited share error (recovery study).",
+  "slug": "inherited",
+  "split": "choose on 2015 to 2022, report on 2023 to the latest month; the minimum turn is chosen by profile on the fitting years and held fixed.",
+  "test": "The coefficient and the inherited share with intervals; the halving buffer.",
+  "title": "Most delay is inherited"
+ }
+}

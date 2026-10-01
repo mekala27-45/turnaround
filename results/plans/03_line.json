@@ -1,0 +1,21 @@
+{
+ "hash": "0249fbc74965a7ac",
+ "plan": {
+  "chapter": 3,
+  "claim": "Arrival delays bunch just under fifteen minutes for some carriers, more than at placebo thresholds.",
+  "estimator": "Per carrier, counts by whole minute of arrival delay; a cubic fit to the log counts within twenty five minutes of the threshold, excluding five minutes either side; excess mass below plus missing mass above.",
+  "family": "Every reporting carrier in the test years, Benjamini-Hochberg at q = 0.05.",
+  "interval": "Not an interval: a p value against placebos, and the excess mass as a share.",
+  "policy": {
+   "bh_q": 0.05,
+   "span": 25,
+   "threshold": 15,
+   "window": 5
+  },
+  "simulator": "False positive rate on clean carriers and power on planted carriers (recovery study).",
+  "slug": "line",
+  "split": "choose on 2015 to 2022, report on 2023 to the latest month; the threshold, window, span and placebos are fixed here, and the test is reported on 2023 onward.",
+  "test": "The statistic at fifteen minutes standardized by its distribution at placebo thresholds from ten to sixty five minutes; one sided normal p value.",
+  "title": "The fifteen minute line"
+ }
+}
