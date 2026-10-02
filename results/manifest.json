@@ -5609,7 +5609,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": 58
+   "value": 59
   },
   "build.decisions": {
    "fmt": "int",
@@ -9207,7 +9207,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "coverage 87.0 percent; mypy clean; ruff clean; palette green; 58 commits; rederive reproduced in a worktree; tag not pushed; Apache 2.0 with the four data sources' terms."
+   "value": "coverage 87.0 percent; mypy clean; ruff clean; palette green; 59 commits; rederive reproduced in a worktree; tag pushed; Apache 2.0 with the four data sources' terms."
   },
   "checklist.18.status": {
    "fmt": "text",
@@ -9221,7 +9221,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "not done"
+   "value": "done"
   },
   "checklist.18.text": {
    "fmt": "text",
@@ -9585,7 +9585,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": 17
+   "value": 18
   },
   "checklist.missing": {
    "fmt": "text",
@@ -9599,7 +9599,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "18"
+   "value": "none"
   },
   "checklist.total": {
    "fmt": "int",

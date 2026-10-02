@@ -16,7 +16,7 @@ Why your flight is late: a data story in {{ v('story.chapters') }} chapters over
 ## Where it runs
 
 - The story and its pages: {{ v('live.site_url') }}
-- The calculator's API: {{ v('deploy.base_url') }}{% if raw('deploy.status') != raw('deploy.base_url') %} ({{ v('deploy.status') }}){% endif %}
+- The calculator's API: {{ v('deploy.base_url') }}{{ (' (' ~ v('deploy.status') ~ ')') if raw('deploy.status') != raw('deploy.base_url') else '' }}
 - The briefing: `report/briefing.md` and `report/briefing.html`
 
 ## In this release

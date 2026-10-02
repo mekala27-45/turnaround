@@ -18,7 +18,8 @@ Why your flight is late: a data story in 8 chapters over 74,201,388 scheduled US
 ## Where it runs
 
 - The story and its pages: https://mekala27-45.github.io/turnaround/
-- The calculator's API: https://turnaround-flights-api.fly.dev (deployed and verified)- The briefing: `report/briefing.md` and `report/briefing.html`
+- The calculator's API: https://turnaround-flights-api.fly.dev (deployed and verified)
+- The briefing: `report/briefing.md` and `report/briefing.html`
 
 ## In this release
 
@@ -29,4 +30,4 @@ Why your flight is late: a data story in 8 chapters over 74,201,388 scheduled US
 
 ## The definition of done
 
-17 of 18 lines done; not done: 18. The README prints every line with its evidence. The last line asks for this tag to be pushed after the commits, so it cannot be done at the commit the tag points to; the commit after the tag records the push.
+18 of 18 lines done. The README prints every line with its evidence.

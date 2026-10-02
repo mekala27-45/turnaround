@@ -23,9 +23,9 @@ Every figure on this page is rendered from `results/manifest.json` (as of 2026-1
 15. **done.** Latency published; the live check in a real browser recorded in results/live_check.json. *Evidence:* POST /v1/checks p50 61 ms, p99 77 ms; results/live_check.json passed.
 16. **done.** RESULTS.md with every figure re-derived by the gate and a specific limitations section. *Evidence:* claim gate over every document; rederive drift 0; limitations section in RESULTS.md.
 17. **done.** README with the matrix and this checklist; DECISIONS.md with at least ten dated entries, two reversals and the corrections; three executed notebooks with a dead end each; the pushback paragraph on every chapter and page. *Evidence:* DECISIONS.md 22 dated entries, 4 reversals, 4 corrections; 3 executed notebooks, 3 with a dead end.
-18. **not done.** Coverage at or above 80 percent, mypy strict clean, ruff clean, zero em dashes, zero banned vocabulary, palette validator green including the dark card run, forty to sixty commits, the rederive run in a worktree before the tag, v0.1.0 pushed after the commits, Apache 2.0 for code with the four data sources' terms declared, repo described, topics set. *Evidence:* coverage 87.0 percent; mypy clean; ruff clean; palette green; 58 commits; rederive reproduced in a worktree; tag not pushed; Apache 2.0 with the four data sources' terms.
+18. **done.** Coverage at or above 80 percent, mypy strict clean, ruff clean, zero em dashes, zero banned vocabulary, palette validator green including the dark card run, forty to sixty commits, the rederive run in a worktree before the tag, v0.1.0 pushed after the commits, Apache 2.0 for code with the four data sources' terms declared, repo described, topics set. *Evidence:* coverage 87.0 percent; mypy clean; ruff clean; palette green; 59 commits; rederive reproduced in a worktree; tag pushed; Apache 2.0 with the four data sources' terms.
 
-17 of 18 done; not done: 18.
+18 of 18 done; not done: none.
 
 Stretch items, not counted toward the checklist: the long history before the window, fares from the ticket sample, load factors from the segment data, an aircraft chapter, the Newark page and containers built in CI are not done in this release.
 

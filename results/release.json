@@ -1,0 +1,18 @@
+{
+ "tag": "v0.1.0",
+ "commit": "50c1ebee55b4b165524a3cca32b61e29d97af3c8",
+ "tag_pushed": true,
+ "pushed_after_commits": true,
+ "pushed_at": "2026-10-02T01:14Z",
+ "pushed_from": "Git GUI on the Windows machine, in a push of its own after main was pushed",
+ "release_workflow": "release #1 passed: the gates, mypy, ruff and the tests on the tagged commit, then the release",
+ "release_url": "https://github.com/mekala27-45/turnaround/releases/tag/v0.1.0",
+ "released_at": "2026-10-02T01:16:26Z",
+ "ci_on_tagged_commit": "ci #3 and pages #3 passed on 50c1ebe",
+ "reset_before_tag": {
+  "at": "2026-10-02T01:13:07Z",
+  "checks_deleted": 49,
+  "scores_deleted": 1,
+  "checks_remaining": 21
+ }
+}
