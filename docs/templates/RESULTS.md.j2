@@ -115,7 +115,7 @@ Threshold {{ v('ch7.threshold') }}, chosen from {{ v('ch7.grid_low') }} to {{ v(
 
 ## Latency
 
-{% if raw('latency.live.status') == 'measured' %}Against {{ v('latency.live.base_url') }} from a separate client, {{ v('latency.live.requests') }} sequential checks after one warming request ({{ v('latency.live.first_request_ms') }}, the machine waking): POST /v1/checks p50 {{ v('latency.live.check.p50_ms') }} and p99 {{ v('latency.live.check.p99_ms') }}; GET /v1/checks/{id} p50 {{ v('latency.live.read.p50_ms') }} and p99 {{ v('latency.live.read.p99_ms') }}; a burst of {{ v('latency.live.concurrency') }} concurrent checks finished within {{ v('latency.live.burst_max_ms') }}.{% else %}The live load test has not run yet.{% endif %}
+{% if raw('latency.live.status') == 'measured' %}Against {{ v('latency.live.base_url') }} from a separate client, {{ v('latency.live.requests') }} sequential checks after one warming request, which took {{ v('latency.live.first_request_ms') }}: POST /v1/checks p50 {{ v('latency.live.check.p50_ms') }} and p99 {{ v('latency.live.check.p99_ms') }}; GET /v1/checks/{id} p50 {{ v('latency.live.read.p50_ms') }} and p99 {{ v('latency.live.read.p99_ms') }}; a burst of {{ v('latency.live.concurrency') }} concurrent checks finished within {{ v('latency.live.burst_max_ms') }}.{% else %}The live load test has not run yet.{% endif %}
 
 ## Limitations
 

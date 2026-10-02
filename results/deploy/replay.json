@@ -1,0 +1,15 @@
+{
+    "base_url":  "https://turnaround-flights-api.fly.dev",
+    "replayed_at":  "2026-10-01T23:20:31.2973123Z",
+    "outcome_month":  "2026-07",
+    "checks_made":  20,
+    "hubs":  20,
+    "scored":  19,
+    "unscored_share":  0.09090909090909094,
+    "scorecard":  {
+                      "interval_coverage":  0.6,
+                      "scored":  20,
+                      "mean_absolute_error":  0.047229582032032834,
+                      "checks":  22
+                  }
+}

@@ -1,0 +1,29 @@
+{
+ "commit": "1eee1e5f2aca6d67ab706b51170a0db418bdc38a",
+ "drift": 0,
+ "drift_lines": [],
+ "figures_compared": 8,
+ "finished_at": "2026-10-02T00:55:01.165270+00:00",
+ "gates_passed": true,
+ "reproduced": true,
+ "reset": null,
+ "started_at": "2026-10-01T23:25:54.883283+00:00",
+ "status": "reproduced",
+ "steps": {
+  "chapters": 1023.2,
+  "data": 1391.9,
+  "exports": 2.4,
+  "manifest": 0.7,
+  "marts": 0.9,
+  "metrics": 54.3,
+  "metrics-chapters": 57.2,
+  "recovery": 2172.7,
+  "render": 0.5,
+  "simulate": 4.8,
+  "warehouse": 615.4
+ },
+ "tables_compared": 27,
+ "timing_differences": {},
+ "values_compared": 659,
+ "where": "/home/claude/turnaround-rederive"
+}

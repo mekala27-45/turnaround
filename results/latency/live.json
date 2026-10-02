@@ -1,0 +1,23 @@
+{
+    "base_url":  "https://turnaround-flights-api.fly.dev",
+    "measured_at":  "2026-10-01T23:21:27.9091826Z",
+    "requests":  40,
+    "concurrency":  6,
+    "hubs":  20,
+    "first_request_ms":  105.1,
+    "check":  {
+                  "p50_ms":  60.7,
+                  "p99_ms":  76.6,
+                  "max_ms":  76.6,
+                  "mean_ms":  61.2
+              },
+    "read":  {
+                 "p50_ms":  45.2,
+                 "p99_ms":  99.5,
+                 "max_ms":  99.5,
+                 "mean_ms":  46.5
+             },
+    "burst_check_max_ms":  168.1,
+    "errors":  0,
+    "note":  "sequential requests after one warming request from a Windows client; the burst is concurrent checks"
+}

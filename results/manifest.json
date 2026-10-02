@@ -5609,7 +5609,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": 57
+   "value": 58
   },
   "build.decisions": {
    "fmt": "int",
@@ -8997,7 +8997,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "not yet published: live check not checked."
+   "value": "https://mekala27-45.github.io/turnaround/: live check passed."
   },
   "checklist.13.status": {
    "fmt": "text",
@@ -9011,7 +9011,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "not done"
+   "value": "done"
   },
   "checklist.13.text": {
    "fmt": "text",
@@ -9039,7 +9039,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "0 of 0 routes loaded live; asleep: not observed; Playwright against the test server: 29 passed, 0 failed."
+   "value": "8 of 8 routes loaded live; asleep: answered on the second probe; Playwright against the test server: 29 passed, 0 failed."
   },
   "checklist.14.status": {
    "fmt": "text",
@@ -9053,7 +9053,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "not done"
+   "value": "done"
   },
   "checklist.14.text": {
    "fmt": "text",
@@ -9081,7 +9081,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "POST /v1/checks p50 not measured, p99 not measured; results/live_check.json not checked."
+   "value": "POST /v1/checks p50 61 ms, p99 77 ms; results/live_check.json passed."
   },
   "checklist.15.status": {
    "fmt": "text",
@@ -9095,7 +9095,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "not done"
+   "value": "done"
   },
   "checklist.15.text": {
    "fmt": "text",
@@ -9123,7 +9123,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "claim gate over every document; rederive drift not run; limitations section in RESULTS.md."
+   "value": "claim gate over every document; rederive drift 0; limitations section in RESULTS.md."
   },
   "checklist.16.status": {
    "fmt": "text",
@@ -9137,7 +9137,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "not done"
+   "value": "done"
   },
   "checklist.16.text": {
    "fmt": "text",
@@ -9207,7 +9207,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "coverage 87.0 percent; mypy clean; ruff clean; palette green; 57 commits; rederive not run; tag not pushed; Apache 2.0 with the four data sources' terms."
+   "value": "coverage 87.0 percent; mypy clean; ruff clean; palette green; 58 commits; rederive reproduced in a worktree; tag not pushed; Apache 2.0 with the four data sources' terms."
   },
   "checklist.18.status": {
    "fmt": "text",
@@ -9459,7 +9459,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "not yet deployed: not yet deployed from no client yet; probability not measured read back; results/deploy/verification.json."
+   "value": "https://turnaround-flights-api.fly.dev: deployed and verified from AJAY, Windows, PowerShell 5.1.26100.9444; probability 12.5% read back; results/deploy/verification.json."
   },
   "checklist.7.status": {
    "fmt": "text",
@@ -9473,7 +9473,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "not done"
+   "value": "done"
   },
   "checklist.7.text": {
    "fmt": "text",
@@ -9585,7 +9585,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": 12
+   "value": 17
   },
   "checklist.missing": {
    "fmt": "text",
@@ -9599,7 +9599,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "7, 13, 14, 15, 16, 18"
+   "value": "18"
   },
   "checklist.total": {
    "fmt": "int",
@@ -9839,6 +9839,20 @@
    },
    "value": 0.01280936955
   },
+  "deploy.audit_before_response": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": "yes"
+  },
   "deploy.base_url": {
    "fmt": "text",
    "provenance": {
@@ -9851,7 +9865,245 @@
     "seeds": null,
     "source": "recorded"
    },
-   "value": "not yet deployed"
+   "value": "https://turnaround-flights-api.fly.dev"
+  },
+  "deploy.buffer": {
+   "fmt": "min0",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 60
+  },
+  "deploy.check_id": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": "ea259ece-b322-4cc9-a3c9-5eddfafaf3c2"
+  },
+  "deploy.checked_at": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": "2026-10-01T23:19:40.2231995Z"
+  },
+  "deploy.client": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": "AJAY, Windows, PowerShell 5.1.26100.9444"
+  },
+  "deploy.connection": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": "MCO ATL LGA"
+  },
+  "deploy.demo_checks": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 20
+  },
+  "deploy.demo_coverage": {
+   "fmt": "pct0",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 0.6
+  },
+  "deploy.demo_mae": {
+   "fmt": "apts1",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 0.04722958203
+  },
+  "deploy.demo_scored": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 20
+  },
+  "deploy.flights": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 26428
+  },
+  "deploy.health_database": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": "ok"
+  },
+  "deploy.health_status": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": "ok"
+  },
+  "deploy.high": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 0.1763903934
+  },
+  "deploy.hubs": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 20
+  },
+  "deploy.low": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 0.08661199898
+  },
+  "deploy.model_version": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": "cells-655d61c5c3"
+  },
+  "deploy.pairs": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 446
   },
   "deploy.passed": {
    "fmt": "text",
@@ -9865,7 +10117,49 @@
     "seeds": null,
     "source": "recorded"
    },
-   "value": "no"
+   "value": "yes"
+  },
+  "deploy.probability": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 0.1247323287
+  },
+  "deploy.realized": {
+   "fmt": "pct1",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 0.1457399103
+  },
+  "deploy.statement_present": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": "yes"
   },
   "deploy.status": {
    "fmt": "text",
@@ -9879,7 +10173,21 @@
     "seeds": null,
     "source": "recorded"
    },
-   "value": "not yet deployed"
+   "value": "deployed and verified"
+  },
+  "deploy.travel_month": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "deploy/verify.ps1",
+    "population": "the live API, checked from a separate client",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": "2026-07"
   },
   "exports.csv.files": {
    "fmt": "int",
@@ -10021,6 +10329,174 @@
    },
    "value": 23
   },
+  "latency.live.base_url": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "scripts/load_test.py",
+    "population": "the live API under the load test",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": "https://turnaround-flights-api.fly.dev"
+  },
+  "latency.live.burst_max_ms": {
+   "fmt": "ms",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "scripts/load_test.py",
+    "population": "the live API under the load test",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 168.1
+  },
+  "latency.live.check.max_ms": {
+   "fmt": "ms",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "scripts/load_test.py",
+    "population": "the live API under the load test",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 76.6
+  },
+  "latency.live.check.p50_ms": {
+   "fmt": "ms",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "scripts/load_test.py",
+    "population": "the live API under the load test",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 60.7
+  },
+  "latency.live.check.p99_ms": {
+   "fmt": "ms",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "scripts/load_test.py",
+    "population": "the live API under the load test",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 76.6
+  },
+  "latency.live.concurrency": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "scripts/load_test.py",
+    "population": "the live API under the load test",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 6
+  },
+  "latency.live.first_request_ms": {
+   "fmt": "ms",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "scripts/load_test.py",
+    "population": "the live API under the load test",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 105.1
+  },
+  "latency.live.measured_at": {
+   "fmt": "text",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "scripts/load_test.py",
+    "population": "the live API under the load test",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": "2026-10-01T23:21:27.9091826Z"
+  },
+  "latency.live.read.max_ms": {
+   "fmt": "ms",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "scripts/load_test.py",
+    "population": "the live API under the load test",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 99.5
+  },
+  "latency.live.read.p50_ms": {
+   "fmt": "ms",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "scripts/load_test.py",
+    "population": "the live API under the load test",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 45.2
+  },
+  "latency.live.read.p99_ms": {
+   "fmt": "ms",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "scripts/load_test.py",
+    "population": "the live API under the load test",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 99.5
+  },
+  "latency.live.requests": {
+   "fmt": "int",
+   "provenance": {
+    "as_of": "2026-10-01",
+    "condition": null,
+    "model": "none",
+    "origin": "scripts/load_test.py",
+    "population": "the live API under the load test",
+    "seed": null,
+    "seeds": null,
+    "source": "recorded"
+   },
+   "value": 40
+  },
   "latency.live.status": {
    "fmt": "text",
    "provenance": {
@@ -10033,7 +10509,7 @@
     "seeds": null,
     "source": "recorded"
    },
-   "value": "not measured"
+   "value": "measured"
   },
   "latency.local.status": {
    "fmt": "text",
@@ -10061,7 +10537,7 @@
     "seeds": null,
     "source": "recorded"
    },
-   "value": 0
+   "value": 1
   },
   "live.asleep_outcome": {
    "fmt": "text",
@@ -10075,7 +10551,7 @@
     "seeds": null,
     "source": "recorded"
    },
-   "value": "not observed"
+   "value": "answered on the second probe"
   },
   "live.browser": {
    "fmt": "text",
@@ -10089,7 +10565,7 @@
     "seeds": null,
     "source": "recorded"
    },
-   "value": "no browser yet"
+   "value": "Chrome 154.0.8037.92 on Windows 11"
   },
   "live.check_id": {
    "fmt": "text",
@@ -10103,7 +10579,7 @@
     "seeds": null,
     "source": "recorded"
    },
-   "value": "none"
+   "value": "406c8130-c003-4931-9462-e037eeb7f298"
   },
   "live.checked_at": {
    "fmt": "text",
@@ -10117,7 +10593,7 @@
     "seeds": null,
     "source": "recorded"
    },
-   "value": "not yet"
+   "value": "2026-10-01T23:36:06Z"
   },
   "live.routes_loaded": {
    "fmt": "int",
@@ -10131,7 +10607,7 @@
     "seeds": null,
     "source": "recorded"
    },
-   "value": 0
+   "value": 8
   },
   "live.routes_total": {
    "fmt": "int",
@@ -10145,7 +10621,7 @@
     "seeds": null,
     "source": "recorded"
    },
-   "value": 0
+   "value": 8
   },
   "live.site_url": {
    "fmt": "text",
@@ -10159,7 +10635,7 @@
     "seeds": null,
     "source": "recorded"
    },
-   "value": "not yet published"
+   "value": "https://mekala27-45.github.io/turnaround/"
   },
   "live.status": {
    "fmt": "text",
@@ -10173,7 +10649,7 @@
     "seeds": null,
     "source": "recorded"
    },
-   "value": "not checked"
+   "value": "passed"
   },
   "metric.cancellation_rate": {
    "fmt": "pct2",

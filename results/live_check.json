@@ -1,0 +1,57 @@
+{
+ "checked_at": "2026-10-01T23:36:06Z",
+ "browser": "Chrome 154.0.8037.92 on Windows 11",
+ "site_url": "https://mekala27-45.github.io/turnaround/",
+ "api_url": "https://turnaround-flights-api.fly.dev",
+ "routes": [
+  {
+   "route": "/",
+   "loaded": true,
+   "statement": true
+  },
+  {
+   "route": "/explore/",
+   "loaded": true,
+   "statement": true
+  },
+  {
+   "route": "/rank/",
+   "loaded": true,
+   "statement": true
+  },
+  {
+   "route": "/rotations/",
+   "loaded": true,
+   "statement": true
+  },
+  {
+   "route": "/events/",
+   "loaded": true,
+   "statement": true
+  },
+  {
+   "route": "/planner/",
+   "loaded": true,
+   "statement": true
+  },
+  {
+   "route": "/data/",
+   "loaded": true,
+   "statement": true
+  },
+  {
+   "route": "/report/",
+   "loaded": true,
+   "statement": true
+  }
+ ],
+ "routes_total": 8,
+ "routes_loaded": 8,
+ "statements_present": 8,
+ "api_health_status": "ok",
+ "check_id": "406c8130-c003-4931-9462-e037eeb7f298",
+ "check_source": "live",
+ "asleep_first_probe": "no answer in 6.2 s, cut off by the page at its 6 s limit while the machine started (planner opened at 23:48:58 UTC after 12 idle minutes)",
+ "asleep_outcome": "answered on the second probe",
+ "passed": true
+}

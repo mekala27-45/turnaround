@@ -28,4 +28,4 @@ Why your flight is late: a data story in {{ v('story.chapters') }} chapters over
 
 ## The definition of done
 
-{{ v('checklist.done') }} of {{ v('checklist.total') }} lines done{% if raw('checklist.missing') != 'none' %}; not done: {{ v('checklist.missing') }}{% endif %}. The README prints every line with its evidence.
+{{ v('checklist.done') }} of {{ v('checklist.total') }} lines done{% if raw('checklist.missing') != 'none' %}; not done: {{ v('checklist.missing') }}{% endif %}. The README prints every line with its evidence.{% if raw('checklist.missing') == raw('checklist.total') | string %} The last line asks for this tag to be pushed after the commits, so it cannot be done at the commit the tag points to; the commit after the tag records the push.{% endif %}
