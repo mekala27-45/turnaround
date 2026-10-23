@@ -1,6 +1,6 @@
 # Results
 
-Every figure on this page is rendered from `results/manifest.json` (as of 2026-10-01) by the claim gate, which re-renders the page in CI and fails on any difference. The window is January 2015 to July 2026; models choose on 2015 to 2022 and report on 2023 onward.
+Every figure on this page is rendered from `results/manifest.json` (as of 2026-10-23) by the claim gate, which re-renders the page in CI and fails on any difference. The window is January 2015 to July 2026; models choose on 2015 to 2022 and report on 2023 onward.
 
 > Public data from the Bureau of Transportation Statistics, the FAA and OurAirports, with weather from Open-Meteo under CC BY 4.0. Carriers and airports are real and appear as they do in the public record; no individual traveler appears. The findings are a portfolio analysis, not an official ranking and not travel advice.
 
@@ -12,7 +12,7 @@ Every figure on this page is rendered from `results/manifest.json` (as of 2026-1
 4. **done.** Chapters 1 and 2 with plan hashes, simulator recovery, results on the test years with intervals, the changepoints named. *Evidence:* plans 74cda4464e3380a2 and 13d98f2ebd738a81; on time change -3.7 pts, padding change +3.98 min with intervals; 204 changepoints dated.
 5. **done.** Chapter 4: rotations with integrity rules and their counts; the inherited share with its interval; the buffer curve. *Evidence:* 18,151,842 rotations, 369,126 broken chains, 601,945 impossible sequences; inherited share 34.9% (34.8% to 34.9%); buffer curve table ch4.buffer_curve.
 6. **done.** Chapter 5: the fair ranking with cluster robust intervals beside the raw ranking, the rank changes named, the simulator recovery. *Evidence:* 15 carriers raw and adjusted with day clustered intervals; 11 change places; simulator rank correlation 0.94 adjusted against -0.07 raw.
-7. **done.** API deployed on Fly with Neon; live URL in the README; verified from a separate client, with the client's response printed. *Evidence:* https://turnaround-flights-api.fly.dev: deployed and verified from AJAY, Windows, PowerShell 5.1.26100.9444; probability 12.5% read back; results/deploy/verification.json.
+7. **done.** API deployed on Fly with Neon; live URL in the README; verified from a separate client, with the client's response printed. *Evidence:* https://turnaround-flights-api.vercel.app: deployed and verified from AJAY, Windows, PowerShell 5.1.26100.9711; probability 12.5% read back; results/deploy/verification.json.
 8. **done.** Checks and scores observed from an independent connection; audit before response; the out of process check. *Evidence:* tests/api: 11 passed (test_check_is_committed, test_score_is_committed, test_audit_precedes_response, the out of process scripts/check_persistence.py).
 9. **done.** Chapter 3: the density test with placebos and correction, published either way; chapter 6: causes reported and estimated side by side. *Evidence:* 0 of 15 carriers flagged after Benjamini-Hochberg; weather share 18.8% against 4.2% reported.
 10. **done.** Chapter 7: the known events table with citations and detection days; the operating point with its interior test; the two event studies with recovery times. *Evidence:* threshold 29.0 inside the grid; 8 of 8 reporting year events flagged; recovery 9 and 5 days.
@@ -20,12 +20,12 @@ Every figure on this page is rendered from `results/manifest.json` (as of 2026-1
 12. **done.** Exports: the workbook with live formulas and its recalculation test, the Tableau extract and specification, the Power BI specification with measures, the CSV bundle with its dictionary. *Evidence:* workbook 23 sheets, 12 summary formulas, recalculation test passed; 18 DAX measures; 19 CSV files with a dictionary.
 13. **done.** The story live on GitHub Pages with sticky charts, method notes, the SQL behind every chart, the corrections section and the print stylesheet. *Evidence:* https://mekala27-45.github.io/turnaround/: live check passed.
 14. **done.** Explore, rank, rotations, events, planner, data and report pages live, working from the recorded session when the API is asleep; the test server refuses what the host refuses. *Evidence:* 8 of 8 routes loaded live; asleep: answered on the second probe; Playwright against the test server: 29 passed, 0 failed.
-15. **done.** Latency published; the live check in a real browser recorded in results/live_check.json. *Evidence:* POST /v1/checks p50 61 ms, p99 77 ms; results/live_check.json passed.
+15. **done.** Latency published; the live check in a real browser recorded in results/live_check.json. *Evidence:* POST /v1/checks p50 1,051 ms, p99 1,110 ms; results/live_check.json passed.
 16. **done.** RESULTS.md with every figure re-derived by the gate and a specific limitations section. *Evidence:* claim gate over every document; rederive drift 0; limitations section in RESULTS.md.
-17. **done.** README with the matrix and this checklist; DECISIONS.md with at least ten dated entries, two reversals and the corrections; three executed notebooks with a dead end each; the pushback paragraph on every chapter and page. *Evidence:* DECISIONS.md 22 dated entries, 4 reversals, 4 corrections; 3 executed notebooks, 3 with a dead end.
-18. **done.** Coverage at or above 80 percent, mypy strict clean, ruff clean, zero em dashes, zero banned vocabulary, palette validator green including the dark card run, forty to sixty commits, the rederive run in a worktree before the tag, v0.1.0 pushed after the commits, Apache 2.0 for code with the four data sources' terms declared, repo described, topics set. *Evidence:* coverage 87.0 percent; mypy clean; ruff clean; palette green; 59 commits; rederive reproduced in a worktree; tag pushed; Apache 2.0 with the four data sources' terms.
+17. **done.** README with the matrix and this checklist; DECISIONS.md with at least ten dated entries, two reversals and the corrections; three executed notebooks with a dead end each; the pushback paragraph on every chapter and page. *Evidence:* DECISIONS.md 23 dated entries, 4 reversals, 4 corrections; 3 executed notebooks, 3 with a dead end.
+18. **not done.** Coverage at or above 80 percent, mypy strict clean, ruff clean, zero em dashes, zero banned vocabulary, palette validator green including the dark card run, forty to sixty commits, the rederive run in a worktree before the tag, v0.1.0 pushed after the commits, Apache 2.0 for code with the four data sources' terms declared, repo described, topics set. *Evidence:* coverage 87.0 percent; mypy clean; ruff clean; palette green; 62 commits; rederive reproduced in a worktree; tag pushed; Apache 2.0 with the four data sources' terms.
 
-18 of 18 done; not done: none.
+17 of 18 done; not done: 18.
 
 Stretch items, not counted toward the checklist: the long history before the window, fares from the ticket sample, load factors from the segment data, an aircraft chapter, the Newark page and containers built in CI are not done in this release.
 
@@ -637,7 +637,7 @@ Threshold 29.0, chosen from 3.0 to 30.0 with a false alarm costed at 1.0 and a m
 
 ## Latency
 
-Against https://turnaround-flights-api.fly.dev from a separate client, 40 sequential checks after one warming request, which took 105 ms: POST /v1/checks p50 61 ms and p99 77 ms; GET /v1/checks/{id} p50 45 ms and p99 100 ms; a burst of 6 concurrent checks finished within 168 ms.
+Against https://turnaround-flights-api.vercel.app from a separate client, 40 sequential checks after one warming request, which took 956 ms: POST /v1/checks p50 1,051 ms and p99 1,110 ms; GET /v1/checks/{id} p50 1,040 ms and p99 1,110 ms; a burst of 6 concurrent checks finished within 2,522 ms.
 ## Limitations
 
 - **The weather covers thirty airports.** The weather estimate uses flights between two of the FAA's Core 30 airports, which carry most of the traffic and most of the weather delay but not the regional airports where a storm can close the only runway. It is also airport weather at the scheduled hours, not weather along the route, so it is a floor on weather's share.

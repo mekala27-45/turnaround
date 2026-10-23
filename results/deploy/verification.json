@@ -1,7 +1,7 @@
 {
-    "base_url":  "https://turnaround-flights-api.fly.dev",
-    "client":  "AJAY, Windows, PowerShell 5.1.26100.9444",
-    "checked_at":  "2026-10-01T23:19:40.2231995Z",
+    "base_url":  "https://turnaround-flights-api.vercel.app",
+    "client":  "AJAY, Windows, PowerShell 5.1.26100.9711",
+    "checked_at":  "2026-10-23T17:52:18.3286833Z",
     "health":  {
                    "hubs":  20,
                    "status":  "ok",
@@ -12,22 +12,22 @@
     "connection":  "MCO ATL LGA",
     "travel_month":  "2026-07",
     "buffer_minutes":  60,
-    "check_id":  "ea259ece-b322-4cc9-a3c9-5eddfafaf3c2",
-    "probability":  0.12473232865907065,
-    "low":  0.08661199898111481,
+    "check_id":  "280cbd01-3e45-45fe-ba49-bda220c5c8e6",
+    "probability":  0.12473232865907062,
+    "low":  0.08661199898111478,
     "high":  0.1763903933736906,
     "flights":  26428,
-    "read_back_probability":  0.12473232865907065,
+    "read_back_probability":  0.12473232865907062,
     "score":  {
                   "outcome_month":  "2026-07",
                   "realized_rate":  0.14573991031390135,
                   "pairs":  446,
-                  "absolute_error":  0.0210075816548307,
+                  "absolute_error":  0.02100758165483073,
                   "inside_interval":  true,
-                  "scored_at":  "2026-10-01T23:19:39.868867+00:00"
+                  "scored_at":  "2026-10-23T17:52:15.599697+00:00"
               },
-    "unscored_share":  0.5,
-    "audit_entries":  4,
+    "unscored_share":  0.045454545454545414,
+    "audit_entries":  50,
     "audit_before_response":  true,
     "statement_present":  true,
     "passed":  true

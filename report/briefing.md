@@ -1,6 +1,6 @@
 # Why flights are late: the operations review
 
-*turnaround, as of 2026-10-01. Every scheduled domestic flight of the reporting carriers from January 2015 to July 2026, 74,201,388 flights. Models choose on 2015 to 2022 and report on 2023 onward. Every figure is rendered from the analysis manifest.*
+*turnaround, as of 2026-10-23. Every scheduled domestic flight of the reporting carriers from January 2015 to July 2026, 74,201,388 flights. Models choose on 2015 to 2022 and report on 2023 onward. Every figure is rendered from the analysis manifest.*
 
 > Public data from the Bureau of Transportation Statistics, the FAA and OurAirports, with weather from Open-Meteo under CC BY 4.0. Carriers and airports are real and appear as they do in the public record; no individual traveler appears. The findings are a portfolio analysis, not an official ranking and not travel advice.
 
