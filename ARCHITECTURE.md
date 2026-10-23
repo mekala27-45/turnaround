@@ -60,4 +60,4 @@ A story that can be edited by hand drifts from its evidence within a week: a num
 
 ## What runs where
 
-The pipeline runs on one machine: DuckDB for the warehouse and the chapters, a disk cache keyed by input digest for the expensive steps, and every seeded step sorting before it samples so two runs agree to the byte. The site is static on GitHub Pages and queries the committed marts in the browser with DuckDB-WASM. The API is one Fly machine that sleeps when idle, with its check log in Neon Postgres; the site probes it twice and falls back to a recorded session, labeled as recorded, when it does not answer.
+The pipeline runs on one machine: DuckDB for the warehouse and the chapters, a disk cache keyed by input digest for the expensive steps, and every seeded step sorting before it samples so two runs agree to the byte. The site is static on GitHub Pages and queries the committed marts in the browser with DuckDB-WASM. The API is a Vercel container function that scales to zero when idle, with its check log in Neon Postgres; the site probes it twice and falls back to a recorded session, labeled as recorded, when it does not answer.

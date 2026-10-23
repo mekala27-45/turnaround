@@ -20,7 +20,7 @@ export default function PlannerPage() {
           diverted, or lands too late to leave {m.vOr("policy.min_connection", "the minimum connection time")} to change planes.
         </p>
         <p className="text-sm text-ink2">
-          The answers come from the live API on Fly. Its machine sleeps when idle; the page asks twice, and if it is still asleep it answers from a
+          The answers come from the live API on Vercel. It sleeps when idle; the page asks twice, and if it is still asleep it answers from a
           session recorded against the live API and says so.
         </p>
       </PageHeader>

@@ -1,4 +1,4 @@
-"""The live check: the Pages site and the Fly API opened in a real browser after the deploy.
+"""The live check: the Pages site and the Vercel API opened in a real browser after the deploy.
 
 The browser session runs on a machine that can reach both hosts (the build machine cannot): every
 route loaded with the statement on it, the API's health read, one check saved through the planner

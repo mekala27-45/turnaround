@@ -80,9 +80,8 @@ rederive:
 web:
 	npm --prefix web run build
 
-# Deploys the API to Fly with the Neon connection string as a secret. Needs flyctl and the
-# variables in .env; the machine that built this repository could not reach Fly, so the same
-# steps live in deploy/deploy.ps1 for a Windows machine.
+# The live API runs on Vercel and redeploys on every push to main, so nothing here deploys it.
+# This target is the former Fly route, kept for history. It needs flyctl and a Fly account with a card.
 deploy:
 	sh deploy/deploy.sh
 

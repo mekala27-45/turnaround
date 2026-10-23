@@ -1,4 +1,6 @@
-# Read the live API's recent logs from Fly on a Windows machine, so a failing health check can be
+# The former Fly route, kept for history. On Vercel the logs are in the project dashboard.
+#
+# Read the API's recent logs from Fly on a Windows machine, so a failing health check can be
 # explained without opening a dashboard. Redacts anything that looks like a connection string or a
 # bearer token, and writes the result to deploy\fly-logs.txt.
 #

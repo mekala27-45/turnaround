@@ -1,3 +1,5 @@
+# The former Fly route, kept for history. The live API runs on Vercel from Dockerfile.vercel.
+#
 # Fly.io, free allowance: one shared CPU machine that stops when idle and starts on the first
 # request. The planner page reads its recorded session while the machine wakes and says so.
 app = "turnaround-flights-api"

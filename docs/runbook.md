@@ -78,7 +78,7 @@ The test server refuses HEAD requests and answers the first API call with a 503,
 
 ## Deploying the API
 
-From the Windows machine with `.env` beside the repository, in Git GUI's Tools menu or PowerShell: `deploy\deploy.ps1`, then `deploy\verify.ps1` (a check from a separate client, read back), then `deploy\replay.ps1` (the demo queue). `deploy\logs.ps1` shows the machine's recent logs. `make deploy` runs the same steps from a shell that can reach Fly.
+The API runs on Vercel and redeploys on every push to `main`; `docs/serving.md` has the one time setup. From the Windows machine with `.env` beside the repository, in Git GUI's Tools menu or PowerShell: `deploy\verify.ps1` (a check from a separate client, read back), then `deploy\replay.ps1` (the demo queue). The logs are in the Vercel dashboard. `deploy\deploy.ps1`, `deploy\logs.ps1` and `make deploy` are the former Fly route, kept for history.
 
 ## Resetting and rederiving
 

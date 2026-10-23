@@ -5609,7 +5609,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": 62
+   "value": 63
   },
   "build.decisions": {
    "fmt": "int",
@@ -9207,7 +9207,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "coverage 87.0 percent; mypy clean; ruff clean; palette green; 62 commits; rederive reproduced in a worktree; tag pushed; Apache 2.0 with the four data sources' terms."
+   "value": "coverage 87.0 percent; mypy clean; ruff clean; palette green; 63 commits; rederive reproduced in a worktree; tag pushed; Apache 2.0 with the four data sources' terms."
   },
   "checklist.18.status": {
    "fmt": "text",
@@ -9487,7 +9487,7 @@
     "seeds": null,
     "source": "mixed"
    },
-   "value": "API deployed on Fly with Neon; live URL in the README; verified from a separate client, with the client's response printed"
+   "value": "API deployed on Vercel with Neon; live URL in the README; verified from a separate client, with the client's response printed"
   },
   "checklist.8.evidence": {
    "fmt": "text",

@@ -52,7 +52,7 @@ Every chapter is a claim that could have come out the other way: a plan hashed b
 | Data storytelling | `story/`, the sticky chart layout, the method notes |
 | Dashboards and BI | `exports/tableau`, `exports/powerbi`, `/explore` |
 | Spreadsheet modeling | `exports/workbook.xlsx` with live formulas |
-| APIs and persistence | `packages/api`, `fly.toml`, `scripts/check_persistence.py` |
+| APIs and persistence | `packages/api`, `Dockerfile.vercel`, `scripts/check_persistence.py` |
 | Visualization | `web/`, the validated palette, one message per chart |
 | Communication | `report/briefing.md`, the pushback paragraphs |
 | Reproducibility | the claim gate, the rederive, the corrections log |
@@ -66,7 +66,7 @@ Every chapter is a claim that could have come out the other way: a plan hashed b
 4. **done.** Chapters 1 and 2 with plan hashes, simulator recovery, results on the test years with intervals, the changepoints named. *Evidence:* plans 74cda4464e3380a2 and 13d98f2ebd738a81; on time change -3.7 pts, padding change +3.98 min with intervals; 204 changepoints dated.
 5. **done.** Chapter 4: rotations with integrity rules and their counts; the inherited share with its interval; the buffer curve. *Evidence:* 18,151,842 rotations, 369,126 broken chains, 601,945 impossible sequences; inherited share 34.9% (34.8% to 34.9%); buffer curve table ch4.buffer_curve.
 6. **done.** Chapter 5: the fair ranking with cluster robust intervals beside the raw ranking, the rank changes named, the simulator recovery. *Evidence:* 15 carriers raw and adjusted with day clustered intervals; 11 change places; simulator rank correlation 0.94 adjusted against -0.07 raw.
-7. **done.** API deployed on Fly with Neon; live URL in the README; verified from a separate client, with the client's response printed. *Evidence:* https://turnaround-flights-api.vercel.app: deployed and verified from AJAY, Windows, PowerShell 5.1.26100.9711; probability 12.5% read back; results/deploy/verification.json.
+7. **done.** API deployed on Vercel with Neon; live URL in the README; verified from a separate client, with the client's response printed. *Evidence:* https://turnaround-flights-api.vercel.app: deployed and verified from AJAY, Windows, PowerShell 5.1.26100.9711; probability 12.5% read back; results/deploy/verification.json.
 8. **done.** Checks and scores observed from an independent connection; audit before response; the out of process check. *Evidence:* tests/api: 11 passed (test_check_is_committed, test_score_is_committed, test_audit_precedes_response, the out of process scripts/check_persistence.py).
 9. **done.** Chapter 3: the density test with placebos and correction, published either way; chapter 6: causes reported and estimated side by side. *Evidence:* 0 of 15 carriers flagged after Benjamini-Hochberg; weather share 18.8% against 4.2% reported.
 10. **done.** Chapter 7: the known events table with citations and detection days; the operating point with its interior test; the two event studies with recovery times. *Evidence:* threshold 29.0 inside the grid; 8 of 8 reporting year events flagged; recovery 9 and 5 days.
@@ -77,7 +77,7 @@ Every chapter is a claim that could have come out the other way: a plan hashed b
 15. **done.** Latency published; the live check in a real browser recorded in results/live_check.json. *Evidence:* POST /v1/checks p50 1,051 ms, p99 1,110 ms; results/live_check.json passed.
 16. **done.** RESULTS.md with every figure re-derived by the gate and a specific limitations section. *Evidence:* claim gate over every document; rederive drift 0; limitations section in RESULTS.md.
 17. **done.** README with the matrix and this checklist; DECISIONS.md with at least ten dated entries, two reversals and the corrections; three executed notebooks with a dead end each; the pushback paragraph on every chapter and page. *Evidence:* DECISIONS.md 23 dated entries, 4 reversals, 4 corrections; 3 executed notebooks, 3 with a dead end.
-18. **not done.** Coverage at or above 80 percent, mypy strict clean, ruff clean, zero em dashes, zero banned vocabulary, palette validator green including the dark card run, forty to sixty commits, the rederive run in a worktree before the tag, v0.1.0 pushed after the commits, Apache 2.0 for code with the four data sources' terms declared, repo described, topics set. *Evidence:* coverage 87.0 percent; mypy clean; ruff clean; palette green; 62 commits; rederive reproduced in a worktree; tag pushed; Apache 2.0 with the four data sources' terms.
+18. **not done.** Coverage at or above 80 percent, mypy strict clean, ruff clean, zero em dashes, zero banned vocabulary, palette validator green including the dark card run, forty to sixty commits, the rederive run in a worktree before the tag, v0.1.0 pushed after the commits, Apache 2.0 for code with the four data sources' terms declared, repo described, topics set. *Evidence:* coverage 87.0 percent; mypy clean; ruff clean; palette green; 63 commits; rederive reproduced in a worktree; tag pushed; Apache 2.0 with the four data sources' terms.
 
 ## Run it
 

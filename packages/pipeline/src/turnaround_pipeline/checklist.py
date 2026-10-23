@@ -24,7 +24,7 @@ LINES: tuple[str, ...] = (
     "Chapters 1 and 2 with plan hashes, simulator recovery, results on the test years with intervals, the changepoints named",
     "Chapter 4: rotations with integrity rules and their counts; the inherited share with its interval; the buffer curve",
     "Chapter 5: the fair ranking with cluster robust intervals beside the raw ranking, the rank changes named, the simulator recovery",
-    "API deployed on Fly with Neon; live URL in the README; verified from a separate client, with the client's response printed",
+    "API deployed on Vercel with Neon; live URL in the README; verified from a separate client, with the client's response printed",
     "Checks and scores observed from an independent connection; audit before response; the out of process check",
     "Chapter 3: the density test with placebos and correction, published either way; chapter 6: causes reported and estimated side by side",
     "Chapter 7: the known events table with citations and detection days; the operating point with its interior test; the two event studies with recovery times",

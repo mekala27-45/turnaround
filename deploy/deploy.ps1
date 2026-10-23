@@ -1,3 +1,5 @@
+# The former Fly route, kept for history. The live API runs on Vercel and redeploys on every push to main.
+#
 # Deploy the turnaround API to Fly from a Windows machine.
 #
 # Reads FLY_API_TOKEN, DATABASE_URL (the shared Neon database; the tables go in the `turnaround`

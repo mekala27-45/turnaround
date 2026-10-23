@@ -1,12 +1,14 @@
 # Serving
 
-Two things are served: the static site on GitHub Pages, and the misconnect calculator's API on Fly.io with its check log in Neon Postgres. The site never needs the API to tell the story; only the planner page writes.
+Two things are served: the static site on GitHub Pages, and the misconnect calculator's API on Vercel with its check log in Neon Postgres. The site never needs the API to tell the story; only the planner page writes.
 
 > Public data from the Bureau of Transportation Statistics, the FAA and OurAirports, with weather from Open-Meteo under CC BY 4.0. Carriers and airports are real and appear as they do in the public record; no individual traveler appears. The findings are a portfolio analysis, not an official ranking and not travel advice.
 
 ## The API
 
-FastAPI in `packages/api`, one shared CPU machine on Fly that stops when idle and starts on the first request, with its tables in the `turnaround` schema of a Neon database. Live at https://turnaround-flights-api.vercel.app (deployed and verified).
+FastAPI in `packages/api`, run as a Vercel container function on the free Hobby plan and built from `Dockerfile.vercel`. It scales to zero when idle and starts on the first request, and the migration runs at every start. Its tables live in the `turnaround` schema of a Neon database. Live at https://turnaround-flights-api.vercel.app (deployed and verified).
+
+The API ran on Fly first. Fly now asks for a card on every operation, so it moved; DECISIONS.md has the entry.
 
 | Route | What it does |
 |---|---|
@@ -36,20 +38,28 @@ The latest month in the marts is held out of the cells and kept as the outcome m
 
 ## Deploying
 
-From a Windows machine with the repository and a `.env` beside it, through Git GUI's tools menu or PowerShell:
+Vercel builds and serves the API. The setup is done once, in this order:
 
-    deploy\deploy.ps1      # flyctl, the app, the secrets, the image, the migrations
+- Import the GitHub repository as a new Vercel project.
+- Pick the Container preset and point it at `Dockerfile.vercel`. That file is `Dockerfile.api` listening on the port Vercel sends the traffic to.
+- In the project settings, set `DATABASE_URL`, `TURNAROUND_WRITE_TOKEN`, `TURNAROUND_DB_SCHEMA` and `TURNAROUND_CORS_ORIGINS`.
+
+After that, every push to `main` redeploys. There is no deploy script to run.
+
+The checks run from a Windows machine with the repository and a `.env` beside it, through Git GUI's tools menu or PowerShell. They read the live address from `deploy/live-url.txt` and the write token from `deploy/write-token.txt`, so put the Vercel address and the token from the project settings there first.
+
     deploy\verify.ps1      # a check from a separate client, read back; writes results\deploy\verification.json
     deploy\replay.ps1      # the demo queue: checks at the busiest hubs so the log is never empty
     deploy\load-test.ps1   # writes results\latency\live.json
-    deploy\logs.ps1        # the machine's recent logs
     deploy\reset.ps1       # deletes the rows the recordings and checks created
 
-Secrets live in `.env` and in Fly's secret store, nowhere else. `deploy/write-token.txt` is written by the deploy and ignored by git.
+The function's logs are in the Vercel dashboard. `fly.toml`, `deploy\deploy.ps1`, `deploy/deploy.sh` and `deploy\logs.ps1` are the former Fly route, kept for history.
+
+Secrets live in `.env` and in the Vercel project's environment variables, nowhere else. `deploy/live-url.txt` and `deploy/write-token.txt` are ignored by git.
 
 ## Latency
 
-Against the live API from a separate client: POST /v1/checks p50 1,051 ms, p99 1,110 ms, after one warming request that took 956 ms while the machine woke.
+Against the live API from a separate client: POST /v1/checks p50 1,051 ms, p99 1,110 ms, after one warming request that took 956 ms while the instance started.
 ## The site when the API is asleep
 
-The planner page probes the API twice, because the first request after an idle period wakes the machine and can fail while it does. If both probes fail, the page reads `web/public/data/recorded_session.json`, a session recorded against the API, and labels every answer as recorded. The test server in `web/scripts/serve.mjs` refuses HEAD requests and answers the first API call with HTTP 503 so the Playwright suite exercises both paths on every run.
+The planner page probes the API twice, because the first request after an idle period starts an instance and can fail while it does. If both probes fail, the page reads `web/public/data/recorded_session.json`, a session recorded against the API, and labels every answer as recorded. The test server in `web/scripts/serve.mjs` refuses HEAD requests and answers the first API call with HTTP 503 so the Playwright suite exercises both paths on every run.

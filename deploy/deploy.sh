@@ -1,4 +1,6 @@
 #!/bin/sh
+# The former Fly route, kept for history. The live API runs on Vercel and redeploys on every push to main.
+#
 # Deploy the API to Fly with the Neon connection string and the write token as secrets, from a
 # machine with a POSIX shell. Reads FLY_API_TOKEN, TURNAROUND_DATABASE_URL (or DATABASE_URL, then the
 # tables go in the `turnaround` schema of that database) and TURNAROUND_WRITE_TOKEN from the
