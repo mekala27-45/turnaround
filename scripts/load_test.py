@@ -3,7 +3,7 @@ GET /v1/checks/{id} over N sequential requests plus a burst of concurrent checks
 server. Writes results/latency/<label>.json, which the documents quote.
 
     python scripts/load_test.py --base-url http://127.0.0.1:8080 --label local --requests 60 --concurrency 8
-    python scripts/load_test.py --base-url https://turnaround-api.fly.dev --label live
+    python scripts/load_test.py --base-url https://turnaround-flights-api.vercel.app --label live
 """
 
 from __future__ import annotations

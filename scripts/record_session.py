@@ -8,7 +8,7 @@ responses and says so on the page. Every check the recording makes carries the n
 deletes by.
 
     TURNAROUND_TEST_DATABASE_URL=postgresql+psycopg://... python scripts/record_session.py --start-server
-    python scripts/record_session.py --base-url https://turnaround-flights-api.fly.dev --token ...
+    python scripts/record_session.py --base-url https://turnaround-flights-api.vercel.app --token ...
 """
 
 from __future__ import annotations

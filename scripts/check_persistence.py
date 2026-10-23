@@ -8,7 +8,7 @@ back through the API's own GET endpoints from this separate client, which is the
 README prints. In both modes the audit row must be observed at or before the response's served_at.
 
     python scripts/check_persistence.py --start-server
-    python scripts/check_persistence.py --base-url https://turnaround-api.fly.dev --out results/deploy/verification.json
+    python scripts/check_persistence.py --base-url https://turnaround-flights-api.vercel.app --out results/deploy/verification.json
 """
 
 from __future__ import annotations
